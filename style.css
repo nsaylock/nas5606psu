@@ -1,13 +1,16 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
+    background-color: white;
+    color: black;
     margin: 0;
     padding: 0;
+    min-height: 1000px;
 }
 
 header {
-    background-color: #1e1e1e;
+    background-color: #060255;
+    color: white;
+    font-weight: bold;
     text-align: center;
     padding: 20px;
 }
@@ -18,8 +21,8 @@ header {
 }
 
 nav {
-    background-color: #333;
-    padding: 10px;
+    background-color: rgb(165, 164, 164);
+    padding: 5px;
 }
 
 nav ul {
@@ -34,7 +37,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #ffffff;
+    color: black;
     text-decoration: none;
     font-size: 18px;
 }
@@ -46,7 +49,7 @@ main {
 }
 
 article {
-    background-color: #1e1e1e;
+    background-color: white;
     padding: 20px;
     border-radius: 5px;
 }
@@ -67,17 +70,11 @@ label {
     margin: 10px 0 5px;
 }
 
-input, textarea {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #333;
-    color: white;
-}
-
 button {
     margin-top: 10px;
     padding: 10px;
+    width: 175px;
+    font-size: 25px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -87,25 +84,30 @@ button {
 
 p {
     font-size: 18px;
-    color: rgb(235, 235, 235);
+    color: black;
 }
 
 .section-heading {
-    font-size: 30px;
+    font-size: 40px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
+    padding-left: 1px;
+    margin-bottom: 10px;
 }
 
 .sub-heading {
     font-size: 26px;
     font-weight: bold;
-    color: rgb(235, 233, 233);
+    color: black;
+    padding-top: 5px;
+}
+
+.over-line {
+    border-top: 1px solid black;
 }
 
 .job-title {
     font-size: 28px;
-    border-top: 1px solid white;
+    border-top: 1px solid black;
     padding-top: 5px;
     display: flex;
 }
@@ -118,10 +120,77 @@ p {
 }
 
 .dates {
-    color: rgb(155, 155, 155);
+    color: rgb(87, 87, 87);
 }
 
 h2, h3 {
     margin: 0;
     padding-top: 2px;
+    text-align: center;
+}
+
+.center {
+    text-align: center;
+}
+
+.bubble {
+    margin: 0 0 20px;
+    padding: 5px 20px 10px;
+    background-color: white;
+    outline: 2px solid rgb(120, 150, 236);
+    border-radius: 15px;
+    font-size: 18px;
+    color: black;  
+    box-shadow: 8px 8px 10px rgb(44, 44, 44);
+}
+
+.transcript-container {
+    margin-top: 15px;
+    font-size: 22px;
+    display: flex;
+}
+
+.transcript-L {
+    flex: 1;
+}
+
+.transcript-R {
+    padding-right: 5px;
+    text-align: center;
+}
+
+.large-text {
+    font-size: 30px;
+    font-weight: 600;
+    border-bottom: 1px solid gray;
+}
+
+footer {
+    height: 50px;
+    background-color: #060255;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer a {
+    color: snow;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.short-page {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.picture-block {
+    display: flex;
+}
+
+img {
+    margin-left: 20px;
+    border-radius: 10px;;
 }
