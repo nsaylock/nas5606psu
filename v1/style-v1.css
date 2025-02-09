@@ -1,0 +1,213 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(210deg, rgb(9, 9, 41), rgb(197, 164, 164)),
+                linear-gradient(160deg, rgb(0, 255, 98), orange),
+                linear-gradient(300deg, white, rgb(252, 235, 235));
+    background-attachment: fixed;
+}
+
+p {
+    padding: 0;
+    margin: 3px 0 0 0;
+    font-size: 20px;
+}
+
+em {
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+button {
+    background-color: rgb(48, 90, 228);
+    color: snow;
+    font-size: 20px;
+    height: 40px;
+    width: 150px;
+    border-radius: 10px;
+    margin-top: 3px;
+}
+
+.header-container {
+    position: fixed;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.header {
+    background: linear-gradient(300deg, rgb(19, 25, 82), rgb(110, 138, 190));
+    color: whitesmoke;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    height: 75px;
+    font-size: 50px;
+    padding: 8px 30px 10px;
+    text-shadow: 4px 4px 6px black;
+}
+
+.nav-bar {
+    background: linear-gradient(300deg, rgb(156, 87, 44), rgb(197, 141, 104)); 
+    height: 28px;
+    line-height: 28px;
+    display: flex;
+}
+
+.links {
+    text-shadow: 4px 2px 5px black;
+    font-size: 20px;
+    list-style: none;
+    margin: 0;
+    display: flex;
+    
+}
+
+li {
+    height: 28px;
+    padding: 0 40px;
+    border-right: 1px solid black;
+}
+
+.top-spacer {
+    height: 115px;
+}
+
+.main {
+    display: flex;
+}
+
+.side-spacer {
+    flex: 1 2;
+}
+
+.right {
+    margin-left: auto;
+}
+
+.main-content {
+    font-family: sans-serif;
+    padding: 5px 25px;
+    display: flex;
+    flex: 10 1;
+    flex-direction: column;
+}
+
+.center {
+    align-items: center;
+}
+
+.section-heading {
+    font-size: 30px;
+    font-weight: 600;
+    color: snow;
+    border-radius: 12px;
+    padding: 5px 15px;
+    margin: 6px 0 0;
+}
+
+.bubble {
+    margin: 0 0 20px;
+    padding: 5px 20px 10px;
+    background-color: snow;
+    outline: 2px solid rgb(120, 150, 236);
+    border-radius: 15px;
+    font-size: 18px;
+    color: black;  
+    box-shadow: 8px 8px 10px rgb(44, 44, 44);
+}
+
+.job-title-container {
+    font-size: 18px;
+    height: 50px;
+    align-items: center;
+    display: flex;
+    outline: 2px solid black;
+    margin: 10px 0;
+    padding: 0 15px;
+    border-radius: 8px;
+}
+
+.job-title,
+.company-name {
+    font-weight: 500;
+    align-self: center;
+    flex: 1;
+}
+
+.job-title {
+    font-size: 24px;
+    height: 32px;
+    line-height: 32px;
+}
+
+.company-name {
+    font-size: 18px;
+    text-align: right;
+    color: rgb(97, 95, 95);
+}
+
+.dates {
+    margin-top: 5px;
+    color: rgb(97, 95, 95);
+    font-size: 17px;
+    padding-bottom: 2px;
+}
+
+.work-description {
+    margin-top: 5px;
+}
+
+.degree {
+    color: black;
+    margin-top: 8px;
+    font-size: 20px;
+}
+
+footer {
+    margin-top: 20px;
+    background: linear-gradient(300deg, rgb(19, 25, 82), rgb(110, 138, 190));
+    color: snow;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#short-page {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.large-text {
+    font-size: 30px;
+    font-weight: 600;
+    border-bottom: 1px solid gray;
+}
+
+.transcript-container {
+    margin-top: 15px;
+    font-size: 22px;
+    display: flex;
+}
+
+.transcript-L {
+    flex: 1;
+}
+
+.transcript-R {
+    padding-right: 5px;
+    text-align: center;
+
+}
