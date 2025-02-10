@@ -16,7 +16,7 @@ header {
 }
 
 .nas {
-    font-size: 50px;
+    font-size: 60px;
     font-family: arial;
 }
 
@@ -39,7 +39,7 @@ nav ul li {
 nav ul li a {
     color: black;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 22px;
 }
 
 main {
@@ -186,11 +186,21 @@ footer a {
     width: 100%;
 }
 
-.picture-block {
+.picture-block-container {
     display: flex;
+}
+
+.picture-block-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.picture-block-right {
+    display: flex;
+    align-items: center;
 }
 
 img {
     margin-left: 20px;
-    border-radius: 10px;;
+    border-radius: 10px;
 }
