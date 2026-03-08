@@ -1,0 +1,433 @@
+body {
+    font-family: sans-serif;
+    background-color: rgb(32, 32, 32);
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 1000px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 20px;
+    align-items: center;
+}
+
+header {
+    background-color: #550e02;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+}
+
+.nas {
+    font-size: 30px;
+    font-family: arial;
+    width: 1200px;
+}
+
+nav {
+    background-color: rgb(165, 164, 164);
+    padding: 5px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: black;
+    text-decoration: none;
+    font-size: 22px;
+}
+
+#main-area {
+    outline: 2px solid black;
+    background-color: rgb(20, 90, 30);
+    height: 620px;
+    width: 1200px;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px 20px 20px;
+}
+
+.main-left {
+    height: 620px;
+    width: 750px;
+    margin-right: 30px;
+}
+
+.main-right {
+    outline: 2px solid white;
+    height: 600px;
+    width: 350px;
+}
+
+.side-bets-grid {
+    height: 500px;
+    width: auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.dc-pb-parent {
+    height: 200px;
+    width: 100%;
+    display: flex;
+}
+
+.dont-come-line {
+    width: 120px;
+    padding: 2px;
+    display: flex;
+}
+
+.dc-pb {
+    width: 100%;
+}
+
+.dont-come-row {
+    height: 60px;
+    padding: 2px;
+    display: flex;
+}
+
+.placebet-row {
+    height: 116px;
+    margin-top: 16px;
+    padding: 2px;
+    display: flex;
+}
+
+.test-container {
+    outline: 2px solid white;
+    height: 100px;
+    width:  100px;
+}
+/* ///////////////////////// BUTTONS ///////////////////////////////////////// */
+button {
+    background-color: transparent;
+    border: none;
+}
+.on-puck {
+    margin: -50px 0 0;
+    padding: 0;
+    position: relative;
+    z-index: -1;
+}
+
+
+
+#placebet-4, #placebet-5, #placebet-6,
+#placebet-8, #placebet-9, #placebet-10 {
+    outline: 2px solid white;
+    color: white;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+}
+
+#pb-4-chips, #pb-5-chips, #pb-6-chips,
+#pb-8-chips, #pb-9-chips, #pb-10-chips {
+    outline: 1px solid black;
+    color: yellow;
+    height: 40px;
+    font-size: 25px;
+    line-height: 40px;
+    text-align: center;
+    margin-top: -15px;
+}
+
+.dont-come {
+    outline: 2px solid white;
+    color: white;
+    line-height: 40px;
+    width: 100%;
+    z-index: 1;
+}
+
+#dc-4, #dc-5, #dc-6, #dc-8, #dc-9, #dc-10 {
+    position: relative;
+}
+
+
+.come {
+    outline: 2px solid white;
+    color: rgb(194, 6, 6);
+    font-weight: 900;
+    font-size: 35px;
+    height: 75px;
+    width: 746px;
+    line-height: 75px;
+    vertical-align: middle;
+    text-align: center;
+    margin: 5px 0 0 2px;
+}
+
+.field {
+    outline: 2px solid white;
+    color: yellow;
+    font-size: 20px;
+    height: 100px;
+    width: 746px;
+    line-height: 35px;
+    word-spacing: 15px;
+    vertical-align: middle;
+    text-align: center;
+    margin: 5px 0 0 2px;
+}
+
+.dont-pass {
+    outline: 2px solid white;
+    color: white;
+    font-size: 20px;
+    height: 35px;
+    width: 746px;
+    line-height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    margin: 15px 0 0 2px;
+}
+
+#pass-line {
+    outline: 2px solid white;
+    background-color: rgb(20, 90, 30);
+    color: yellow;
+    font-size: 30px;
+    font-weight: 600;
+    height: 50px;
+    width: 746px;
+    line-height: 50px;
+    word-spacing: 10px;
+    vertical-align: middle;
+    text-align: center;
+    margin: 5px 0 0 2px;
+}
+
+.seven-bet {
+    outline: 2px solid white;
+    color: white;
+    height: 50px;
+    width: 100%;
+    vertical-align: middle;
+}
+
+.hardways-bet, .craps-bet {
+    outline: 2px solid white;
+    color: white;
+    line-height: 10px;
+    padding-top: 12px;
+}
+
+.any-craps {
+    outline: 2px solid white;
+    color: white;
+    height: 50px;
+    width: 100%;
+}
+
+/* --------------------------Betting Section --------------------------*/
+.bet-container {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    
+}
+
+#pull-back-button {
+    outline: 2px solid black;
+    background-color: rgb(53, 69, 161);
+    border-color: rgb(53, 69, 161);
+    color: white;
+    font-size: 25px;
+    width: 85px;
+    height: 120px;
+    margin-top: 20px;
+    padding-right: 10px;
+    border-radius: 5px;
+    border-style: outset;
+    transition: background-color 0.1s ease, border-color 0.1s ease, 
+                transform 0.02s ease;
+}
+#pull-back-button:hover {
+    background-color: rgb(29, 49, 160);
+    border-color: rgb(29, 49, 160);
+}
+
+#bet-left {
+    width: 250px;
+    height: 125px;
+    margin: 10px;
+    justify-items: center;
+    font-size: 30px;
+    color: rgb(233, 229, 13);
+    font-weight: 600;
+    padding-top: 20px;
+    background-image: url('');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 140px 140px;
+}
+
+#staged-bet { 
+    padding-top: 30px;
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.bet-right {
+    width: 100%;
+    height: 130px;
+    display: grid;
+    grid-column: inherit;
+    grid-template-columns: 25% 25% 25% 25%;
+    margin: 10px;
+    padding: 10px 0;
+}
+
+#increment1, #decrement1, #increment5, 
+#decrement5, #twenty-five, #thirty, 
+#two-fifty, #one-hundred {
+    outline: 2px solid black;
+    border-radius: 5px;
+    height: 50px;
+    width: 80px;
+    font-weight: 600;
+    font-size: 22px;
+    border-style:outset;
+    transition: background-color 0.1s ease, border-color 0.1s ease,
+                transform 0.02s ease;
+}
+
+#increment1:active, #decrement1:active, #increment5:active, 
+#decrement5:active, #twenty-five:active, #thirty:active, 
+#two-fifty:active, #one-hundred:active, #pull-back-button:active {
+    transform: scale(0.97);
+}
+
+#increment1, #decrement1 {
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(255, 255, 255);
+}
+#increment1:hover, #decrement1:hover {
+    background-color: rgb(196, 196, 196);
+    border-color: rgb(196, 196, 196);
+}
+
+#increment5, #decrement5 {
+    background-color: rgb(145, 5, 0);
+    color: white;
+    border-color: rgb(145, 5, 0);
+}
+#increment5:hover, #decrement5:hover {
+    background-color: rgb(116, 22, 6);
+    border-color: rgb(116, 22, 6);
+}
+
+#twenty-five {
+    background-color: rgb(11, 153, 11);
+    border-color: rgb(11, 153, 11);
+}
+#twenty-five:hover {
+    background-color: rgb(6, 122, 6);
+    border-color: rgb(6, 122, 6);
+}
+#thirty {
+    background-color: rgb(199, 112, 14);
+    border-color: rgb(199, 112, 14);
+}
+#thirty:hover {
+    background-color: rgb(163, 91, 8);
+    border-color: rgb(163, 91, 8);
+}
+#two-fifty {
+    background-color: rgb(0, 87, 121);
+    border-color: rgb(0, 87, 121);
+    color: white;
+} 
+#two-fifty:hover {
+    background-color: rgb(1, 76, 105);
+    border-color: rgb(1, 76, 105);
+} 
+#one-hundred {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
+#one-hundred:hover {
+    background-color: rgb(34, 34, 34);
+}
+/* ^^^^^^^^^^^^^^^^^^^^^^^^^ END BETTING SECTION ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
+.bottom-container {
+    outline: 2px solid black;
+    background-color: rgb(20, 90, 30);
+    font-size: 25px;
+    width: 1200px;
+    min-height: 100px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.bankroll-label {
+    font-size: 35px;
+    margin: 40px 0 0 100px;
+}
+#bankroll {
+    font-size: 40px;
+    margin: 0 0 0 112px;
+}
+
+#roll-button {
+    outline: 2px solid black;
+    background-color: rgb(173, 143, 7);
+    color: white;
+    height: 120px;
+    width: 280px;
+    font-size: 50px;
+    font-weight: 600;
+    padding: 0 25px;
+    border-radius: 10px;
+    border-style: outset;
+    border-width: 10px;;
+    border-color: rgb(173, 143, 7);
+    margin-top: 30px;
+}
+#roll-button:hover {
+    background-color: rgb(155, 127, 5);
+    border-color: rgb(155, 127, 5);
+    transition: 0.05s ease-in;
+
+}
+#roll-button:active {
+    transform: scale(0.95);
+}
+
+#dice-display {
+    margin-right: 30px;
+}
+
+.testing-info {
+    width: 1200px;
+    font-size: 30px;
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
+#money-on-table {
+    margin-left: 10px;
+}
+
+#roll-box, #message-box {
+    width: 300px;
+    margin-left: 120px;
+}
