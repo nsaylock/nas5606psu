@@ -17,6 +17,7 @@ let gameOn = false;
 // Table Bet Storage Variables
 let passLineBet = 0;
 let placeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
+let payout = 0;
 
 
 // Numbers/Messages
@@ -48,7 +49,7 @@ const placeBetElement = {
     six: document.getElementById('placebet-6'),
     eight: document.getElementById('placebet-8'),
     nine: document.getElementById('placebet-9'),
-    ten: document.getElementById('placeet-10')
+    ten: document.getElementById('placebet-10')
 };
 const placeBetChipsDisplayElement = {
     four: document.getElementById('pb-4-chips'),
@@ -189,6 +190,7 @@ function pull_back_bet(amount) {
     bankroll += amount;
     moneyOnTable -= amount;
     moneyOnTableElement.textContent = '$' + moneyOnTable;
+    reset_money_on_table();
     reset_stagedBet();
     update_bankroll();
     play_decrement_sound();
@@ -202,6 +204,11 @@ function reset_stagedBet() {
     betElement.textContent = '$0';
     betElement.style.fontSize = '30px';
     check_for_chip_img();
+}
+
+function reset_money_on_table() {
+    moneyOnTable = 0;
+    moneyOnTableElement.textContent = '$' + moneyOnTable;
 }
 
 // Placing Bets on the table
@@ -229,19 +236,39 @@ function place_bet(selector) {
             case 4:
                 placeBet[4] = commit_bet(placeBet[4]);
                 placeBetChipsDisplayElement.four.textContent = '$' + placeBet[4];
-                
-
+                break;
+            case 5:
+                placeBet[5] = commit_bet(placeBet[5]);
+                placeBetChipsDisplayElement.five.textContent = '$' + placeBet[5];
+                break;
+            case 6:
+                placeBet[6] = commit_bet(placeBet[6]);
+                placeBetChipsDisplayElement.six.textContent = '$' + placeBet[6];
+                break;
+            case 8:
+                placeBet[8] = commit_bet(placeBet[8]);
+                placeBetChipsDisplayElement.eight.textContent = '$' + placeBet[8];
+                break;
+            case 9:
+                placeBet[9] = commit_bet(placeBet[9]);
+                placeBetChipsDisplayElement.nine.textContent = '$' + placeBet[9];
+                break;
+            case 10:
+                placeBet[10] = commit_bet(placeBet[10]);
+                placeBetChipsDisplayElement.ten.textContent = '$' + placeBet[10];
+                break;
         }
     }
 }
 // ^^^^^^^^^^ end placing bets ^^^^^^^^^^^^^^^^^^^
 
 function roll_dice() {
-    reset_stagedBet();
-    messageElement.textContent = '';
+    
     if (passLineBet == 0) {
         alert('You must play the pass line to roll')
     } else {
+        reset_stagedBet();
+        messageElement.textContent = '';
         dice1 = Math.floor(Math.random()*6) + 1;
         dice2 = Math.floor(Math.random()*6) + 1;
         sum = dice1 + dice2;
@@ -259,6 +286,8 @@ function roll_dice() {
 function score_roll() {
     if (gameOn == false) {
         come_out_roll();
+    } else {
+        point_roll();
     }
 }
 
@@ -267,6 +296,7 @@ function come_out_roll() {
         messageElement.textContent = 'Craps';
         passLineElement.textContent = original.passLineElement;
         passLineBet = 0;
+        reset_money_on_table();
     } else if (sum == 7 || sum == 11) {
         messageElement.textContent = 'You won $' + passLineBet;
         bankroll += passLineBet;
@@ -278,14 +308,91 @@ function come_out_roll() {
     }
 }
 
+function point_roll() {
+    if (sum == 7) {
+        clear_table();
+        gameOn = false;
+        remove_on_marker();
+    }
+    score_place_bets();
+}
+
+function clear_table() {
+    messageElement.textContent = 'Seven Out. All bets cleared.'
+    reset_money_on_table();
+
+    passLineElement.textContent = original.passLineElement;
+    passLineBet = 0;
+
+    placeBetChipsDisplayElement.four.textContent = '';
+    placeBet[4] = 0;
+    placeBetChipsDisplayElement.five.textContent = '';
+    placeBet[5] = 0;
+    placeBetChipsDisplayElement.six.textContent = '';
+    placeBet[6] = 0;
+    placeBetChipsDisplayElement.eight.textContent = '';
+    placeBet[8] = 0;
+    placeBetChipsDisplayElement.nine.textContent = '';
+    placeBet[9] = 0;
+    placeBetChipsDisplayElement.ten.textContent = '';
+    placeBet[10] = 0;
+
+}
+
+function score_place_bets() {
+    if (placeBet[4] != 0 && sum == 4) {
+        payout = placeBet[4]*9/5;
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = `Player wins $${payout}!`;
+    }
+    if (placeBet[5] != 0 && sum == 5) {
+        payout = placeBet[5]*7/5;
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = `Player wins $${payout}!`;
+    }
+    if (placeBet[6] != 0 && sum == 6) {
+        payout = placeBet[6]*7/6;
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = `Player wins $${payout}!`;
+    }
+    if (placeBet[8] != 0 && sum == 8) {
+        payout = placeBet[8]*7/6;
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = `Player wins $${payout}!`;
+    }
+    if (placeBet[9] != 0 && sum == 9) {
+        payout = placeBet[9]*7/5;
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = `Player wins $${payout}!`;
+        }
+    if (placeBet[10] != 0 && sum == 10) {
+        payout = placeBet[10]*9/5;
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = `Player wins $${payout}!`;
+    }
+    
+}
+
 function display_on_marker() {
     const onIMG = document.getElementById(`on-${target}`);
     onIMG.src = 'img/on.png';
-    onIMG.style.zIndex = 20;
+    onIMG.style.zIndex = '20';
     document.getElementById(`dc-${target}`).style.zIndex = '0';
     messageElement.textContent = `Point established on ${target}`;
-
 }
+function remove_on_marker() {
+    document.getElementById(`on-${target}`).src = 'img/on-placeholder.png';
+    document.getElementById(`on-${target}`).style.zIndex = '-1';
+    document.getElementById(`dc-${target}`).style.zIndex = '1';
+}
+
+
 
 // STOPPING HERE OBVIOUSLY THESE NEED TO BE ChANGED
 
@@ -313,6 +420,8 @@ passLineElement.addEventListener('click', (e) => {
     } else if (pullBackInProgress == true && gameOn == true) {
         alert('Cannont Pull Back Pass Line While Game is On.');
         reset_stagedBet();
+    } else if (passLineBet != 0) {
+        //Do nothing
     } else if (gameOn == false) {
         pass_line();
     } // else game is on and click does nothing
@@ -324,6 +433,65 @@ placeBetElement.four.addEventListener('click', (e) => {
         placeBet[4] = pull_back_bet(placeBet[4]);
     } else {
         place_bet(4);
+    }
+});
+placeBetElement.five.addEventListener('click', (e) => {
+    if (pullBackInProgress == true) {
+        placeBetChipsDisplayElement.five.textContent = '';
+        placeBet[5] = pull_back_bet(placeBet[5]);
+    } else {
+        if (stagedBet % 5 != 0) {
+            alert('5 pays out 7:5. Bet must be divisible by 5')
+        } else {
+            place_bet(5);
+        }
+    }
+});
+placeBetElement.six.addEventListener('click', (e) => {
+    if (pullBackInProgress == true) {
+        placeBetChipsDisplayElement.six.textContent = '';
+        placeBet[6] = pull_back_bet(placeBet[6]);
+    } else {
+        if (stagedBet % 6 != 0) {
+            alert('6 pays out 7:6. Bet must be divisible by 6')
+        } else {
+            place_bet(6);
+        }
+        
+    }
+});
+placeBetElement.eight.addEventListener('click', (e) => {
+    if (pullBackInProgress == true) {
+        placeBetChipsDisplayElement.eight.textContent = '';
+        placeBet[8] = pull_back_bet(placeBet[8]);
+    } else {
+        if (stagedBet % 6 != 0) {
+            alert('8 pays out 7:6. Bet must be divisible by 6')
+        } else {
+            place_bet(8);
+        }
+        
+    }
+});
+placeBetElement.nine.addEventListener('click', (e) => {
+    if (pullBackInProgress == true) {
+        placeBetChipsDisplayElement.nine.textContent = '';
+        placeBet[8] = pull_back_bet(placeBet[9]);
+    } else {
+        if (stagedBet % 5 != 0) {
+            alert('9 pays out 7:5. Bet must be divisible by 5')
+        } else {
+            place_bet(9);
+        }
+        
+    }
+});
+placeBetElement.ten.addEventListener('click', (e) => {
+    if (pullBackInProgress == true) {
+        placeBetChipsDisplayElement.ten.textContent = '';
+        placeBet[10] = pull_back_bet(placeBet[10]);
+    } else {
+        place_bet(10);
     }
 });
 
