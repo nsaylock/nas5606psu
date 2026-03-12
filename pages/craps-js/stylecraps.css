@@ -35,7 +35,7 @@ body::before {
 #main-area {
     outline: 10px solid rgb(1, 56, 1);
     background-color: rgb(20, 90, 30);
-    height: 620px;
+    height: 660px;
     width: 1200px;
     display: flex;
     justify-content: center;
@@ -128,7 +128,16 @@ button {
     margin-top: -15px;
 }
 
-.dont-come {
+#dont-come {
+    outline: 2px solid white;
+    color: white;
+    text-shadow: 2px 2px 0px black;
+    font-size: 18px;
+    line-height: 40px;
+    height: 239px;
+    width: 100%;
+}
+.dont-come-text {
     outline: 2px solid white;
     color: white;
     text-shadow: 2px 2px 0px black;
@@ -143,6 +152,22 @@ button {
 }
 
 
+.come-bet-display-row {
+    height: 40px;
+    width: 746px;
+    display: flex;
+    flex-direction: row;
+    margin: 1px 0 0 2px;
+}
+.come-boxes-text {
+    outline: 2px solid white;
+    height: 100%;
+    width: 100%;
+}
+#come-blank {
+    outline: none;
+}
+
 .come {
     outline: 2px solid white;
     color: rgb(194, 6, 6);
@@ -156,18 +181,32 @@ button {
     padding-bottom: 5px;
 }
 
-.field {
+#field {
     outline: 2px solid white;
     color: yellow;
     text-shadow: 2px 2px 0px black;
-    font-size: 25px;
     height: 100px;
     width: 746px;
     line-height: 35px;
+    margin: 5px 0 0 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.field-label {
+    font-size: 25px;
     word-spacing: 15px;
     vertical-align: middle;
     text-align: center;
-    margin: 5px 0 0 2px;
+    align-self: center;
+    margin-left: 170px;
+}
+#field-chips-display {
+    font-size: 30px;
+    line-height: 100px;
+    text-align: middle;
+    width: 100px;
+    margin-left: 70px;
 }
 
 .dont-pass {

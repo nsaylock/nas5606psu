@@ -20,6 +20,7 @@ let placeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let payout = 0;
 let hardwaysBet = {4:0, 6:0, 8:0, 10:0};
 let crapsBet = {2:0, 3:0, 11:0, 12:0};
+let fieldBet = 0;
 
 
 // Numbers/Messages
@@ -44,7 +45,6 @@ const pullBackButton = document.getElementById('pull-back-button');
 
 // Table Buttons
 const passLineElement = document.getElementById('pass-line');
-
 
 const placeBetElement = {
     four: document.getElementById('placebet-4'),
@@ -97,6 +97,9 @@ const crapsTextElement = {
     eleven: document.getElementById('craps-11-text'),
     twelve: document.getElementById('craps-12-text')
 }
+
+const fieldElement = document.getElementById('field');
+const fieldChipsDisplayElement = document.getElementById('field-chips-display');
 
 const original = {
     passLineElement: passLineElement.textContent,
@@ -252,6 +255,7 @@ function update_moneyOnTable() {
 
 // Placing Bets on the table
 
+
 function pass_line() {
     if (stagedBet >= minBet) {
         //if (passLineBet == 0) {
@@ -302,6 +306,19 @@ Pull back bet to change.`);
         }
     }
 }
+
+function field_bet() {
+    if (stagedBet < minBet) {
+        alert('The minimum bet is $' + minBet + '.');
+    } else if (fieldBet != 0) {
+        alert(`You already have a Place Bet on ${selector}. 
+Pull back bet to change.`);
+    } else {
+        fieldBet = commit_bet(fieldBet);
+        fieldChipsDisplayElement.textContent = '$' + fieldBet;
+    }
+}
+
 function hardways_bet(selector) {
     if (hardwaysBet[selector] != 0) {
         alert(`You already have a Hardways Bet on ${selector}. 
@@ -370,7 +387,42 @@ Pull back bet to change.`);
     }
 }
 
-// ^^^^^^^^^^ end placing bets ^^^^^^^^^^^^^^^^^^^
+function clear_table() {
+    messageElement.textContent = 'Seven Out. All bets cleared.'
+    update_moneyOnTable();
+
+    passLineElement.textContent = original.passLineElement;
+    passLineBet = 0;
+
+    placeBetChipsDisplayElement.four.textContent = '';
+    placeBet[4] = 0;
+    placeBetChipsDisplayElement.five.textContent = '';
+    placeBet[5] = 0;
+    placeBetChipsDisplayElement.six.textContent = '';
+    placeBet[6] = 0;
+    placeBetChipsDisplayElement.eight.textContent = '';
+    placeBet[8] = 0;
+    placeBetChipsDisplayElement.nine.textContent = '';
+    placeBet[9] = 0;
+    placeBetChipsDisplayElement.ten.textContent = '';
+    placeBet[10] = 0;
+
+    hardwaysTextElement.four.style = original.hardwaysTextElementStyle;
+    hardwaysTextElement.six.style = original.hardwaysTextElementStyle;
+    hardwaysTextElement.eight.style = original.hardwaysTextElementStyle;
+    hardwaysTextElement.ten.style = original.hardwaysTextElementStyle;
+    hardwaysTextElement.four.textContent = '7 to 1';
+    hardwaysTextElement.six.textContent = '9 to 1';
+    hardwaysTextElement.eight.textContent = '9 to 1';
+    hardwaysTextElement.ten.textContent = '7 to 1';
+    hardwaysBet[4] = 0;
+    hardwaysBet[6] = 0;
+    hardwaysBet[8] = 0;
+    hardwaysBet[10] = 0;
+}
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// ^^^^^^^^^^^^^^^^^^^^^^ end placing bets ^^^^^^^^^^^^^^^^^^^
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 function roll_dice() {
     if (passLineBet == 0) {
@@ -394,6 +446,18 @@ function roll_dice() {
         score_roll();
     }
 }
+}
+function display_on_marker() {
+    const onIMG = document.getElementById(`on-${target}`);
+    onIMG.src = 'img/on.png';
+    onIMG.style.zIndex = '20';
+    document.getElementById(`dc-${target}`).style.zIndex = '0';
+    messageElement.textContent = `Point established on ${target}`;
+}
+function remove_on_marker() {
+    document.getElementById(`on-${target}`).src = 'img/on-placeholder.png';
+    document.getElementById(`on-${target}`).style.zIndex = '-1';
+    document.getElementById(`dc-${target}`).style.zIndex = '1';
 }
 
 function display_roll_message() {
@@ -478,40 +542,10 @@ function score_roll() {
     }
     // One Roll Bets
     score_craps_bets();
-}
-
-function clear_table() {
-    messageElement.textContent = 'Seven Out. All bets cleared.'
-    update_moneyOnTable();
-
-    passLineElement.textContent = original.passLineElement;
-    passLineBet = 0;
-
-    placeBetChipsDisplayElement.four.textContent = '';
-    placeBet[4] = 0;
-    placeBetChipsDisplayElement.five.textContent = '';
-    placeBet[5] = 0;
-    placeBetChipsDisplayElement.six.textContent = '';
-    placeBet[6] = 0;
-    placeBetChipsDisplayElement.eight.textContent = '';
-    placeBet[8] = 0;
-    placeBetChipsDisplayElement.nine.textContent = '';
-    placeBet[9] = 0;
-    placeBetChipsDisplayElement.ten.textContent = '';
-    placeBet[10] = 0;
-
-    hardwaysTextElement.four.style = original.hardwaysTextElementStyle;
-    hardwaysTextElement.six.style = original.hardwaysTextElementStyle;
-    hardwaysTextElement.eight.style = original.hardwaysTextElementStyle;
-    hardwaysTextElement.ten.style = original.hardwaysTextElementStyle;
-    hardwaysTextElement.four.textContent = '7 to 1';
-    hardwaysTextElement.six.textContent = '9 to 1';
-    hardwaysTextElement.eight.textContent = '9 to 1';
-    hardwaysTextElement.ten.textContent = '7 to 1';
-    hardwaysBet[4] = 0;
-    hardwaysBet[6] = 0;
-    hardwaysBet[8] = 0;
-    hardwaysBet[10] = 0;
+    // Field Bet
+    if (fieldBet != 0) {
+        score_field_bet();
+    }
 }
 
 function score_place_bets() {
@@ -616,6 +650,25 @@ One Roll Bets Cleared.`;
     }
     reset_craps_bets_text();
 }
+function score_field_bet() {
+    // Lose
+    if (sum == 5 || sum == 6 || sum == 8) {
+        messageElement.textContent = 'Lost $' + fieldBet + ' to the field.';
+        fieldBet = lose_bet(fieldBet);
+        fieldChipsDisplayElement.textContent = '';
+    // Win
+    } else {
+        if (sum == 2 || sum == 12) {
+            payout = fieldBet * 2;
+        } else {
+            payout = fieldBet;
+        }
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = 'Won $' + payout + ' in the field.';
+    }
+
+}
 
 function reset_craps_bets_text() {
     if (oneRollWinner == 2) {
@@ -645,24 +698,10 @@ function reset_craps_bets_text() {
 }
 
 
-function display_on_marker() {
-    const onIMG = document.getElementById(`on-${target}`);
-    onIMG.src = 'img/on.png';
-    onIMG.style.zIndex = '20';
-    document.getElementById(`dc-${target}`).style.zIndex = '0';
-    messageElement.textContent = `Point established on ${target}`;
-}
-function remove_on_marker() {
-    document.getElementById(`on-${target}`).src = 'img/on-placeholder.png';
-    document.getElementById(`on-${target}`).style.zIndex = '-1';
-    document.getElementById(`dc-${target}`).style.zIndex = '1';
-}
+// ####################################################################################
+// ###################### EVENT LISTENERS #############################################
+// ####################################################################################
 
-
-
-// STOPPING HERE OBVIOUSLY THESE NEED TO BE ChANGED
-
-// Add event listeners
 incrementButton.addEventListener('click', incrementbyone);
 decrementButton.addEventListener('click', decrementbyone);
 plus5button.addEventListener('click', incrementbyfive);
@@ -676,7 +715,7 @@ rollButton.addEventListener('click', roll_dice);
 pullBackButton.addEventListener('click', pull_back_in_progress)
 
 
-// ################### Table ############################
+// -------------------------------- Table ---------------------------------
 
 
 passLineElement.addEventListener('click', (e) => {
@@ -761,7 +800,10 @@ placeBetElement.ten.addEventListener('click', (e) => {
     }
 });
 
-// ---------------- HARDWAYS -------------------------- HARDWAYS
+// Field
+fieldElement.addEventListener('click', field_bet);
+
+// ---------------- HARDWAYS -------------------------- HARDWAYS----------------------
 hardwaysElement.four.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
         hardwaysTextElement.four.textContent = '7 to 1';
@@ -799,7 +841,7 @@ hardwaysElement.ten.addEventListener('click', (e) => {
     }
 });
 
-// -------------- CRAPS BETS ---------------------------
+// -------------- CRAPS BETS --------------------------- CRAPS BETS -------------------
 crapsElement.two.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
         crapsTextElement.two.textContent = '30 to 1';
@@ -836,7 +878,7 @@ crapsElement.twelve.addEventListener('click', (e) => {
         craps_bet(12);
     }
 });
-// ^^^^^^^^^^^^^^^^ END Table ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// ^^^^^^^^^^^^^^^^^^^^^^^^^ END EVENT LISTENERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 

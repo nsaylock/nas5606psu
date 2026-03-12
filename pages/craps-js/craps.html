@@ -13,16 +13,16 @@
 <div class="main-left">
     <div class="dc-pb-parent">
         <div class="dont-come-line">
-            <button class="dont-come"><h2>Don't<br>Come</h2></button>
+            <button id="dont-come"><h2>Don't<br>Come</h2></button>
         </div>
         <div class="dc-pb">
             <div class="dont-come-row">
-                <div class="dont-come" id="dc-4"></div>
-                <div class="dont-come" id="dc-5"></div>
-                <div class="dont-come" id="dc-6"></div>
-                <div class="dont-come" id="dc-8"></div>
-                <div class="dont-come" id="dc-9"></div>
-                <div class="dont-come" id="dc-10"></div>
+                <div class="dont-come-text" id="dc-4"></div>
+                <div class="dont-come-text" id="dc-5"></div>
+                <div class="dont-come-text" id="dc-6"></div>
+                <div class="dont-come-text" id="dc-8"></div>
+                <div class="dont-come-text" id="dc-9"></div>
+                <div class="dont-come-text" id="dc-10"></div>
             </div>
             <div class="placebet-row">
                 <button id="placebet-4">
@@ -56,10 +56,23 @@
                     <div id="pb-10-chips"></div>
                 </button>
             </div>
+            
         </div>
     </div>
+    <div class="come-bet-display-row">
+                <div class="come-boxes-text" id="come-blank"></div>
+                <div class="come-boxes-text" id="come-4"></div>
+                <div class="come-boxes-text" id="come-5"></div>
+                <div class="come-boxes-text" id="come-6"></div>
+                <div class="come-boxes-text" id="come-8"></div>
+                <div class="come-boxes-text" id="come-9"></div>
+                <div class="come-boxes-text" id="come-10"></div>
+            </div>
     <button class="come">C O M E</button>
-    <button class="field">2 3 4 9 10 11 12<br>FIELD</button>
+    <button id="field">
+        <div class="field-label">2 3 4 9 10 11 12<br>FIELD</div>
+        <div id="field-chips-display"></div>
+    </button>
     <button class="dont-pass">Don't Pass Bar
         <img src="img/white_6.png" style="height: 25px; width: 25px;">
         <img src="img/white_6.png" style="height: 25px; width: 25px;">
