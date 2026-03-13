@@ -352,25 +352,25 @@ function remove_on_marker() {
 }
 
 function display_roll_message() {
-    if (dice1 == dice2) {
-            rollMessageElement.textContent = 'Hard ' + sum;
-        } else if (sum == 3) {
-            rollMessageElement.textContent = 'Craps ' + sum;
-        } else if (sum == 2) {
-            rollMessageElement.textContent = 'Snake Eyes';
-        } else if (sum == 7) {
-            if (gameOn == false) {
-                rollMessageElement.textContent = 'Good 7';
-            } else {
-                rollMessageElement.textContent = 'Ouch';
-            }
-        } else if (sum == 11) {
-            rollMessageElement.textContent = 'Yo';
-        } else if (sum == 12) {
-            rollMessageElement.textContent = 'Midnight';
+    if (sum == 2) {
+        rollMessageElement.textContent = 'Snake Eyes';
+    } else if (sum == 3) {
+        rollMessageElement.textContent = 'Craps ' + sum;
+    } else if (sum == 7) {
+        if (gameOn == false) {
+            rollMessageElement.textContent = 'Good 7';
         } else {
-            rollMessageElement.textContent = 'Player Rolled ' + sum;
+            rollMessageElement.textContent = 'Ouch';
         }
+    } else if (sum == 11) {
+        rollMessageElement.textContent = 'Yo \'leven';
+    } else if (sum == 12) {
+        rollMessageElement.textContent = 'Midnight';
+    } else if (dice1 == dice2) {
+        rollMessageElement.textContent = 'Hard ' + sum;
+    } else {
+        rollMessageElement.textContent = 'Player Rolled ' + sum;
+    }
 }
 
 function come_out_roll() {
