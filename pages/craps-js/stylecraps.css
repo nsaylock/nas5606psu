@@ -107,8 +107,7 @@ button {
     z-index: -1;
 }
 
-#placebet-4, #placebet-5, #placebet-6,
-#placebet-8, #placebet-9, #placebet-10 {
+#number-box {
     outline: 2px solid white;
     color: white;
     text-shadow: 2px 2px 0px black;
@@ -117,8 +116,8 @@ button {
     z-index: 0;
 }
 
-#pb-4-chips, #pb-5-chips, #pb-6-chips,
-#pb-8-chips, #pb-9-chips, #pb-10-chips {
+#come-4, #come-5, #come-6,
+#come-8, #come-9, #come-10 {
     color: yellow;
     height: 40px;
     font-size: 25px;
@@ -152,34 +151,69 @@ button {
 }
 
 
-.come-bet-display-row {
+
+
+.place-bet-display-row {
     height: 40px;
     width: 746px;
     display: flex;
     flex-direction: row;
     margin: 1px 0 0 2px;
 }
-.come-boxes-text {
+.place-boxes-text {
     outline: 2px solid white;
     height: 100%;
     width: 100%;
 }
-#come-blank {
+#place-blank {
     outline: none;
+    margin-right: 10px;
 }
-
-.come {
+#come {
     outline: 2px solid white;
+    height: 75px;
+    width: 746px;
+    
+    margin-left: 170px;
+    margin: 5px 0 0 2px;
+    padding-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+}
+.come-label {
     color: rgb(194, 6, 6);
     text-shadow: 2px 2px 0px black;    
     font-weight: 900;
     font-size: 50px;
-    height: 75px;
-    width: 746px;
+    vertical-align: middle;
     text-align: center;
-    margin: 5px 0 0 2px;
-    padding-bottom: 5px;
+    align-self: center;
+    margin-left: 265px;
 }
+
+#come-chips-display {
+    color: yellow;
+    text-shadow: 2px 2px 0px black;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 75px;
+    text-align: middle;
+    width: 100px;
+    margin-left: 89px;
+}
+#place-4, #place-5, #place-6,
+#place-8, #place-9, #place-10 {
+    color: yellow;
+    text-shadow: 2px 2px 0px black;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 40px;
+    text-align: center;
+    text-align: middle;
+}
+
+
+
 
 #field {
     outline: 2px solid white;
@@ -209,7 +243,7 @@ button {
     margin-left: 70px;
 }
 
-.dont-pass {
+#dont-pass {
     outline: 2px solid white;
     color: white;
     text-shadow: 2px 2px 0px black;
@@ -220,6 +254,18 @@ button {
     vertical-align: middle;
     text-align: center;
     margin: 15px 0 0 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.dont-pass-label {
+    margin-left: 150px;
+}
+#dont-pass-chips-display {
+    font-size: 25px;
+    color: yellow;
+    width: 100px;
+    margin-left: 50px;
 }
 
 #pass-line {
@@ -236,6 +282,16 @@ button {
     vertical-align: middle;
     text-align: center;
     margin: 5px 0 0 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.pass-line-label {
+    margin-left: 150px;
+}
+#pass-line-chips-display {
+    width: 100px;
+    margin-left: 50px;
 }
 
 /*.side-bets-dice-display {}*/

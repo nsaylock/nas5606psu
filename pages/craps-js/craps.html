@@ -25,59 +25,69 @@
                 <div class="dont-come-text" id="dc-10"></div>
             </div>
             <div class="placebet-row">
-                <button id="placebet-4">
+                <button id="number-box">
                     <img class='on-puck' id='on-4'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
                     <h1>4</h1>
-                    <div id="pb-4-chips"></div>
+                    <div id="come-4"></div>
                 </button>
-                <button id="placebet-5">
+                <button id="number-box">
                     <img class='on-puck' id='on-5'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
                     <h1>5</h1>
-                    <div id="pb-5-chips"></div>
+                    <div id="come-5"></div>
                 </button>
-                <button id="placebet-6">
+                <button id="number-box">
                     <img class='on-puck' id='on-6'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
                     <h1>6</h1>
-                    <div id="pb-6-chips"></div>
+                    <div id="come-6"></div>
                 </button>
-                <button id="placebet-8">
+                <button id="number-box">
                     <img class='on-puck' id='on-8'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
                     <h1>8</h1>
-                    <div id="pb-8-chips"></div>
+                    <div id="come-8"></div>
                 </button>
-                <button id="placebet-9">
+                <button id="number-box">
                     <img class='on-puck' id='on-9'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
                     <h1>9</h1>
-                    <div id="pb-9-chips"></div>
+                    <div id="come-9"></div>
                 </button>
-                <button id="placebet-10">
+                <button id="number-box">
                     <img class='on-puck' id='on-10'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
                     <h1>10</h1>
-                    <div id="pb-10-chips"></div>
+                    <div id="come-10"></div>
                 </button>
             </div>
             
         </div>
     </div>
-    <div class="come-bet-display-row">
-                <div class="come-boxes-text" id="come-blank"></div>
-                <div class="come-boxes-text" id="come-4"></div>
-                <div class="come-boxes-text" id="come-5"></div>
-                <div class="come-boxes-text" id="come-6"></div>
-                <div class="come-boxes-text" id="come-8"></div>
-                <div class="come-boxes-text" id="come-9"></div>
-                <div class="come-boxes-text" id="come-10"></div>
+    <div class="place-bet-display-row">
+                <div class="place-boxes-text" id="place-blank"></div>
+                <button class="place-boxes-text" id="place-4"></button>
+                <button class="place-boxes-text" id="place-5"></button>
+                <button class="place-boxes-text" id="place-6"></button>
+                <button class="place-boxes-text" id="place-8"></button>
+                <button class="place-boxes-text" id="place-9"></button>
+                <button class="place-boxes-text" id="place-10"></button>
             </div>
-    <button class="come">C O M E</button>
+    <button id="come">
+        <div class="come-label">C O M E</div>
+        <div id="come-chips-display"></div>
+    </button>
     <button id="field">
         <div class="field-label">2 3 4 9 10 11 12<br>FIELD</div>
         <div id="field-chips-display"></div>
     </button>
-    <button class="dont-pass">Don't Pass Bar
-        <img src="img/white_6.png" style="height: 25px; width: 25px;">
-        <img src="img/white_6.png" style="height: 25px; width: 25px;">
+    <button id="dont-pass">
+        <div class="dont-pass-label">
+            Don't Pass Bar
+            <img src="img/white_6.png" style="height: 25px; width: 25px;">
+            <img src="img/white_6.png" style="height: 25px; width: 25px;">
+        </div>
+        <div id="dont-pass-chips-display"></div>
     </button>
-    <button id="pass-line">PASS LINE</button>
+    <button id="pass-line">
+        <div class="pass-line-label">PASS LINE</div>
+        <div id="pass-line-chips-display"></div>
+    </button>
 
     <div class="bet-container">
         <button id="pull-back-button">Pull<br>Back</button>

@@ -16,11 +16,14 @@ let gameOn = false;
 
 // Table Bet Storage Variables
 let passLineBet = 0;
+let dontPassBet = 0;
 let placeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let payout = 0;
 let hardwaysBet = {4:0, 6:0, 8:0, 10:0};
 let crapsBet = {2:0, 3:0, 11:0, 12:0};
 let fieldBet = 0;
+let stagedComeBet = 0;
+let comeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 
 
 // Numbers/Messages
@@ -44,25 +47,26 @@ const rollButton = document.getElementById('roll-button');
 const pullBackButton = document.getElementById('pull-back-button');
 
 // Table Buttons
-const passLineElement = document.getElementById('pass-line');
 
+
+const numberBoxElement = document.getElementById('number-box');
+const comeBetChipsDisplayElement = {
+    four: document.getElementById('come-4'),
+    five: document.getElementById('come-5'),
+    six: document.getElementById('come-6'),
+    eight: document.getElementById('come-8'),
+    nine: document.getElementById('come-9'),
+    ten: document.getElementById('come-10')
+}
 const placeBetElement = {
-    four: document.getElementById('placebet-4'),
-    five: document.getElementById('placebet-5'),
-    six: document.getElementById('placebet-6'),
-    eight: document.getElementById('placebet-8'),
-    nine: document.getElementById('placebet-9'),
-    ten: document.getElementById('placebet-10')
+    four: document.getElementById('place-4'),
+    five: document.getElementById('place-5'),
+    six: document.getElementById('place-6'),
+    eight: document.getElementById('place-8'),
+    nine: document.getElementById('place-9'),
+    ten: document.getElementById('place-10')
 }
-const placeBetChipsDisplayElement = {
-    four: document.getElementById('pb-4-chips'),
-    five: document.getElementById('pb-5-chips'),
-    six: document.getElementById('pb-6-chips'),
-    eight: document.getElementById('pb-8-chips'),
-    nine: document.getElementById('pb-9-chips'),
-    ten: document.getElementById('pb-10-chips')
-}
-const dontComeChipsDisplayElement = {
+const dontcomeLineChipsDisplayElement = {
     four: document.getElementById('dc-4'),
     five: document.getElementById('dc-5'),
     six: document.getElementById('dc-6'),
@@ -98,8 +102,17 @@ const crapsTextElement = {
     twelve: document.getElementById('craps-12-text')
 }
 
+const comeElement = document.getElementById('come');
+const comeLineChipsDisplayElement = document.getElementById('come-chips-display');
+
 const fieldElement = document.getElementById('field');
 const fieldChipsDisplayElement = document.getElementById('field-chips-display');
+
+const dontPassBarElement = document.getElementById('dont-pass');
+const dontPassBarChipsDisplay = document.getElementById('dont-pass-chips-display');
+
+const passLineElement = document.getElementById('pass-line');
+const passLineChipsDisplay = document.getElementById('pass-line-chips-display');
 
 const original = {
     passLineElement: passLineElement.textContent,
@@ -116,7 +129,7 @@ const messageElement = document.getElementById('message-box');
 const moneyOnTableElement = document.getElementById('money-on-table');
 
 
-// Functions
+// $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
 function check_for_chip_img() {
     if (stagedBet == 0) {
         betContainerElement.style.backgroundImage = "url('')";
@@ -199,6 +212,8 @@ function play_increment_sound() {
     incrementSound.play();
 }
 
+
+// ####################### USEFUL FUNCTIONS ################################
 function update_bankroll() {
     bankroll -= stagedBet;
     bankrollElement.textContent = '$' + bankroll;
@@ -234,177 +249,44 @@ function pull_back_bet(amount) {
     amount = 0;
     return amount;
 }
-
 function lose_bet(amount) {
     moneyOnTable -= amount;
     update_moneyOnTable();
     amount = 0;
     return amount;
 }
-
 function reset_stagedBet() {
     stagedBet = 0;
     betElement.textContent = '$0';
     betElement.style.fontSize = '30px';
     check_for_chip_img();
 }
-
 function update_moneyOnTable() {
     moneyOnTableElement.textContent = '$' + moneyOnTable;
 }
-
-// Placing Bets on the table
-
-
-function pass_line() {
-    if (stagedBet >= minBet) {
-        //if (passLineBet == 0) {
-        passLineBet = commit_bet(passLineBet);
-        passLineElement.textContent = `PASS LINE $${passLineBet}`;
-        //} else {
-            //if (confirm('Do you want to change your bet?')) {
-            //    passLineBet = change_bet(passLineBet);
-            //    passLineElement.textContent = 'PASS LINE $' + passLineBet;
-            //}
-        //}
-    } else {
-        alert('The minimum bet is $' + minBet + '.');
-    }
-}
-function place_bet(selector) {
-    if (stagedBet < minBet) {
-        alert('The minimum bet is $' + minBet + '.');
-    } else if (placeBet[selector] != 0) {
-        alert(`You already have a Place Bet on ${selector}. 
-Pull back bet to change.`);
-    } else {
-        switch (selector) {
-            case 4:
-                placeBet[4] = commit_bet(placeBet[4]);
-                placeBetChipsDisplayElement.four.textContent = '$' + placeBet[4];
-                break;
-            case 5:
-                placeBet[5] = commit_bet(placeBet[5]);
-                placeBetChipsDisplayElement.five.textContent = '$' + placeBet[5];
-                break;
-            case 6:
-                placeBet[6] = commit_bet(placeBet[6]);
-                placeBetChipsDisplayElement.six.textContent = '$' + placeBet[6];
-                break;
-            case 8:
-                placeBet[8] = commit_bet(placeBet[8]);
-                placeBetChipsDisplayElement.eight.textContent = '$' + placeBet[8];
-                break;
-            case 9:
-                placeBet[9] = commit_bet(placeBet[9]);
-                placeBetChipsDisplayElement.nine.textContent = '$' + placeBet[9];
-                break;
-            case 10:
-                placeBet[10] = commit_bet(placeBet[10]);
-                placeBetChipsDisplayElement.ten.textContent = '$' + placeBet[10];
-                break;
-        }
-    }
-}
-
-function field_bet() {
-    if (stagedBet < minBet) {
-        alert('The minimum bet is $' + minBet + '.');
-    } else if (fieldBet != 0) {
-        alert(`You already have a Place Bet on ${selector}. 
-Pull back bet to change.`);
-    } else {
-        fieldBet = commit_bet(fieldBet);
-        fieldChipsDisplayElement.textContent = '$' + fieldBet;
-    }
-}
-
-function hardways_bet(selector) {
-    if (hardwaysBet[selector] != 0) {
-        alert(`You already have a Hardways Bet on ${selector}. 
-Pull back bet to change.`);
-    } else {
-        switch (selector) {
-            case 4:
-                hardwaysBet[4] = commit_bet(hardwaysBet[4]);
-                hardwaysTextElement.four.textContent = '$' + hardwaysBet[4];
-                hardwaysTextElement.four.style.color = 'yellow';
-                hardwaysTextElement.four.style.fontSize = '25px';
-                break;
-            case 6:
-                hardwaysBet[6] = commit_bet(hardwaysBet[6]);
-                hardwaysTextElement.six.textContent = '$' + hardwaysBet[6];
-                hardwaysTextElement.six.style.color = 'yellow';
-                hardwaysTextElement.six.style.fontSize = '25px';
-                break;
-            case 8:
-                hardwaysBet[8] = commit_bet(hardwaysBet[8]);
-                hardwaysTextElement.eight.textContent = '$' + hardwaysBet[8];
-                hardwaysTextElement.eight.style.color = 'yellow';
-                hardwaysTextElement.eight.style.fontSize = '25px';
-                break;
-            case 10:
-                hardwaysBet[10] = commit_bet(hardwaysBet[10]);
-                hardwaysTextElement.ten.textContent = '$' + hardwaysBet[10];
-                hardwaysTextElement.ten.style.color = 'yellow';
-                hardwaysTextElement.ten.style.fontSize = '25px';
-                break;
-            }
-        }
-    }
-
-function craps_bet(selector) {
-    if (crapsBet[selector] != 0) {
-        alert(`You already have a Craps Bet on ${selector}. 
-Pull back bet to change.`);
-    } else {
-        switch (selector) {
-            case 2:
-                crapsBet[2] = commit_bet(crapsBet[2]);
-                crapsTextElement.two.textContent = '$' + crapsBet[2];
-                crapsTextElement.two.style.color = 'yellow';
-                crapsTextElement.two.style.fontSize = '25px';
-                break;
-            case 3:
-                crapsBet[3] = commit_bet(crapsBet[3]);
-                crapsTextElement.three.textContent = '$' + crapsBet[3];
-                crapsTextElement.three.style.color = 'yellow';
-                crapsTextElement.three.style.fontSize = '25px';
-                break;
-            case 11:
-                crapsBet[11] = commit_bet(crapsBet[11]);
-                crapsTextElement.eleven.textContent = '$' + crapsBet[11];
-                crapsTextElement.eleven.style.color = 'yellow';
-                crapsTextElement.eleven.style.fontSize = '25px';
-                break;
-            case 12:
-                crapsBet[12] = commit_bet(crapsBet[12]);
-                crapsTextElement.twelve.textContent = '$' + crapsBet[12];
-                crapsTextElement.twelve.style.color = 'yellow';
-                crapsTextElement.twelve.style.fontSize = '25px';
-                break;
-        }
-    }
-}
-
 function clear_table() {
-    messageElement.textContent = 'Seven Out. All bets cleared.'
+    messageElement.textContent = 'Seven Out. All bets cleared.';
+    if (dontPassBet != 0) {
+        moneyOnTable = dontPassBet;
+    } else {
+        moneyOnTable = 0;
+    }
     update_moneyOnTable();
 
-    passLineElement.textContent = original.passLineElement;
+    passLineChipsDisplay.textContent = '';
     passLineBet = 0;
 
-    placeBetChipsDisplayElement.four.textContent = '';
+    placeBetElement.four.textContent = '';
     placeBet[4] = 0;
-    placeBetChipsDisplayElement.five.textContent = '';
+    placeBetElement.five.textContent = '';
     placeBet[5] = 0;
-    placeBetChipsDisplayElement.six.textContent = '';
+    placeBetElement.six.textContent = '';
     placeBet[6] = 0;
-    placeBetChipsDisplayElement.eight.textContent = '';
+    placeBetElement.eight.textContent = '';
     placeBet[8] = 0;
-    placeBetChipsDisplayElement.nine.textContent = '';
+    placeBetElement.nine.textContent = '';
     placeBet[9] = 0;
-    placeBetChipsDisplayElement.ten.textContent = '';
+    placeBetElement.ten.textContent = '';
     placeBet[10] = 0;
 
     hardwaysTextElement.four.style = original.hardwaysTextElementStyle;
@@ -419,13 +301,22 @@ function clear_table() {
     hardwaysBet[6] = 0;
     hardwaysBet[8] = 0;
     hardwaysBet[10] = 0;
-}
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-// ^^^^^^^^^^^^^^^^^^^^^^ end placing bets ^^^^^^^^^^^^^^^^^^^
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+    comeBetChipsDisplayElement.four.textContent = '';
+    comeBetChipsDisplayElement.five.textContent = '';
+    comeBetChipsDisplayElement.six.textContent = '';
+    comeBetChipsDisplayElement.eight.textContent = '';
+    comeBetChipsDisplayElement.nine.textContent = '';
+    comeBetChipsDisplayElement.ten.textContent = '';
+    for (const key in comeBet) {
+        comeBet[key] = 0;
+    }
+}
+
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%% DICE ROLL -- GAME ON/OFF %%%%%%%%%%%%%%%%%%%%%%%%%%
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN SCORE FUNCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function roll_dice() {
-    if (passLineBet == 0) {
+    if (passLineBet == 0 && dontPassBet == 0) {
         alert('You must play the pass line to roll')
     } else {
         reset_stagedBet();
@@ -441,11 +332,11 @@ function roll_dice() {
         diceRollSound = new Audio(`sounds/Dice_Roll_${soundSelector}.mp3`);
         diceRollSound.play();
         if (gameOn == false) {
-        come_out_roll();
-    } else {
-        score_roll();
+            come_out_roll();
+        } else {
+            score_roll();
+        }
     }
-}
 }
 function display_on_marker() {
     const onIMG = document.getElementById(`on-${target}`);
@@ -483,33 +374,58 @@ function display_roll_message() {
 }
 
 function come_out_roll() {
-    if (sum == 2 || sum == 3 || sum == 12) {
-        messageElement.textContent = 'Craps. Lose Pass Line';
-        passLineElement.textContent = original.passLineElement;
-        moneyOnTable -= passLineBet;
-        passLineBet = 0;
-        update_moneyOnTable();
-    } else if (sum == 7 || sum == 11) {
-        messageElement.textContent = 'You won $' + passLineBet;
-        bankroll += passLineBet;
-        update_bankroll();
-    } else {
-        target = sum; // Target assigned
-        gameOn = true;
-        display_on_marker();
+    if (dontPassBet != 0) {
+        if (sum == 7 || sum == 11) {
+            messageElement.textContent = 'Lose Dont Pass Line';
+            dontPassBarChipsDisplay.textContent = '';
+            moneyOnTable -= dontPassBet;
+            dontPassBet = 0;
+            update_moneyOnTable();
+        } else if (sum == 2 || sum == 3) {
+            messageElement.textContent = 'You won $' + dontPassBet;
+            bankroll += dontPassBet;
+            update_bankroll();
+        } else if (sum == 12) {
+            messageElement.textContent = 'Push on the Dont Pass Bar';
+        } else {
+            target = sum; // Target assigned
+            gameOn = true;
+            display_on_marker();
+        }
+    }
+    if (passLineBet != 0) {
+        if (sum == 2 || sum == 3 || sum == 12) {
+            messageElement.textContent = 'Craps. Lose Pass Line';
+            passLineChipsDisplay.textContent = '';
+            moneyOnTable -= passLineBet;
+            passLineBet = 0;
+            update_moneyOnTable();
+        } else if (sum == 7 || sum == 11) {
+            messageElement.textContent = 'You won $' + passLineBet;
+            bankroll += passLineBet;
+            update_bankroll();
+        } else {
+            target = sum; // Target assigned
+            gameOn = true;
+            display_on_marker();
+        }
     }
 }
 
 function score_roll() {
+    // Score bets on come line first in case of 7 out
+    
     if (sum == 7) {
+        on_the_come_line(); // To score that elusive come line before it gets cleared
         clear_table();
+        score_pass_line();
         gameOn = false;
         remove_on_marker();
     }
     // Place Bets
     for (const key in placeBet) {
         if (placeBet[key] !== 0) {
-        score_place_bets();
+            score_place_bets();
         break;
         }
     }
@@ -546,8 +462,106 @@ function score_roll() {
     if (fieldBet != 0) {
         score_field_bet();
     }
+
+    // Come Line
+    // Score the come bets that have been moved first so they don't get moved and
+    // scored on the same roll
+
+    // Come Bet Still working when game goes off - wins when number hit - loses on 7
+    // Come Bet odds go off when game is off
+    // Initial bet returned to the player when win
+   
+    if (comeBet[sum] != 0 && comeBet[sum] != undefined) {
+        score_come_bets();
+    }
+    
+    if (stagedComeBet != 0) {
+        on_the_come_line();
+    }
+
+    if (sum == target) {
+        gameOn = false;
+        score_pass_line();
+        remove_on_marker();
+    }
+    
 }
 
+// ########################################################################
+// #################### BET PLACEMENT AND SCORING #########################
+// ########################################################################
+
+// PASS LINE AND DONT PASS BAR
+function pass_line() {
+    if (stagedBet >= minBet) {
+        passLineBet = commit_bet(passLineBet);
+        passLineChipsDisplay.textContent = `$${passLineBet}`;
+    } else {
+        alert('The minimum bet is $' + minBet + '.');
+    }
+}
+function dont_pass_line() {
+    if (stagedBet >= minBet) {
+        dontPassBet = commit_bet(dontPassBet);
+        dontPassBarChipsDisplay.textContent = `$${dontPassBet}`;
+    } else {
+        alert('The minimum bet is $' + minBet + '.');
+    }
+}
+function score_pass_line() {
+    if (sum == 7) {
+        if (dontPassBet != 0) {
+            bankroll += dontPassBet;
+            update_bankroll();
+        }
+    } else {
+        if (dontPassBet != 0) {
+            dontPassBet = lose_bet(dontPassBet);
+            dontPassBarChipsDisplay.textContent = '';
+        }
+        if (passLineBet != 0) {
+            bankroll += passLineBet;
+            update_bankroll();
+        }
+    }
+}
+
+// PLACE BETS
+function place_bet(selector) {
+    if (stagedBet < minBet) {
+        alert('The minimum bet is $' + minBet + '.');
+    } else if (placeBet[selector] != 0) {
+        alert(`You already have a Place Bet on ${selector}. 
+Pull back bet to change.`);
+    } else {
+        switch (selector) {
+            case 4:
+                placeBet[4] = commit_bet(placeBet[4]);
+                placeBetElement.four.textContent = '$' + placeBet[4];
+                break;
+            case 5:
+                placeBet[5] = commit_bet(placeBet[5]);
+                placeBetElement.five.textContent = '$' + placeBet[5];
+                break;
+            case 6:
+                placeBet[6] = commit_bet(placeBet[6]);
+                placeBetElement.six.textContent = '$' + placeBet[6];
+                break;
+            case 8:
+                placeBet[8] = commit_bet(placeBet[8]);
+                placeBetElement.eight.textContent = '$' + placeBet[8];
+                break;
+            case 9:
+                placeBet[9] = commit_bet(placeBet[9]);
+                placeBetElement.nine.textContent = '$' + placeBet[9];
+                break;
+            case 10:
+                placeBet[10] = commit_bet(placeBet[10]);
+                placeBetElement.ten.textContent = '$' + placeBet[10];
+                break;
+        }
+    }
+}
 function score_place_bets() {
     if (placeBet[4] != 0 && sum == 4) {
         payout = placeBet[4]*9/5;
@@ -588,6 +602,40 @@ function score_place_bets() {
     
 }
 
+// HARDWAYS BETS
+function hardways_bet(selector) {
+    if (hardwaysBet[selector] != 0) {
+        alert(`You already have a Hardways Bet on ${selector}. 
+Pull back bet to change.`);
+    } else {
+        switch (selector) {
+            case 4:
+                hardwaysBet[4] = commit_bet(hardwaysBet[4]);
+                hardwaysTextElement.four.textContent = '$' + hardwaysBet[4];
+                hardwaysTextElement.four.style.color = 'yellow';
+                hardwaysTextElement.four.style.fontSize = '25px';
+                break;
+            case 6:
+                hardwaysBet[6] = commit_bet(hardwaysBet[6]);
+                hardwaysTextElement.six.textContent = '$' + hardwaysBet[6];
+                hardwaysTextElement.six.style.color = 'yellow';
+                hardwaysTextElement.six.style.fontSize = '25px';
+                break;
+            case 8:
+                hardwaysBet[8] = commit_bet(hardwaysBet[8]);
+                hardwaysTextElement.eight.textContent = '$' + hardwaysBet[8];
+                hardwaysTextElement.eight.style.color = 'yellow';
+                hardwaysTextElement.eight.style.fontSize = '25px';
+                break;
+            case 10:
+                hardwaysBet[10] = commit_bet(hardwaysBet[10]);
+                hardwaysTextElement.ten.textContent = '$' + hardwaysBet[10];
+                hardwaysTextElement.ten.style.color = 'yellow';
+                hardwaysTextElement.ten.style.fontSize = '25px';
+                break;
+            }
+        }
+}
 function score_hardways_bets() {
     if (hardwaysBet[4] != 0 && sum == 4) {
         payout = hardwaysBet[4]*7;
@@ -615,9 +663,43 @@ function score_hardways_bets() {
     }
 }
 
+// ONE ROLL BETS
+function craps_bet(selector) {
+    if (crapsBet[selector] != 0) {
+        alert(`You already have a Craps Bet on ${selector}. 
+Pull back bet to change.`);
+    } else {
+        switch (selector) {
+            case 2:
+                crapsBet[2] = commit_bet(crapsBet[2]);
+                crapsTextElement.two.textContent = '$' + crapsBet[2];
+                crapsTextElement.two.style.color = 'yellow';
+                crapsTextElement.two.style.fontSize = '25px';
+                break;
+            case 3:
+                crapsBet[3] = commit_bet(crapsBet[3]);
+                crapsTextElement.three.textContent = '$' + crapsBet[3];
+                crapsTextElement.three.style.color = 'yellow';
+                crapsTextElement.three.style.fontSize = '25px';
+                break;
+            case 11:
+                crapsBet[11] = commit_bet(crapsBet[11]);
+                crapsTextElement.eleven.textContent = '$' + crapsBet[11];
+                crapsTextElement.eleven.style.color = 'yellow';
+                crapsTextElement.eleven.style.fontSize = '25px';
+                break;
+            case 12:
+                crapsBet[12] = commit_bet(crapsBet[12]);
+                crapsTextElement.twelve.textContent = '$' + crapsBet[12];
+                crapsTextElement.twelve.style.color = 'yellow';
+                crapsTextElement.twelve.style.fontSize = '25px';
+                break;
+        }
+    }
+}
 function score_craps_bets() {
     for (const key in crapsBet) {
-        if (key == sum) {
+        if (key == sum && crapsBet[key] != 0) {
             switch (sum) {
                 case 2:
                     payout = crapsBet[2] * 30;
@@ -650,26 +732,6 @@ One Roll Bets Cleared.`;
     }
     reset_craps_bets_text();
 }
-function score_field_bet() {
-    // Lose
-    if (sum == 5 || sum == 6 || sum == 8) {
-        messageElement.textContent = 'Lost $' + fieldBet + ' to the field.';
-        fieldBet = lose_bet(fieldBet);
-        fieldChipsDisplayElement.textContent = '';
-    // Win
-    } else {
-        if (sum == 2 || sum == 12) {
-            payout = fieldBet * 2;
-        } else {
-            payout = fieldBet;
-        }
-        bankroll += payout;
-        update_bankroll();
-        messageElement.textContent = 'Won $' + payout + ' in the field.';
-    }
-
-}
-
 function reset_craps_bets_text() {
     if (oneRollWinner == 2) {
         crapsTextElement.two.textContent = 'WINNER!';
@@ -697,6 +759,114 @@ function reset_craps_bets_text() {
     }
 }
 
+// FIELD BETS
+function field_bet() { // Place staged bet on Field
+    if (stagedBet < minBet) {
+        alert('The minimum bet is $' + minBet + '.');
+    } else if (fieldBet != 0) {
+        alert(`You already have a Bet in the field. 
+Pull back bet to change.`);
+    } else {
+        fieldBet = commit_bet(fieldBet);
+        fieldChipsDisplayElement.textContent = '$' + fieldBet;
+    }
+}
+function score_field_bet() {
+    // Lose
+    if (sum == 5 || sum == 6 || sum == 8) {
+        messageElement.textContent = 'Lost $' + fieldBet + ' to the field.';
+        fieldBet = lose_bet(fieldBet);
+        fieldChipsDisplayElement.textContent = '';
+    // Win
+    } else {
+        if (sum == 2 || sum == 12) {
+            payout = fieldBet * 2;
+        } else {
+            payout = fieldBet;
+        }
+        bankroll += payout;
+        update_bankroll();
+        messageElement.textContent = 'Won $' + payout + ' in the field.';
+    }
+
+}
+
+// COME BETS
+
+function come_bet() { // Place the Staged Bet on the Come Line
+    if (stagedBet < minBet) {
+        alert('The minimum bet is $' + minBet + '.');
+    } else if (stagedComeBet != 0) {
+        alert(`You already have a Bet on the Come Line.
+Pull back bet to change.`);
+    } else {
+        stagedComeBet = commit_bet(stagedComeBet);
+        comeLineChipsDisplayElement.textContent = '$' + stagedComeBet;
+    }
+}
+function on_the_come_line() { // Score Bets on Come Line or Move if Point
+    if (sum == 2 || sum == 3 || sum == 12) {
+        messageElement.textContent = 'Craps. Lose Bet on the Come Line';
+        comeLineChipsDisplayElement.textContent = '';
+        moneyOnTable -= stagedComeBet;
+        stagedComeBet = 0;
+        update_moneyOnTable();
+    } else if (sum == 7 || sum == 11) {
+        messageElement.textContent = 'You won $' + stagedComeBet + ' on the Come Line';
+        bankroll += stagedComeBet;
+        update_bankroll();
+        if (sum == 7) {
+            bankroll += stagedComeBet;
+            update_bankroll();
+            stagedComeBet = lose_bet(stagedComeBet);
+            comeLineChipsDisplayElement.textContent = ''; // Make say bet returned until next roll
+        }
+    } else {
+        move_come_bet();
+        comeLineChipsDisplayElement.textContent = '';
+        stagedComeBet = 0;
+    }
+}
+function move_come_bet() { // Move the Come Line to Come Bet area
+    switch (sum) {
+        case 4:
+            comeBet[4] = stagedComeBet;
+            comeBetChipsDisplayElement.four.textContent = '$' + comeBet[4];
+            break;
+        case 5:
+            comeBet[5] = stagedComeBet;
+            comeBetChipsDisplayElement.five.textContent = '$' + comeBet[5];
+            break;
+        case 6:
+            comeBet[6] = stagedComeBet;
+            comeBetChipsDisplayElement.six.textContent = '$' + comeBet[6];
+            break;
+        case 8:
+            comeBet[8] = stagedComeBet;
+            comeBetChipsDisplayElement.eight.textContent = '$' + comeBet[8];
+            break;
+        case 9:
+            comeBet[9] = stagedComeBet;
+            comeBetChipsDisplayElement.nine.textContent = '$' + comeBet[9];
+            break;
+        case 10:
+            comeBet[10] = stagedComeBet;
+            comeBetChipsDisplayElement.ten.textContent = '$' + comeBet[10];
+            break;
+    }
+}
+function score_come_bets() { // Score Come Bets
+    payout = comeBet[sum];
+    bankroll += payout * 2;
+    update_bankroll();
+    messageElement.textContent = `Won $${payout} on the ${sum} Come Bet`;
+    comeBet[sum] = lose_bet(comeBet[sum]);
+}
+
+
+
+
+
 
 // ####################################################################################
 // ###################### EVENT LISTENERS #############################################
@@ -711,30 +881,13 @@ thirty.addEventListener('click', make_thirty);
 oneHundred.addEventListener('click', make_one_hundred);
 twoFifty.addEventListener('click', make_two_fifty);
 rollButton.addEventListener('click', roll_dice);
-
 pullBackButton.addEventListener('click', pull_back_in_progress)
-
 
 // -------------------------------- Table ---------------------------------
 
-
-passLineElement.addEventListener('click', (e) => {
-    if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
-        passLineElement.textContent = original.passLineElement;
-        passLineBet = pull_back_bet(passLineBet);
-    } else if (pullBackInProgress == true && gameOn == true) {
-        alert('Cannont Pull Back Pass Line While Game is On.');
-        reset_stagedBet();
-    } else if (passLineBet != 0) {
-        //Do nothing
-    } else if (gameOn == false) {
-        pass_line();
-    } // else game is on and click does nothing
-});
-
 placeBetElement.four.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        placeBetChipsDisplayElement.four.textContent = '';
+        placeBetElement.four.textContent = '';
         placeBet[4] = pull_back_bet(placeBet[4]);
     } else {
         place_bet(4);
@@ -742,7 +895,7 @@ placeBetElement.four.addEventListener('click', (e) => {
 });
 placeBetElement.five.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        placeBetChipsDisplayElement.five.textContent = '';
+        placeBetElement.five.textContent = '';
         placeBet[5] = pull_back_bet(placeBet[5]);
     } else {
         if (stagedBet % 5 != 0) {
@@ -754,7 +907,7 @@ placeBetElement.five.addEventListener('click', (e) => {
 });
 placeBetElement.six.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        placeBetChipsDisplayElement.six.textContent = '';
+        placeBetElement.six.textContent = '';
         placeBet[6] = pull_back_bet(placeBet[6]);
     } else {
         if (stagedBet % 6 != 0) {
@@ -767,7 +920,7 @@ placeBetElement.six.addEventListener('click', (e) => {
 });
 placeBetElement.eight.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        placeBetChipsDisplayElement.eight.textContent = '';
+        placeBetElement.eight.textContent = '';
         placeBet[8] = pull_back_bet(placeBet[8]);
     } else {
         if (stagedBet % 6 != 0) {
@@ -780,7 +933,7 @@ placeBetElement.eight.addEventListener('click', (e) => {
 });
 placeBetElement.nine.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        placeBetChipsDisplayElement.nine.textContent = '';
+        placeBetElement.nine.textContent = '';
         placeBet[8] = pull_back_bet(placeBet[9]);
     } else {
         if (stagedBet % 5 != 0) {
@@ -793,7 +946,7 @@ placeBetElement.nine.addEventListener('click', (e) => {
 });
 placeBetElement.ten.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        placeBetChipsDisplayElement.ten.textContent = '';
+        placeBetElement.ten.textContent = '';
         placeBet[10] = pull_back_bet(placeBet[10]);
     } else {
         place_bet(10);
@@ -803,7 +956,46 @@ placeBetElement.ten.addEventListener('click', (e) => {
 // Field
 fieldElement.addEventListener('click', field_bet);
 
+// Come Line
+// Cannot place bet on come line until point is established
+comeElement.addEventListener('click', (e) => {
+    if (gameOn == false) {
+        alert('You cannot bet on the Come Line until a point has been established.');
+    } else {
+        come_bet();
+    }
+});
+
+dontPassBarElement.addEventListener('click', (e) => {
+    if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
+        dontPassBarChipsDisplay.textContent = '';
+        dontPassBet = pull_back_bet(dontPassBet);
+    } else if (pullBackInProgress == true && gameOn == true) {
+        alert('Cannont Pull Back While Game is On.');
+        reset_stagedBet();
+    } else if (dontPassBet != 0) {
+        //Do nothing
+    } else if (gameOn == false) {
+        dont_pass_line();
+    } // else game is on and click does nothing
+});
+
+passLineElement.addEventListener('click', (e) => {
+    if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
+        passLineChipsDisplay.textContent = '';
+        passLineBet = pull_back_bet(passLineBet);
+    } else if (pullBackInProgress == true && gameOn == true) {
+        alert('Cannont Pull Back Pass Line While Game is On.');
+        reset_stagedBet();
+    } else if (passLineBet != 0) {
+        //Do nothing
+    } else if (gameOn == false) {
+        pass_line();
+    } // else game is on and click does nothing
+});
+
 // ---------------- HARDWAYS -------------------------- HARDWAYS----------------------
+
 hardwaysElement.four.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
         hardwaysTextElement.four.textContent = '7 to 1';
@@ -842,6 +1034,7 @@ hardwaysElement.ten.addEventListener('click', (e) => {
 });
 
 // -------------- CRAPS BETS --------------------------- CRAPS BETS -------------------
+
 crapsElement.two.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
         crapsTextElement.two.textContent = '30 to 1';
