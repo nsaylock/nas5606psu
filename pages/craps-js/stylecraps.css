@@ -107,7 +107,8 @@ button {
     z-index: -1;
 }
 
-#number-box {
+#number-box-4, #number-box-5, #number-box-6,
+#number-box-8, #number-box-9, #number-box-10 {
     outline: 2px solid white;
     color: white;
     font-size: 30px;
@@ -118,6 +119,11 @@ button {
     padding-bottom: 10px;
 }
 
+.come-bet-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 #come-4, #come-5, #come-6,
 #come-8, #come-9, #come-10 {
     color: rgb(194, 6, 6);
@@ -127,6 +133,15 @@ button {
     line-height: 40px;
     text-align: center;
     margin: 0 0 0 -5px;
+}
+#come-4-odds, #come-5-odds, #come-6-odds,
+#come-8-odds, #come-9-odds, #come-10-odds {
+    font-size: 20px;
+    font-weight: 600;
+    color: black;
+    padding-top: 20px;
+    text-shadow: none;
+    padding-left: 5px;
 }
 
 #dont-come {
@@ -601,4 +616,17 @@ button {
     line-height: 30px;
     vertical-align: middle;
     margin-bottom: 2px;
+}
+
+#message-2 {
+    color: rgba(255, 255, 255, 0.671);
+}
+#message-3 {
+    color: rgba(255, 255, 255, 0.733);
+}
+#message-4 {
+    color: rgba(255, 255, 255, 0.521);
+}
+#message-5 {
+    color: rgba(255, 255, 255, 0.356);
 }

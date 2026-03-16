@@ -1,3 +1,12 @@
+// Things to do:
+// 1) Make a clear bet button (easy)
+// 2) Make it so choosing to play the pass line odds will remove the existing place bet
+// -- on that number
+// 3) Need buy options on the 4 and 10
+// 4) probably dont come odds
+// 5) Come/Dont come odds formatting gets messed up
+
+
 // variables
 let stagedBet = 0;
 let bankroll = 500;
@@ -28,6 +37,7 @@ let crapsBet = {2:0, 3:0, 11:0, 12:0};
 let fieldBet = 0;
 let stagedComeBet = 0;
 let comeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
+let comeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let stagedDontComeBet = 0;
 let dontComeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 
@@ -60,7 +70,14 @@ const rollButton = document.getElementById('roll-button');
 const pullBackButton = document.getElementById('pull-back-button');
 
 // Table Buttons
-const numberBoxElement = document.getElementById('number-box');
+const numberBoxElement = {
+    four: document.getElementById('number-box-4'),
+    five: document.getElementById('number-box-5'),
+    six: document.getElementById('number-box-6'),
+    eight: document.getElementById('number-box-8'),
+    nine: document.getElementById('number-box-9'),
+    ten: document.getElementById('number-box-10')
+}
 const comeLineElement = document.getElementById('come');
 const comeLineChipsDisplayElement = document.getElementById('come-chips-display');
 const comeBetChipsDisplayElement = {
@@ -71,6 +88,15 @@ const comeBetChipsDisplayElement = {
     nine: document.getElementById('come-9'),
     ten: document.getElementById('come-10')
 }
+const comeBetOddsElement = {
+    four: document.getElementById('come-4-odds'),
+    five: document.getElementById('come-5-odds'),
+    six: document.getElementById('come-6-odds'),
+    eight: document.getElementById('come-8-odds'),
+    nine: document.getElementById('come-9-odds'),
+    ten: document.getElementById('come-10-odds')
+}
+
 const dontComeLineElement = document.getElementById('dont-come');
 const dontComeBottom = document.getElementById('place-blank');
 const dontComeLineChipsDisplayElement = document.getElementById('dont-come-chips-display');
@@ -82,6 +108,7 @@ const dontComeBetChipsDisplayElement = {
     nine: document.getElementById('dc-9'),
     ten: document.getElementById('dc-10')
 }
+
 const placeBetElement = {
     four: document.getElementById('place-4'),
     five: document.getElementById('place-5'),
@@ -140,6 +167,7 @@ const passLineOddsElement = document.getElementById('pass-line-odds');
 
 const original = {
     passLineElement: passLineElement.textContent,
+    betElementStyle: betElement.style,
     hardwaysTextElementStyle: hardwaysTextElement.four.textContent
 }
 
@@ -147,6 +175,8 @@ const original = {
 // $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
 
 function check_for_chip_img() {
+    betElement.style = original.betElementStyle;
+    pullBackInProgress = false;
     if (stagedBet == 0) {
         betContainerElement.style.backgroundImage = "url('')";
     } else {
@@ -175,7 +205,11 @@ function decrementbyone() {
     betElement.textContent = '$' + stagedBet;
     play_decrement_sound();
     check_for_chip_img();
+    } else {
+        betElement.textContent = '$0';
+        betElement.style = original.betElementStyle;
     }
+    
 }
 function decrementbyfive() {
     if (stagedBet >= 5) {
@@ -183,7 +217,11 @@ function decrementbyfive() {
     betElement.textContent = '$' + stagedBet;
     play_decrement_sound();
     check_for_chip_img();
+    } else {
+        betElement.textContent = '$0';
+        betElement.style = original.betElementStyle;
     }
+    
 }
 function make_twenty_five() {
     if (bankroll < 25) {
@@ -247,7 +285,6 @@ function commit_bet(betToPlace) {
     moneyOnTable += betToPlace; // Testing purposes
     update_moneyOnTable();
     update_bankroll();
-    reset_stagedBet();
     play_increment_sound();
     return betToPlace;
 }
@@ -266,10 +303,11 @@ function pull_back_bet(amount) {
     bankroll += amount;
     moneyOnTable -= amount;
     update_moneyOnTable();
-    reset_stagedBet();
     update_bankroll();
     play_decrement_sound();
     pullBackInProgress = false;
+    betElement.style = original.betElementStyle;
+    stagedBet = amount;
     amount = 0;
     return amount;
 }
@@ -338,6 +376,16 @@ function clear_table() {
     for (const key in comeBet) {
         comeBet[key] = 0;
     }
+    comeBetOddsElement.four.textContent = '';
+    comeBetOddsElement.five.textContent = '';
+    comeBetOddsElement.six.textContent = '';
+    comeBetOddsElement.eight.textContent = '';
+    comeBetOddsElement.nine.textContent = '';
+    comeBetOddsElement.ten.textContent = '';
+    for (const key in comeBetOdds) {
+        comeBetOdds[key] = 0;
+    }
+
 }
 function message_display(message) {
     document.getElementById('message-5').textContent = document.getElementById('message-4').textContent;
@@ -506,7 +554,6 @@ Place Bet Behind the Pass Line for better odds?`);
         message_display(message);
     }
 }
-
 
 function score_roll() {
     // Score bets on come line first in case of 7 out
@@ -946,6 +993,64 @@ Pull back bet to change.`);
         comeLineChipsDisplayElement.textContent = '$' + stagedComeBet;
     }
 }
+
+let goodToPlace = false;
+function come_bet_odds(selection) {
+    if (comeBet[selection] != 0) {
+        if (comeBetOdds[selection] != 0) {
+            alert('Come Bet Odds already placed, pull back bet to change');
+        } else {
+            // Good to place
+            switch (selection) {
+                case 5:
+                case 9:
+                    if (stagedBet % 2 != 0) {
+                        alert(`Come Bet Odds on ${selection} pays out 3:2.
+Bet must be divisible by 2`);
+                    } else {
+                        goodToPlace = true;
+                        if (selection == 5) {
+                            comeBetOddsElement.five.textContent = '$' + stagedBet;
+                        } else {
+                            comeBetOddsElement.nine.textContent = '$' + stagedBet;
+                        }
+                    }
+                    break;
+                case 6:
+                case 8:
+                    if (stagedBet % 5 != 0) {
+                        alert(`Come Bet Odds on ${selection} pays out 6:5.
+Bet must be divisible by 5`);
+                    } else {
+                        goodToPlace = true;
+                        if (selection == 6) {
+                            comeBetOddsElement.six.textContent = '$' + stagedBet;
+                        } else {
+                            comeBetOddsElement.eight.textContent = '$' + stagedBet;
+                        }
+                    }
+                    break;
+                case 4:
+                case 10:
+                    goodToPlace = true;
+                    if (selection == 4) {
+                            comeBetOddsElement.four.textContent = '$' + stagedBet;
+                        } else {
+                            comeBetOddsElement.ten.textContent = '$' + stagedBet;
+                        }
+                    break;
+            }
+            if (goodToPlace == true) {
+                comeBetOdds[selection] = stagedBet;
+                bankroll -= stagedBet;
+                update_bankroll();
+                moneyOnTable += stagedBet;
+                update_moneyOnTable();
+                reset_stagedBet();
+            }
+        }
+    }
+}
 function on_the_come_line() { // Score Bets on Come Line or Move if Point
     if (sum == 2 || sum == 3 || sum == 12) {
         message = 'Craps. Lose Bet on the Come Line';
@@ -1006,6 +1111,62 @@ function score_come_bets() { // Score Come Bets
     message = `Won $${payout} on the ${sum} Come Bet`;
     message_display(message);
     comeBet[sum] = lose_bet(comeBet[sum]);
+    switch (sum) {
+        case 4:
+            comeBetChipsDisplayElement.four.textContent = '';
+            break;
+        case 5:
+            comeBetChipsDisplayElement.five.textContent = '';
+            break;
+        case 6:
+            comeBetChipsDisplayElement.six.textContent = '';
+            break;
+        case 8:
+            comeBetChipsDisplayElement.eight.textContent = '';
+            break;
+        case 9:
+            comeBetChipsDisplayElement.nine.textContent = '';
+            break;
+        case 10:
+            comeBetChipsDisplayElement.ten.textContent = '';
+            break;
+    }
+    if (comeBetOdds[sum] != 0) {
+        switch (sum) {
+            case 4:
+            case 10:
+                payout = comeBetOdds[sum] * 2;
+                if (sum == 4) {
+                    comeBetOddsElement.four.textContent = '';
+                } else {
+                    comeBetOddsElement.ten.textContent = '';
+                }
+                break;
+            case 5:
+            case 9:
+                payout = comeBetOdds[sum] * 3 / 2;
+                if (sum == 5) {
+                    comeBetOddsElement.five.textContent = '';
+                } else {
+                    comeBetOddsElement.nine.textContent = '';
+                }
+                break;
+            case 6:
+            case 8:
+                payout = comeBetOdds[sum] * 6 / 5;
+                if (sum == 6) {
+                    comeBetOddsElement.six.textContent = '';
+                } else {
+                    comeBetOddsElement.eight.textContent = '';
+                }
+                break;
+        }
+        bankroll += (payout + comeBetOdds[sum]);
+        update_bankroll();
+        message = `Won $${payout} on the ${sum} Come Bet Odds`;
+        message_display(message);
+        comeBetOdds[sum] = lose_bet(comeBetOdds[sum]);
+    }
 }
 
 function dont_come_bet() {
@@ -1217,6 +1378,79 @@ dontComeBottom.addEventListener('click', (e) => {
 
 // Come Line
 // Cannot place bet on come line until point is established
+numberBoxElement.four.addEventListener('click', (e) => {
+    // need pull back bet
+    if (stagedBet < minBet && pullBackInProgress != true) {
+        alert('Minimum Bet is $' + minBet);
+    } else if (pullBackInProgress == true) {
+        comeBetOddsElement.four.textContent = '';
+        comeBetOdds[4] = pull_back_bet(comeBetOdds[4]);
+    } else if (stagedBet == 0) {
+        // Do nothing
+    } else {
+        come_bet_odds(4);
+    }
+});
+numberBoxElement.five.addEventListener('click', (e) => {
+    if (stagedBet < minBet && pullBackInProgress != true) {
+        alert('Minimum Bet is $' + minBet);
+    } else if (pullBackInProgress == true) {
+        comeBetOddsElement.five.textContent = '';
+        comeBetOdds[5] = pull_back_bet(comeBetOdds[5]);
+    } if (stagedBet == 0) {
+        // Do nothing
+    } else {
+        come_bet_odds(5);
+    }
+});
+numberBoxElement.six.addEventListener('click', (e) => {
+    if (stagedBet < minBet && pullBackInProgress != true) {
+        alert('Minimum Bet is $' + minBet);
+    } else if (pullBackInProgress == true) {
+        comeBetOddsElement.six.textContent = '';
+        comeBetOdds[6] = pull_back_bet(comeBetOdds[6]);
+    } else if (stagedBet == 0) {
+        // Do nothing
+    } else {
+        come_bet_odds(6);
+    }
+});
+numberBoxElement.eight.addEventListener('click', (e) => {
+    if (stagedBet < minBet && pullBackInProgress != true) {
+        alert('Minimum Bet is $' + minBet);
+    } else if (pullBackInProgress == true) {
+        comeBetOddsElement.eight.textContent = '';
+        comeBetOdds[8] = pull_back_bet(comeBetOdds[8]);
+    } else if (stagedBet == 0) {
+        // Do nothing
+    } else {
+        come_bet_odds(8);
+    }
+});
+numberBoxElement.nine.addEventListener('click', (e) => {
+    if (stagedBet < minBet && pullBackInProgress != true) {
+        alert('Minimum Bet is $' + minBet);
+    } else if (pullBackInProgress == true) {
+        comeBetOddsElement.nine.textContent = '';
+        comeBetOdds[9] = pull_back_bet(comeBetOdds[9]);
+    } else if (stagedBet == 0) {
+        // Do nothing
+    } else {
+        come_bet_odds(9);
+    }
+});
+numberBoxElement.ten.addEventListener('click', (e) => {
+    if (stagedBet < minBet && pullBackInProgress != true) {
+        alert('Minimum Bet is $' + minBet);
+    } else if (pullBackInProgress == true) {
+        comeBetOddsElement.ten.textContent = '';
+        comeBetOdds[10] = pull_back_bet(comeBetOdds[10]);
+    } else if (stagedBet == 0) {
+        // Do nothing
+    } else {
+        come_bet_odds(10);
+    }
+});
 comeLineElement.addEventListener('click', (e) => {
     if (gameOn == false) {
         alert('You cannot bet on the Come Line until a point has been established.');
