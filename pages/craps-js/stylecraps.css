@@ -435,14 +435,15 @@ button {
     height: 130px;
     display: grid;
     grid-column: inherit;
-    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-columns: 20% 20% 20% 20% 20%;
     margin: 10px;
     padding: 10px 0;
 }
 
 #increment1, #decrement1, #increment5, 
 #decrement5, #twenty-five, #thirty, 
-#two-fifty, #one-hundred {
+#two-fifty, #one-hundred, #clear-bet,
+#five-hundred {
     outline: 2px solid black;
     border-radius: 5px;
     height: 50px;
@@ -454,10 +455,31 @@ button {
                 transform 0.02s ease;
 }
 
+
 #increment1:active, #decrement1:active, #increment5:active, 
 #decrement5:active, #twenty-five:active, #thirty:active, 
-#two-fifty:active, #one-hundred:active, #pull-back-button:active {
+#two-fifty:active, #one-hundred:active, #pull-back-button:active,
+#clear-bet:active, #five-hundred:active {
     transform: scale(0.97);
+}
+#clear-bet {
+    background-color: rgb(20, 90, 30);
+    border-color: rgb(20, 90, 30);
+    font-size: 22px;
+}
+#clear-bet:hover {
+    background-color: rgb(45, 167, 63);
+    border-color: rgb(45, 167, 63);
+}
+
+#five-hundred {
+    color: white;
+    background-color: rgb(65, 5, 134);
+    border-color: rgb(65, 5, 134);
+}
+#five-hundred:hover {
+    background-color: rgb(89, 23, 163);
+    border-color: rgb(89, 23, 163);
 }
 
 #increment1, #decrement1 {

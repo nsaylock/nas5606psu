@@ -68,6 +68,7 @@ const oneHundred = document.getElementById('one-hundred');
 const twoFifty = document.getElementById('two-fifty');
 const rollButton = document.getElementById('roll-button');
 const pullBackButton = document.getElementById('pull-back-button');
+const clearBetButton = document.getElementById('clear-bet');
 
 // Table Buttons
 const numberBoxElement = {
@@ -300,14 +301,14 @@ function pull_back_in_progress() {
     pullBackInProgress = true;
 }
 function pull_back_bet(amount) {
+    stagedBet = 0;
     bankroll += amount;
     moneyOnTable -= amount;
     update_moneyOnTable();
     update_bankroll();
-    play_decrement_sound();
-    pullBackInProgress = false;
-    betElement.style = original.betElementStyle;
-    stagedBet = amount;
+    if (amount != 0) {
+        play_decrement_sound();
+    }
     amount = 0;
     return amount;
 }
@@ -1288,7 +1289,8 @@ thirty.addEventListener('click', make_thirty);
 oneHundred.addEventListener('click', make_one_hundred);
 twoFifty.addEventListener('click', make_two_fifty);
 rollButton.addEventListener('click', roll_dice);
-pullBackButton.addEventListener('click', pull_back_in_progress)
+pullBackButton.addEventListener('click', pull_back_in_progress);
+clearBetButton.addEventListener('click', reset_stagedBet);
 
 // -------------------------------- Table ---------------------------------
 
@@ -1565,7 +1567,7 @@ crapsElement.two.addEventListener('click', (e) => {
 });
 crapsElement.three.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        crapsTextElement.three.textContent = '30 to 1';
+        crapsTextElement.three.textContent = '15 to 1';
         crapsTextElement.three.style = original.hardwaysTextElementStyle;
         crapsBet[3] = pull_back_bet(crapsBet[3]);
     } else {
@@ -1574,7 +1576,7 @@ crapsElement.three.addEventListener('click', (e) => {
 });
 crapsElement.eleven.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
-        crapsTextElement.eleven.textContent = '30 to 1';
+        crapsTextElement.eleven.textContent = '15 to 1';
         crapsTextElement.eleven.style = original.hardwaysTextElementStyle;
         crapsBet[11] = pull_back_bet(crapsBet[11]);
     } else {
