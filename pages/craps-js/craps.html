@@ -13,7 +13,10 @@
 <div class="main-left">
     <div class="dc-pb-parent">
         <div class="dont-come-line">
-            <button id="dont-come"><h2>Don't<br>Come</h2></button>
+            <button id="dont-come">
+                <div class="dont-come-label">Don't Come</div>
+                <div id="dont-come-chips-display"></div>
+            </button>
         </div>
         <div class="dc-pb">
             <div class="dont-come-row">
@@ -27,32 +30,32 @@
             <div class="placebet-row">
                 <button id="number-box">
                     <img class='on-puck' id='on-4'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
-                    <h1>4</h1>
+                    4
                     <div id="come-4"></div>
                 </button>
                 <button id="number-box">
                     <img class='on-puck' id='on-5'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
-                    <h1>5</h1>
+                    5
                     <div id="come-5"></div>
                 </button>
                 <button id="number-box">
                     <img class='on-puck' id='on-6'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
-                    <h1>6</h1>
+                    6
                     <div id="come-6"></div>
                 </button>
                 <button id="number-box">
                     <img class='on-puck' id='on-8'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
-                    <h1>8</h1>
+                    8
                     <div id="come-8"></div>
                 </button>
                 <button id="number-box">
                     <img class='on-puck' id='on-9'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
-                    <h1>9</h1>
+                    9
                     <div id="come-9"></div>
                 </button>
                 <button id="number-box">
                     <img class='on-puck' id='on-10'src="img/on-placeholder.png" style="height: 50px; width: 75px;">
-                    <h1>10</h1>
+                    10
                     <div id="come-10"></div>
                 </button>
             </div>
@@ -88,7 +91,7 @@
         <div class="pass-line-label">PASS LINE</div>
         <div id="pass-line-chips-display"></div>
     </button>
-
+    <button id="pass-line-odds"></button>
     <div class="bet-container">
         <button id="pull-back-button">Pull<br>Back</button>
         <div id="bet-left">
@@ -173,6 +176,7 @@
         </button>
     </div>
     <button id="any-craps"><h2>Any Craps</h2></button>
+    <img id="off-puck" src="img/off.png">
 
 
 
@@ -194,7 +198,13 @@
     Money On Table
     <div id="money-on-table">$0</div>
     <div id="roll-box"></div>
-    <div id="message-box"></div>
+    <div id="message-box">
+        <div id="message-1"></div>
+        <div id="message-2"></div>
+        <div id="message-3"></div>
+        <div id="message-4"></div>
+        <div id="message-5"></div>
+    </div>
 </div>
 
 
