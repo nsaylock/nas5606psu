@@ -33,7 +33,6 @@ body::before {
 }
 
 #main-area {
-    outline: 10px solid rgb(1, 56, 1);
     background-color: rgb(20, 90, 30);
     min-height: 705px;
     width: 1200px;
@@ -41,11 +40,20 @@ body::before {
     flex-direction: column;
     justify-content: center;
     padding: 2px 20px 20px 20px;
+    position: absolute;
+    top: 0px;
 
 }
 
+#main-area, .bottom-container {
+    border-color: rgb(1, 56, 1);
+    border-width: 10px;
+    border-style:solid;
+    border-radius: 20px;
+}
+
 .bonus-container {
-    height: 80px;
+    min-height: 75px;
     margin: 10px 20px 20px 0;
     display: flex;
     flex-direction: row;
@@ -60,10 +68,13 @@ body::before {
     box-shadow: 5px 5px 5px black;
     color: gold;
     background-color: rgb(20, 90, 30);
+    border-color: rgb(20, 90, 30);
+    border-width: 3px;
+    border-style: solid;
     height: 40px;
     width: 40px;
     line-height: 40px;
-    border-radius: 20px;
+    border-radius: 23px;
     margin: 0 6px;
     text-align: middle;
     text-align: center;
@@ -81,28 +92,59 @@ body::before {
     text-shadow: 2px 2px 0px black;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 55px 55px;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 22px;
+    background-size: 80px 80px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
     font-weight: 600;
     text-align: center;
     text-align: middle;
     line-height: 28px;
     height: 60px;
     width: 140px;
+    z-index: 0;
+    position: relative;
+    padding-top: 5px;
 }
-#small-chips {
+#first {
+    /* all small numbers spacing*/
+    margin-left: 20px;
+}
+#second {
+    /* make em all numbers spacing*/
+    margin: 0 6px;
+}
+#third {
+    /* all tall numbers spacing*/
+    margin-right: 20px;
+}
+#small-button, #all-button, #tall-button {
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: gold;
+    height: 105px;
+    width:140px;
+    text-shadow: 2px 2px 0px black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    text-align: middle;
+    line-height: 28px;
+    z-index: 10;
+    position: absolute;
+    top: -18px;
+    left: 0;
+}
+#small-button {
     background-image: url('');
-    margin: 0 0 0 20px;
+}
 
-}
-#all-chips {
+#all-button {
     background-image: url('');
-    margin: 0 5px;
 }
-#tall-chips {
+#tall-button {
     background-image: url('');
-    margin: 0 20px 0 0;
 }
 
 
@@ -311,7 +353,7 @@ button {
     vertical-align: middle;
     text-align: center;
     align-self: center;
-    margin-left: 265px;
+    margin-left: 255px;
 }
 
 #come-chips-display {
@@ -342,7 +384,7 @@ button {
     outline: 2px solid white;
     color: yellow;
     text-shadow: 2px 2px 0px black;
-    height: 100px;
+    height: 80px;
     width: 746px;
     line-height: 35px;
     margin: 5px 0 0 2px;
@@ -564,14 +606,14 @@ button {
 }
 
 #five-hundred {
-    outline: 2px solid gold;
-    color: white;
+    color: gold;
     background-color: rgb(65, 5, 134);
-    border-color: gold;
+    border-color: rgb(65, 5, 134);
 }
 #five-hundred:hover {
-    background-color: rgb(89, 23, 163);
-    border-color: rgb(89, 23, 163);
+    color: rgb(65, 5, 134);
+    background-color: goldenrod;
+    border-color: goldenrod;
 }
 
 #increment1, #decrement1 {
@@ -629,17 +671,19 @@ button {
 /* ^^^^^^^^^^^^^^^^^^^^^^^^^ END BETTING SECTION ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 .bottom-container {
-    border-color: rgb(1, 56, 1);
-    border-style: solid;
     border-width: 0 10px 10px 10px;
+    border-radius: 0 0 20px 20px;
     background-color: rgb(20, 90, 30);
     font-size: 25px;
     width: 1200px;
     min-height: 110px;
-    padding: 10px 20px;
+    padding: 15px 20px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    position: absolute;
+    top: 825px;
+
 }
 
 .bankroll-container {
@@ -704,31 +748,39 @@ button {
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     width: 1200px;
+    height: 150px;
     font-size: 30px;
     display: flex;
     flex-direction: row;
-    padding: 20px;
-    margin: 20px;
+    padding: 5px 20px;
+    margin: 5px 20px 20px;
+    position: absolute;
+    top: 1010px;
+}
+
+.money-label {
+    outline: 2px solid white;
+    margin: 30px 0 0 10px;
+    width: 218px;
+    height: 70px;
+    padding: 5px;
+    margin-left: 35px;
+    border-radius: 5px;
+
 }
 #money-on-table {
     /* Bottom left shows how much money is currently on table*/
-    width: 100px;
-    margin-left: 10px;
-}
-
-#roll-box {
-    /*text display shows what number was rolled and what was scored (won $25, 7 out, etc)*/
-    width: 300px;
-    margin-left: 90px;
+    width: 210px;
     text-align: center;
 }
 
 #message-box {
-    width: 350px;
-    margin-left: 100px;
+    width: 475px;
+    margin-left: 70px;
     font-size: 20px;
     line-height: 30px;
     vertical-align: middle;
+    text-align: center;
     margin-bottom: 2px;
 }
 

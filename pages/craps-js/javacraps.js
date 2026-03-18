@@ -41,6 +41,7 @@ let goodToPlace = false;
 //let moveDCBet = false;
 let gameOn = false;
 
+
 // Table Bet Storage Variables
 let passLineBet = 0;
 let passLineOdds = 0;
@@ -57,6 +58,17 @@ let stagedDontComeBet = 0;
 let dontComeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let dontComeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 
+let smallNumbersHit = {2:false, 3:false, 4:false, 5:false, 6:false};
+let tallNumbersHit = {8:false, 9:false, 10:false, 11:false, 12:false};
+let smallNumbersBet = 0;
+let allSmallTrue = false;
+let allSmallPaid = false;
+let allNumbersBet = 0;
+let makeEmAllPaid = false;
+let tallNumbersBet = 0;
+let allTallTrue = false;
+let allTallPaid = false;
+
 
 // Numbers/Messages
 const betElement = document.getElementById('staged-bet');
@@ -66,7 +78,8 @@ const bankrollElement = document.getElementById('bankroll');
 const dice1Element = document.getElementById('dice1');
 const dice2Element = document.getElementById('dice2');
 
-const rollMessageElement = document.getElementById('roll-box');
+//const rollMessageElement = document.getElementById('roll-box');
+// Goodbye roll box
 //const messageElement = document.getElementById('message-box');
 // Testing Elements
 const moneyOnTableElement = document.getElementById('money-on-table');
@@ -87,6 +100,22 @@ const pullBackButton = document.getElementById('pull-back-button');
 const clearBetButton = document.getElementById('clear-bet');
 
 // Table Buttons
+const allNumbersCircles = {
+    two: document.getElementById('small-2'),
+    three: document.getElementById('small-3'),
+    four: document.getElementById('small-4'),
+    five: document.getElementById('small-5'),
+    six: document.getElementById('small-6'),
+    eight: document.getElementById('small-8'),
+    nine: document.getElementById('small-9'),
+    ten: document.getElementById('small-10'),
+    eleven: document.getElementById('small-11'),
+    twelve: document.getElementById('small-12')
+}
+const smallNumbersButton = document.getElementById('small-button');
+const allNumbersButton = document.getElementById('all-button');
+const tallNumbersButton = document.getElementById('tall-button');
+
 const numberBoxElement = {
     four: document.getElementById('number-box-4'),
     five: document.getElementById('number-box-5'),
@@ -359,8 +388,17 @@ function reset_stagedBet() {
 function update_moneyOnTable() {
     moneyOnTableElement.textContent = '$' + moneyOnTable;
 }
+function message_display(message) {
+    rollName = display_roll_message(sum);
+    newMessage = rollName + ' - ' + message;
+    document.getElementById('message-5').textContent = document.getElementById('message-4').textContent;
+    document.getElementById('message-4').textContent = document.getElementById('message-3').textContent;
+    document.getElementById('message-3').textContent = document.getElementById('message-2').textContent;
+    document.getElementById('message-2').textContent = document.getElementById('message-1').textContent;
+    document.getElementById('message-1').textContent = newMessage;
+}
 function clear_table() {
-    message = 'All bets cleared.';
+    message = 'All bets cleared';
     message_display(message);
     if (dontPassBet != 0) {
         moneyOnTable = dontPassBet;
@@ -403,14 +441,7 @@ function clear_table() {
     }
 
 }
-function message_display(message) {
-    newMessage = sum + ' - ' + message;
-    document.getElementById('message-5').textContent = document.getElementById('message-4').textContent;
-    document.getElementById('message-4').textContent = document.getElementById('message-3').textContent;
-    document.getElementById('message-3').textContent = document.getElementById('message-2').textContent;
-    document.getElementById('message-2').textContent = document.getElementById('message-1').textContent;
-    document.getElementById('message-1').textContent = newMessage;
-}
+
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% DICE ROLL -- GAME ON/OFF %%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN SCORE FUNCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function roll_dice() {
@@ -422,7 +453,14 @@ function roll_dice() {
         dice1 = Math.floor(Math.random()*6) + 1;
         dice2 = Math.floor(Math.random()*6) + 1;
         sum = dice1 + dice2;
-        display_roll_message();
+
+        if (smallNumbersBet != 0 || allNumbersBet != 0 || tallNumbersBet != 0) {
+            if (sum == 7) {
+                clear_bonus_bet();
+            } else {
+                check_bonus_bet(sum);
+            }
+        }
         dice1Element.src = `img/red_${dice1}.png`;
         dice2Element.src = `img/red_${dice2}.png`;
 
@@ -450,26 +488,27 @@ function remove_on_marker() {
     offPuckElement.src = 'img/off.png';
 }
 
-function display_roll_message() {
+function display_roll_message(sum) {
     if (sum == 2) {
-        rollMessageElement.textContent = 'Snake Eyes';
+        rollName = 'Snake Eyes';
     } else if (sum == 3) {
-        rollMessageElement.textContent = 'Craps ' + sum;
+        rollName = 'Craps ' + sum;
     } else if (sum == 7) {
         if (gameOn == false) {
-            rollMessageElement.textContent = '7 Winner';
+            rollName = '7 Winner';
         } else {
-            rollMessageElement.textContent = '7 Out';
+            rollName = '7 Out';
         }
     } else if (sum == 11) {
-        rollMessageElement.textContent = 'Yo \'leven';
+        rollName = 'Yo';
     } else if (sum == 12) {
-        rollMessageElement.textContent = 'Midnight';
+        rollName = 'Midnight';
     } else if (dice1 == dice2) {
-        rollMessageElement.textContent = 'Hard ' + sum;
+        rollName = sum + ' Hard';
     } else {
-        rollMessageElement.textContent = 'Player Rolled ' + sum;
+        return sum;
     }
+    return rollName;
 }
 
 function come_out_roll() {
@@ -690,7 +729,6 @@ function pass_line_odds() {
         reset_place_bet_text(target);
     }
     passLineOdds = stagedBet;
-    bankroll -= stagedBet;
     update_bankroll();
     moneyOnTable += passLineOdds;
     update_moneyOnTable;
@@ -1101,7 +1139,6 @@ Bet must be divisible by 5`);
             }
             if (goodToPlace == true) {
                 comeBetOdds[selection] = stagedBet;
-                bankroll -= stagedBet;
                 update_bankroll();
                 moneyOnTable += stagedBet;
                 update_moneyOnTable();
@@ -1301,7 +1338,6 @@ Bet must be divisible by 2`);
             }
             if (goodToPlace == true) {
                 dontComeBetOdds[selection] = stagedBet;
-                bankroll -= stagedBet;
                 update_bankroll();
                 moneyOnTable += stagedBet;
                 update_moneyOnTable();
@@ -1480,6 +1516,208 @@ pullBackButton.addEventListener('click', pull_back_in_progress);
 clearBetButton.addEventListener('click', reset_stagedBet);
 
 // -------------------------------- Table ---------------------------------
+
+
+
+smallNumbersButton.addEventListener('click', (e) => {
+    if (stagedBet == 0 || stagedBet > bankroll || allSmallPaid == true) {
+        // Do nothing
+    } else if (gameOn == true) {
+        alert('Warning: Can only place bonus bets while game is off');
+    } else {
+        smallNumbersBet = commit_bet(smallNumbersBet);
+        set_bonus_bet();
+    }
+    
+});
+allNumbersButton.addEventListener('click', (e) => {
+    if (stagedBet == 0 || stagedBet > bankroll || makeEmAllPaid == true) {
+        // Do nothing
+    } else if (gameOn == true) {
+        alert('Warning: Can only place bonus bets while game is off');
+    } else {
+        allNumbersBet = commit_bet(allNumbersBet);
+        set_bonus_bet();
+    }
+});
+tallNumbersButton.addEventListener('click', (e) => {
+    if (stagedBet == 0 || stagedBet > bankroll || allTallPaid == true) {
+        // Do nothing
+    } else if (gameOn == true) {
+        alert('Warning: Can only place bonus bets while game is off');
+    } else {
+        tallNumbersBet = commit_bet(tallNumbersBet);
+        set_bonus_bet();
+    }
+});
+
+function set_bonus_bet() {
+    if (smallNumbersBet != 0) {
+        smallNumbersButton.style.backgroundImage = "url('img/chip_red.png')";
+    }
+    if (allNumbersBet != 0) {
+        allNumbersButton.style.backgroundImage = "url('img/chip_red.png')";
+    }
+    if (tallNumbersBet != 0) {
+        tallNumbersButton.style.backgroundImage = "url('img/chip_red.png')";
+    }
+}
+function check_bonus_bet(sum) {
+    if (smallNumbersBet != 0) {
+        switch (sum) {
+            case 2:
+                allNumbersCircles.two.style.backgroundColor = 'gold';
+                allNumbersCircles.two.textContent = '';
+                smallNumbersHit[2] = true;
+                break;
+            case 3:
+                allNumbersCircles.three.style.backgroundColor = 'gold';
+                allNumbersCircles.three.textContent = '';
+                smallNumbersHit[3] = true;
+                break;
+            case 4:
+                allNumbersCircles.four.style.backgroundColor = 'gold';
+                allNumbersCircles.four.textContent = '';
+                smallNumbersHit[4] = true;
+                break;
+            case 5:
+                allNumbersCircles.five.style.backgroundColor = 'gold';
+                allNumbersCircles.five.textContent = '';
+                smallNumbersHit[5] = true;
+                break;
+            case 6:
+                allNumbersCircles.six.style.backgroundColor = 'gold';
+                allNumbersCircles.six.textContent = '';
+                smallNumbersHit[6] = true;
+                break;
+        }
+        for (const key in smallNumbersHit) {
+            if (smallNumbersHit[key] == true) {
+                allSmallTrue = true;
+            } else {
+                allSmallTrue = false;
+                break;
+            }
+        }
+        if (allSmallTrue == true) {
+            score_bonus_bet();
+        }
+    }
+    if (tallNumbersBet != 0) {
+        switch (sum) {
+            case 8:
+                allNumbersCircles.eight.style.backgroundColor = 'gold';
+                allNumbersCircles.eight.textContent = '';
+                tallNumbersHit[8] = true;
+                break;
+            case 9:
+                allNumbersCircles.nine.style.backgroundColor = 'gold';
+                allNumbersCircles.nine.textContent = '';
+                tallNumbersHit[9] = true;
+                break;
+            case 10:
+                allNumbersCircles.ten.style.backgroundColor = 'gold';
+                allNumbersCircles.ten.textContent = '';
+                tallNumbersHit[10] = true;
+                break;
+            case 11:
+                allNumbersCircles.eleven.style.backgroundColor = 'gold';
+                allNumbersCircles.eleven.textContent = '';
+                tallNumbersHit[11] = true;
+                break;
+            case 12:
+                allNumbersCircles.twelve.style.backgroundColor = 'gold';
+                allNumbersCircles.twelve.textContent = '';
+                tallNumbersHit[12] = true;
+                break;
+        }
+        for (const key in tallNumbersHit) {
+            if (tallNumbersHit[key] == true) {
+                allTallTrue = true;
+            } else {
+                allTallTrue = false;
+                break;
+            }
+        }
+        if (allTallTrue == true) {
+            score_bonus_bet();
+        }
+    }
+}
+function score_bonus_bet() {
+    if (allSmallTrue == true && allSmallPaid == false) {
+        payout = smallNumbersBet * 30;
+        bankroll += (payout + smallNumbersBet);
+        update_bankroll();
+        for (i = 0; i < 4; i++) {
+            message_display('All Small Bonus Bet Hit !');
+        }
+        message_display(`Won $${payout}`);
+        smallNumbersBet = lose_bet(smallNumbersBet);
+        smallNumbersButton.style.backgroundImage = "url('')";
+        allSmallPaid = true;
+    }
+    if (allTallTrue == true && allTallPaid == false) {
+        payout = tallNumbersBet * 30;
+        bankroll += (payout + tallNumbersBet);
+        update_bankroll();
+        for (i = 0; i < 4; i++) {
+            message_display('All Tall Bonus Bet Hit !');
+        }
+        message_display(`Won $${payout}`);
+        tallNumbersBet = lose_bet(tallNumbersBet);
+        tallNumbersButton.style.backgroundImage = "url('')";
+        allTallPaid = true;
+    }
+    if (allTallTrue == true && allSmallTrue == true && makeEmAllPaid == false) {
+        payout = allNumbersBet * 150;
+        bankroll += (payout + allNumbersBet);
+        update_bankroll();
+        message_display('Make \'Em All Bonus Bet Hit!');
+        message_display(`Won $${payout}`);
+        allNumbersBet = lose_bet(allNumbersBet);
+        allNumbersButton.style.backgroundImage = "url('')";
+        makeEmAllPaid = true;
+    }
+}
+function clear_bonus_bet() {
+    smallNumbersBet = 0;
+    allNumbersBet = 0;
+    tallNumbersBet = 0;
+    allSmallTrue = false;
+    allSmallPaid = false;
+    allTallTrue = false;
+    allTallPaid = false;
+    makeEmAllPaid = false;
+
+    for (const key in smallNumbersHit) {
+        smallNumbersHit[key] = false;
+        tallNumbersHit[key + 6] = false;
+    }
+    smallNumbersButton.style.backgroundImage = "url('')";
+    allNumbersButton.style.backgroundImage = "url('')";
+    tallNumbersButton.style.backgroundImage = "url('')";
+    allNumbersCircles.two.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.two.textContent = '2';
+    allNumbersCircles.three.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.three.textContent = '3';
+    allNumbersCircles.four.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.four.textContent = '4';
+    allNumbersCircles.five.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.five.textContent = '5';
+    allNumbersCircles.six.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.six.textContent = '6';
+    allNumbersCircles.eight.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.eight.textContent = '8';
+    allNumbersCircles.nine.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.nine.textContent = '9';
+    allNumbersCircles.ten.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.ten.textContent = '10';
+    allNumbersCircles.eleven.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.eleven.textContent = '11';
+    allNumbersCircles.twelve.style.backgroundColor = 'rgb(20, 90, 30)';
+    allNumbersCircles.twelve.textContent = '12';
+}
 
 placeBetElement.four.addEventListener('click', (e) => {
     if (pullBackInProgress == true) {
