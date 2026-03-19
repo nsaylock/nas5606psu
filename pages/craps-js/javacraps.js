@@ -464,7 +464,7 @@ function roll_dice() {
         dice1Element.src = `img/red_${dice1}.png`;
         dice2Element.src = `img/red_${dice2}.png`;
 
-        soundSelector = Math.floor(Math.random()*3)+1;
+        soundSelector = Math.floor(Math.random()*6)+1;
         diceRollSound = new Audio(`sounds/Dice_Roll_${soundSelector}.mp3`);
         diceRollSound.play();
         if (gameOn == false) {

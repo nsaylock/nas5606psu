@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Body</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="javascript.js" defer></script>
+</head>
+<body>
+<header>
+
+
+    <button id="side-bar-button"></button>
+    <div class="menu-label">Workout<br>Selection</div>
+    <aside id="side-bar">
+        <a id="page-link" href='push.html'>Push</a>
+        <a id="page-link" href='pull.html'>Pull</a>
+        <a id="page-link" href='legs.html'>Legs</a>
+    </aside>
+
+
+    <div class="page-title"><div><button id="loadjson">load</button>Full Body</div></div>
+</header>
+<!-- Main Area -->
+<div class="main">
+    <div class="current-container">
+        <h2>Current Workout</h2>
+        <div class="current-display">
+            <div class='bubble-display' id="name">workout</div>
+            <div class='bubble-display' id="sets">sets</div>
+            <div class='bubble-display' id="reps">reps</div>
+        </div>
+        <div class="buttons-container">
+            <button id="skip">Skip</button>
+            <button id="done">Done</button>
+        </div>
+    </div><!-- close current workout container -->
+    <div class="completed-container">
+        <div class="completed-workouts-title">Completed Workouts</div>
+        <div class="completed-list">completed list goes here</div>
+    </div><!-- close completed workouts container-->
+</div> <!-- close main -->
+</body>
+</html>

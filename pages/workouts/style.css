@@ -1,0 +1,244 @@
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: rgb(17, 17, 17);
+    color: white;
+    font-size: 20px;
+}
+a {
+    text-decoration: none;
+    color: white;
+}
+
+
+
+/* Home Page */
+.main-area {
+    height: 100%;
+    width: 100%;
+    display:flex;
+    flex: 1 1 auto;
+    background-color: gray;
+}
+
+.selection-menu-home-page {
+    margin-top: 50px;
+    border: 5px solid rgb(105, 69, 1);
+    background-color: rgb(212, 131, 8);
+    border-radius: 15px;
+    height: 500px;
+    width: 50%;
+    font-size: 30px;
+    font-weight: 900;
+    text-align: center;
+    /* Flex Menu Buttons*/
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    padding: 25px 50px 50px;
+    row-gap: 30px;
+}
+
+.menu-buttons-home-page {
+    background-color: rgb(24, 24, 24);
+    border: 3px outset rgb(24,24,24);
+    border-radius: 20px;
+    height: 80px;
+    width: 75%;
+    color: white;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 80px;
+    text-align: middle;
+    text-decoration: none;
+    cursor: default;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.08s ease;
+    flex-shrink: 1;
+    padding: 0 20px;
+}
+.menu-buttons-home-page:hover {
+    background-color: rgb(44, 44, 44);
+    border-color: rgb(44, 44, 44);
+}
+.menu-buttons-home-page:active {
+    transform: scale(0.97);
+}
+
+/*                      Pages                                */
+/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */
+
+header {
+    background-color: rgb(13, 7, 19);
+    height: 5rem;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#side-bar-button::before {
+    content: "\2630";
+}
+
+#side-bar-button {
+    background-color: rgb(9, 5, 14);
+    border: 1px solid rgb(39, 39, 39);
+    font-size: 22px;
+    line-height: 40px;
+    text-align: middle;
+    color: white;
+    height: 40px;
+    width: 40px;
+    margin: 0 20px;
+    z-index: 1;
+}
+#side-bar-button:hover {
+    background-color: black;
+}
+.page-title {
+    font-size: 36px;
+    font-weight: 600;
+    height: 40px;
+    width: 100vw;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    z-index: 0;
+}
+
+aside {
+    background-color: rgb(9, 5, 14);
+    height: 85vh;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 0;
+    top: 5rem;
+    row-gap: 25px;
+    padding-top: 25px;
+}
+
+#side-bar {
+    width: 15%;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+}
+#side-bar.open {
+    transform: translateX(0%);
+}
+
+#page-link {
+    display: block;
+    margin-left: 35%;
+}
+
+
+
+
+
+.main {
+    display: flex;
+    flex-direction: column;
+    border: 5px solid rgb(39, 39, 39);
+    height: 50vh;
+    width: 75vw;
+    justify-self: center;
+    padding-top: 25px;
+    row-gap: 1rem;
+}
+
+.current-container {
+    height: 15rem;
+    text-align: center;
+}
+
+.current-display {
+    display: flex;
+    flex-basis: 100px;
+    padding: 3rem 2rem;
+    font-size: 25px;
+    justify-content: space-around;
+}
+
+.bubble-display {
+    border: 1px solid black;
+    border-radius: 10px;
+    color: black;
+    height: 3rem;
+    line-height: 3rem;
+    text-align: middle;
+    background-color: white;
+}
+
+#name {
+    width: 50%;
+    flex-shrink: 0;
+
+}
+
+#sets {
+    width: 20%;
+    margin: 0 5%;
+}
+
+#reps {
+    width: 20%;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    column-gap: 15%;
+}
+
+#skip, #done {
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 900;
+
+    height: 3rem;
+    width: 5rem;
+
+}
+
+#skip {
+    background-color: red;
+}
+
+#done {
+    background-color: green;
+}
+
+.completed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.completed-workouts-title {
+    width: 100%;
+    text-align: center;
+}
+
+.completed-list {
+    border: 1px solid white;
+    width: 75%;
+}
+
+@media (max-width: 550px) {
+    .main {
+        width: 99vw;
+    }
+    #page-link {
+        margin-left: 22%;
+    }
+}

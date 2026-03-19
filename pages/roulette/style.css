@@ -1,0 +1,100 @@
+* {
+    font-family:'Arial Narrow Bold', sans-serif;
+}
+body {
+    background-image: url('img/roulette_wheel.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+}
+
+.main-area {
+    outline: 5px solid rgb(4, 73, 4);
+    background-color: rgb(30,90,1);
+    border-radius: 25px;
+    height: 500px;
+    width: 500px;
+    position: absolute;
+    top: 100px;
+    display: flex;
+    flex-direction: row;
+    padding: 50px;
+    
+    
+}
+
+.spin-container {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 10px;
+}
+#spin-button {
+    border: 4px solid rgb(233, 236, 13);
+    background-color: rgb(233, 236, 13);
+    border-style: outset;
+    box-shadow: 5px 5px 5px black;
+    border-radius: 10px;
+    height: 100px;
+    width: 200px;
+    color: black;
+    font-size: 50px;
+    font-weight: 600;
+    transition: background-color 0.1s linear, transform 0.05s linear,
+                box-shadow 0.1s ease;
+}
+#spin-button:hover{
+    background-color: rgb(191, 194, 5);
+    border-color: rgb(191, 194, 5);
+}
+#spin-button:active {
+    transform: scale(0.97);
+    box-shadow: none;
+}
+
+#current-number-display {
+    background-color: none;
+    border-radius: 220px;
+    width: 300px;
+    height: 350px;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    line-height: 220px;
+    text-align: middle;
+    font-size: 180px;
+    font-weight: 600;
+    margin-top: 75px;
+    padding: 0;
+}
+
+.volume-control {
+    height: 50px;
+    width: 150px;
+    color: white;
+    text-align: center;
+    margin-top: 100px;
+}
+
+
+.spin-history-container {
+    color: white;
+    border-radius: 15px;
+    background-color: rgb(0,0,0);
+    width: 150px;
+    font-size: 25px;
+    padding: 0 25px;
+    margin-left: 50px;
+}
+
+#spin-1, #spin-2, #spin-3, #spin-4,
+#spin-5, #spin-6, #spin-7, #spin-8,
+#spin-9, #spin-10 {
+    text-align: center;
+    width: 100%;
+    margin-top: 5px;
+} 
