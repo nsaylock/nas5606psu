@@ -1,5 +1,5 @@
 * {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 0;
     margin: 0;
 }
@@ -76,7 +76,7 @@ a {
 
 header {
     background-color: rgb(13, 7, 19);
-    height: 5rem;
+    height: 75px;
     width: 100vw;
     display: flex;
     align-items: center;
@@ -91,21 +91,25 @@ header {
     background-color: rgb(9, 5, 14);
     border: 1px solid rgb(39, 39, 39);
     font-size: 22px;
-    line-height: 40px;
+    line-height: 35px;
     text-align: middle;
     color: white;
     height: 40px;
     width: 40px;
     margin: 0 20px;
     z-index: 1;
+    transition: background-color 0.2s ease;
 }
 #side-bar-button:hover {
-    background-color: black;
+    background-color: rgb(32, 32, 32);
+}
+.side-bar-label {
+    font-size: 16px;
 }
 .page-title {
     font-size: 36px;
     font-weight: 600;
-    height: 40px;
+    height: 55px;
     width: 100vw;
     text-align: center;
     display: flex;
@@ -116,12 +120,12 @@ header {
 
 aside {
     background-color: rgb(9, 5, 14);
-    height: 85vh;
+    height: 100vh;
     position: absolute;
     display: flex;
     flex-direction: column;
     left: 0;
-    top: 5rem;
+    top: 75px;
     row-gap: 25px;
     padding-top: 25px;
 }
@@ -140,6 +144,7 @@ aside {
     margin-left: 35%;
 }
 
+/* End header and side bar */
 
 
 
@@ -148,7 +153,7 @@ aside {
     display: flex;
     flex-direction: column;
     border: 5px solid rgb(39, 39, 39);
-    height: 50vh;
+    height: 60vh;
     width: 75vw;
     justify-self: center;
     padding-top: 25px;
@@ -163,11 +168,11 @@ aside {
 .current-display {
     display: flex;
     flex-basis: 100px;
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 0;
     font-size: 25px;
+    font-weight: 600;
     justify-content: space-around;
 }
-
 .bubble-display {
     border: 1px solid black;
     border-radius: 10px;
@@ -178,37 +183,59 @@ aside {
     background-color: white;
 }
 
-#name {
+.labels-bar {
+    /* Same as current-display, shows type of workout and says 'sets' 'reps'*/
+    display: flex;
+    flex-basis: 100px;
+    padding: 5px 2rem;
+    font-size: 25px;
+    justify-content: space-around;
+    
+}
+.labels {
+    /* Same as bubble-display so they stay locked to each other*/
+    border-radius: 10px;
+    color: white;
+    height: 3rem;
+    font-size: 18px;
+}
+
+#name, #muscle-group {
     width: 50%;
-    flex-shrink: 0;
+    flex: 1 0 auto;
 
 }
 
-#sets {
-    width: 20%;
+#sets, #sets-label {
+    width: 15%;
     margin: 0 5%;
+    flex: 0 1 auto;
 }
 
-#reps {
-    width: 20%;
+
+#reps, #reps-label {
+    width: 15%;
 }
 
 .buttons-container {
     display: flex;
     justify-content: center;
-    column-gap: 15%;
+    column-gap: 5%;
 }
 
-#skip, #done {
+#skip, #done, #begin {
     border-radius: 5px;
     font-size: 20px;
     font-weight: 900;
-
     height: 3rem;
     width: 5rem;
 
 }
 
+#begin {
+    width: 10rem;
+    background-color: rgb(212, 131, 8);
+}
 #skip {
     background-color: red;
 }
@@ -227,11 +254,16 @@ aside {
 .completed-workouts-title {
     width: 100%;
     text-align: center;
+    margin-top: 2rem;
 }
 
-.completed-list {
+#completed-list {
     border: 1px solid white;
     width: 75%;
+}
+
+.hidden {
+    display: none;
 }
 
 @media (max-width: 550px) {
@@ -239,6 +271,26 @@ aside {
         width: 99vw;
     }
     #page-link {
-        margin-left: 22%;
+        margin-left: 26%;
+    }
+    .page-title {
+        justify-content: flex-end;
+        right: 5%;
+        font-size: 30px;
+        top: 15px;
+    }
+    #side-bar {
+        width: 23%;
+    }
+    #begin {
+        font-size: 16px;
+    }
+    .current-display {
+        justify-content: space-between;
+        padding: 3rem 8px 0;
+        font-size: 20px;
+    }
+    .labels-bar {
+        padding: 5px 0;
     }
 }

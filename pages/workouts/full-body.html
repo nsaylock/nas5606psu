@@ -12,33 +12,39 @@
 
 
     <button id="side-bar-button"></button>
-    <div class="menu-label">Workout<br>Selection</div>
+    <div class="side-bar-label">Workout<br>Selection</div>
     <aside id="side-bar">
-        <a id="page-link" href='push.html'>Push</a>
-        <a id="page-link" href='pull.html'>Pull</a>
-        <a id="page-link" href='legs.html'>Legs</a>
+        <a id="page-link" >Push</a>
+        <a id="page-link" >Pull</a>
+        <a id="page-link" >Legs</a>
     </aside>
 
 
-    <div class="page-title"><div><button id="loadjson">load</button>Full Body</div></div>
+    <div class="page-title"><div>Full Body</div></div>
 </header>
 <!-- Main Area -->
 <div class="main">
     <div class="current-container">
         <h2>Current Workout</h2>
         <div class="current-display">
-            <div class='bubble-display' id="name">workout</div>
-            <div class='bubble-display' id="sets">sets</div>
-            <div class='bubble-display' id="reps">reps</div>
+            <div class='bubble-display' id="name"></div>
+            <div class='bubble-display' id="sets"></div>
+            <div class='bubble-display' id="reps"></div>
+        </div>
+        <div class="labels-bar">
+            <div class='labels' id="muscle-group">Workout</div>
+            <div class='labels' id="sets-label">Sets</div>
+            <div class='labels' id="reps-label">Reps</div>
         </div>
         <div class="buttons-container">
+            <button id="begin">Begin Workout</button>
             <button id="skip">Skip</button>
             <button id="done">Done</button>
         </div>
     </div><!-- close current workout container -->
     <div class="completed-container">
         <div class="completed-workouts-title">Completed Workouts</div>
-        <div class="completed-list">completed list goes here</div>
+        <div id="completed-list"></div>
     </div><!-- close completed workouts container-->
 </div> <!-- close main -->
 </body>
