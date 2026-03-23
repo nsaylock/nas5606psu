@@ -22,8 +22,6 @@ body {
     display: flex;
     flex-direction: row;
     padding: 50px;
-    
-    
 }
 
 .spin-container {
@@ -98,3 +96,52 @@ body {
     width: 100%;
     margin-top: 5px;
 } 
+
+/*
+body 
+.main-area 
+.spin-container 
+#spin-button 
+#spin-button:hover
+#spin-button:active 
+#current-number-display 
+.volume-control 
+.spin-history-container 
+#spin-1, #spin-2, #spin-3, #spin-4,
+#spin-5, #spin-6, #spin-7, #spin-8,
+#spin-9, #spin-10 
+*/
+
+@media (max-width: 500px) {
+    body {
+        background-size: 500px 1000px;
+    }
+    .main-area {
+    height: 500px;
+    width: 90vw;
+    top: 5vh;
+    padding: 50px 0px;
+}
+.spin-history-container {
+    color: white;
+    border-radius: 15px;
+    background-color: rgb(0,0,0);
+    width: 75px;
+    padding: 0 15px;
+    margin: 0 15px 0 0;
+}
+
+.spin-container {
+    align-items: flex-start;
+    margin: 0;
+}
+#current-number-display {
+    transform: scale(0.6);
+}
+
+#spin-button {
+    transform: scale(0.7);
+    margin: 0;
+}
+
+}

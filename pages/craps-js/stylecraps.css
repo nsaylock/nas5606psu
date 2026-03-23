@@ -4,6 +4,11 @@ html, body {
     height: 100%;
 }
 
+#main-area, #bottom-container, #info-displays {
+    transform: scale(0.8);
+    transform-origin: 50% 0;
+}
+
 body {
     font-family: sans-serif;
     background-image: url('img/casino_03.jpg');
@@ -17,7 +22,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 20px;
+    margin: 0px;
     align-items: center;
 }
 
@@ -26,7 +31,7 @@ body::before {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     background: rgba(0, 0, 0, 0.5); /* Black overlay with 50% opacity */
     z-index: -1;
@@ -41,11 +46,10 @@ body::before {
     justify-content: center;
     padding: 2px 20px 20px 20px;
     position: absolute;
-    top: 0px;
-
+    top: 15px;
 }
 
-#main-area, .bottom-container {
+#main-area, #bottom-container {
     border-color: rgb(1, 56, 1);
     border-width: 10px;
     border-style:solid;
@@ -224,6 +228,22 @@ button {
     z-index: -1;
 }
 
+#on-4, #on-5, #on-6, 
+#on-8, #on-9, #on-10 {
+    position: fixed;
+    height: 70px;
+    width: 70px;
+    top: 145px;
+    z-index: 20;
+}
+#on-4 { left: 182px; }
+#on-5 { left: 288px; }
+#on-6 { left: 396px; }
+#on-8 { left: 502px; }
+#on-9 { left: 610px; }
+#on-10 { left: 715px; }
+.hidden { display: none;}
+
 #number-box-4, #number-box-5, #number-box-6,
 #number-box-8, #number-box-9, #number-box-10 {
     outline: 2px solid white;
@@ -232,8 +252,10 @@ button {
     text-shadow: 2px 2px 0px black;
     height: 100%;
     width: 100%;
+    line-height: 100%;
+    text-align: middle;
     z-index: 0;
-    padding-bottom: 10px;
+    padding-top: 25px;
 }
 
 .come-bet-container {
@@ -459,7 +481,11 @@ button {
     margin-left: 50px;
 }
 
-/*.side-bets-dice-display {}*/
+.side-bets-dice-display {
+    display: flex;
+    justify-content: center;
+    column-gap: 10px;
+}
 
 #hw-6-text, #hw-8-text, #hw-4-text, #hw-10-text,
 #craps-3-text, #craps-2-text, #craps-12-text, #craps-11-text {
@@ -495,9 +521,12 @@ button {
 }
 
 #off-puck {
-    height: 70px;
-    width: 110px;
-    margin: 20px 0 0 110px;
+    position: fixed;
+    height: 100px;
+    width: 100px;
+    top: 16%;
+    left: 62%;
+    z-index: 20;
 }
 
 /* --------------------------Betting Section --------------------------*/
@@ -545,6 +574,7 @@ button {
     width: 250px;
     height: 125px;
     margin: 10px;
+    margin-right: 0;
     justify-items: center;
     font-size: 30px;
     color: rgb(233, 229, 13);
@@ -553,7 +583,7 @@ button {
     background-image: url('');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 140px 140px;
+    background-size: 130px 130px;
 }
 
 #staged-bet { 
@@ -670,7 +700,7 @@ button {
 }
 /* ^^^^^^^^^^^^^^^^^^^^^^^^^ END BETTING SECTION ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
-.bottom-container {
+#bottom-container {
     border-width: 0 10px 10px 10px;
     border-radius: 0 0 20px 20px;
     background-color: rgb(20, 90, 30);
@@ -680,9 +710,10 @@ button {
     padding: 15px 20px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     position: absolute;
-    top: 825px;
+    top: 670px;
+    z-index: 0;
 
 }
 
@@ -694,6 +725,7 @@ button {
     min-height: 130px;
     border-radius: 30px;
     margin: 0 0 10px 0;
+    
 }
 
 .bankroll-label {
@@ -721,7 +753,7 @@ button {
     border-style: outset;
     border-width: 10px;;
     border-color: rgb(173, 143, 7);
-    margin-top: 20px;
+    margin: 20px 0 0 100px ;
 }
 #roll-button:hover {
     background-color: rgb(155, 127, 5);
@@ -735,15 +767,49 @@ button {
 
 #dice-display {
     /*Bottom Right, holds the dice imgs*/
-    margin: -30px 60px 0 0;
-}
-#dice1, #dice2 {
-    /*imgs of the dice, src is changed by js*/
+    display: flex;
+    position: relative;
     height: 150px;
-    width: 150px;
+    width: 300px;
+
+    top: 610px;
+    left: 310px;
+    z-index: 1000;
+    column-gap: 15px;
 }
 
-.info-displays {
+@keyframes diceMove {
+    2%, 70% { transform: translate(-560px, -480px); }
+    100% { transform: none;}
+}
+
+.dice-move {
+    animation: diceMove;
+    animation-duration: 1.5s;
+    animation-delay: 0s;
+}
+
+@keyframes diceGrow {
+    2%, 70% { height: 375px; width: 375px;}
+    100% { height: 140px; width: 140px;}
+}
+
+.dice-grow {
+    animation: diceGrow;
+    animation-duration:  1.5s;
+    animation-delay: 0s;
+}
+
+#dice1, #dice2 {
+    /*imgs of the dice, src is changed by js*/
+    box-shadow: 10px 10px 12px black;
+    height: 140px;
+    width: 140px;
+    z-index: 100;
+    
+}
+
+#info-displays {
     /*Div underneath main area*/
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
@@ -755,7 +821,7 @@ button {
     padding: 5px 20px;
     margin: 5px 20px 20px;
     position: absolute;
-    top: 1010px;
+    top: 790px;
 }
 
 .money-label {

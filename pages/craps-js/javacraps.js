@@ -1,13 +1,9 @@
 // Things to do:
-// 2.5) Add all ways bet at the top maybe - 30:1 150:1 30:1
 // 3) Need buy options on the 4 and 10
-// 3.5) Add the big 6 & 8
-// 4) probably dont come odds
 // 5) Come/Dont come odds formatting gets messed up
 // 6) Case where auto-rounding to place odds will make bankroll go negative when close to 0
 // 7) Add tips button for how to play
 // 8) Add a link to a new page that shows the code
-// 9) Remove the roll-message-box and tie in the roll number to the message box
 
 // 10) Dont come/dc odds can be removed after the point is established
 //          -- once placed, can not be turned off
@@ -40,6 +36,7 @@ let roundUpBet = false;
 let goodToPlace = false;
 //let moveDCBet = false;
 let gameOn = false;
+let oneOrTwo;
 
 
 // Table Bet Storage Variables
@@ -70,6 +67,8 @@ let allTallTrue = false;
 let allTallPaid = false;
 
 
+
+
 // Numbers/Messages
 const betElement = document.getElementById('staged-bet');
 const betContainerElement = document.getElementById('bet-left');
@@ -85,6 +84,11 @@ const dice2Element = document.getElementById('dice2');
 const moneyOnTableElement = document.getElementById('money-on-table');
 
 const offPuckElement = document.getElementById('off-puck');
+const diceDisplay = document.getElementById('dice-display');
+const dice = {
+    one: document.getElementById('dice1'),
+    two: document.getElementById('dice2')
+}
 
 // Betting Buttons
 const incrementButton = document.getElementById('increment1');
@@ -95,6 +99,7 @@ const twentyFive = document.getElementById('twenty-five');
 const thirty = document.getElementById('thirty');
 const oneHundred = document.getElementById('one-hundred');
 const twoFifty = document.getElementById('two-fifty');
+const fiveHundred = document.getElementById('five-hundred');
 const rollButton = document.getElementById('roll-button');
 const pullBackButton = document.getElementById('pull-back-button');
 const clearBetButton = document.getElementById('clear-bet');
@@ -242,7 +247,18 @@ function check_for_chip_img() {
     if (stagedBet == 0) {
         betContainerElement.style.backgroundImage = "url('')";
     } else {
-        betContainerElement.style.backgroundImage = "url('img/chip_red.png')";
+        if (stagedBet > 0 && stagedBet < 5) {
+            betContainerElement.style.backgroundImage = "url('img/white_chip.png')";
+        } else if (stagedBet >= 5 && stagedBet < 25) {
+            betContainerElement.style.backgroundImage = "url('img/red_chip.png')";
+        } else if (stagedBet >= 25 && stagedBet < 100) {
+            betContainerElement.style.backgroundImage = "url('img/green_chip.png')";
+        } else if (stagedBet >= 100 && stagedBet < 500) {
+            betContainerElement.style.backgroundImage = "url('img/black_chip.png')";
+        } else {
+            betContainerElement.style.backgroundImage = "url('img/purple_chip.png')";
+        }
+        
     }
 }
 function incrementbyone() {
@@ -320,6 +336,16 @@ function make_two_fifty() {
         alert(`You only have $${bankroll} left in your bankroll`);
     } else {
     stagedBet = 250;
+    betElement.textContent = '$' + stagedBet;
+    play_increment_sound();
+    check_for_chip_img();
+    }
+}
+function make_five_hundred() {
+    if (bankroll < 500) {
+        alert(`You only have $${bankroll} left in your bankroll`);
+    } else {
+    stagedBet = 500;
     betElement.textContent = '$' + stagedBet;
     play_increment_sound();
     check_for_chip_img();
@@ -461,10 +487,32 @@ function roll_dice() {
                 check_bonus_bet(sum);
             }
         }
-        dice1Element.src = `img/red_${dice1}.png`;
-        dice2Element.src = `img/red_${dice2}.png`;
 
-        soundSelector = Math.floor(Math.random()*6)+1;
+        oneOrTwo = Math.ceil(Math.random()*2);
+        if (dice1 == 6) {
+            dice1Element.src = `img/red_6_${oneOrTwo}.png`;
+        } else {
+            dice1Element.src = `img/red_${dice1}.png`;
+        }
+        if (dice2 == 6) {
+            if (oneOrTwo == 1) {
+                dice2Element.src = 'img/red_6_2.png';
+            } else {
+                dice2Element.src = 'img/red_6_1.png';
+            }
+        } else {
+            dice2Element.src = `img/red_${dice2}.png`;
+        }
+
+        // animation
+        
+        
+        diceThrowAnimation();
+
+
+      
+
+        soundSelector = Math.floor(Math.random()*3)+1;
         diceRollSound = new Audio(`sounds/Dice_Roll_${soundSelector}.mp3`);
         diceRollSound.play();
         if (gameOn == false) {
@@ -474,18 +522,33 @@ function roll_dice() {
         }
     }
 }
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function diceThrowAnimation() {
+    diceDisplay.classList.toggle('dice-move');
+    dice.one.classList.toggle('dice-grow');
+    dice.two.classList.toggle('dice-grow');
+    await delay(1500);
+    diceDisplay.classList.toggle('dice-move');
+    dice.one.classList.toggle('dice-grow');
+    dice.two.classList.toggle('dice-grow');
+}
+
 function display_on_marker() {
     const onIMG = document.getElementById(`on-${target}`);
-    onIMG.src = 'img/on.png';
+    onIMG.classList.toggle('hidden');
     onIMG.style.zIndex = '20';
     document.getElementById(`dont-come-container-${target}`).style.zIndex = '0';
-    offPuckElement.src = 'img/on-placeholder.png';
+    offPuckElement.classList.toggle('hidden');
 }
 function remove_on_marker() {
-    document.getElementById(`on-${target}`).src = 'img/on-placeholder.png';
+    document.getElementById(`on-${target}`).classList.toggle('hidden');
     document.getElementById(`on-${target}`).style.zIndex = '-1';
     document.getElementById(`dont-come-container-${target}`).style.zIndex = '1';
-    offPuckElement.src = 'img/off.png';
+    offPuckElement.classList.toggle('hidden');
 }
 
 function display_roll_message(sum) {
@@ -1511,6 +1574,7 @@ twentyFive.addEventListener('click', make_twenty_five);
 thirty.addEventListener('click', make_thirty);
 oneHundred.addEventListener('click', make_one_hundred);
 twoFifty.addEventListener('click', make_two_fifty);
+fiveHundred.addEventListener('click', make_five_hundred);
 rollButton.addEventListener('click', roll_dice);
 pullBackButton.addEventListener('click', pull_back_in_progress);
 clearBetButton.addEventListener('click', reset_stagedBet);
@@ -1553,13 +1617,13 @@ tallNumbersButton.addEventListener('click', (e) => {
 
 function set_bonus_bet() {
     if (smallNumbersBet != 0) {
-        smallNumbersButton.style.backgroundImage = "url('img/chip_red.png')";
+        smallNumbersButton.style.backgroundImage = "url('img/red_chip.png')";
     }
     if (allNumbersBet != 0) {
-        allNumbersButton.style.backgroundImage = "url('img/chip_red.png')";
+        allNumbersButton.style.backgroundImage = "url('img/red_chip.png')";
     }
     if (tallNumbersBet != 0) {
-        tallNumbersButton.style.backgroundImage = "url('img/chip_red.png')";
+        tallNumbersButton.style.backgroundImage = "url('img/red_chip.png')";
     }
 }
 function check_bonus_bet(sum) {
