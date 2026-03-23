@@ -153,7 +153,7 @@ function done() {
 }
 
 function add_to_completed_list() {
-    
+    // guess i dont need this
 
 }
 

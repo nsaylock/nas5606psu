@@ -16,6 +16,8 @@
 
 // Field bet pull back not working
 
+// dice roll animations glitches when a message pops up to move a bet behind the line
+
 // variables
 let stagedBet = 0;
 let bankroll = 500;
@@ -54,6 +56,7 @@ let comeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let stagedDontComeBet = 0;
 let dontComeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let dontComeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
+let chipStructure = {black: 0, green: 0, red: 0, white: 0};
 
 let smallNumbersHit = {2:false, 3:false, 4:false, 5:false, 6:false};
 let tallNumbersHit = {8:false, 9:false, 10:false, 11:false, 12:false};
@@ -66,8 +69,11 @@ let tallNumbersBet = 0;
 let allTallTrue = false;
 let allTallPaid = false;
 
-
-
+window.addEventListener('load', (e) => {
+    let rand = Math.ceil(Math.random() * 5);
+    let location = `img/casino_0${rand}.jpg`;
+    document.body.style.backgroundImage = "url('"+location+"')";
+});
 
 // Numbers/Messages
 const betElement = document.getElementById('staged-bet');
@@ -229,7 +235,11 @@ const dontPassBarElement = document.getElementById('dont-pass');
 const dontPassBarChipsDisplay = document.getElementById('dont-pass-chips-display');
 
 const passLineElement = document.getElementById('pass-line');
-const passLineChipsDisplay = document.getElementById('pass-line-chips-display');
+
+let passLineChips = {
+    location: document.getElementById('pass-line-chips'),
+    chips: []
+};
 const passLineOddsElement = document.getElementById('pass-line-odds');
 
 const original = {
@@ -383,8 +393,8 @@ function change_bet(betToCommit) {
     return betToCommit;
 }
 function pull_back_in_progress() {
-    betElement.style.fontSize = '20px';
-    betElement.textContent = 'Select Bet to Pull Back';
+    betElement.textContent = 'Pull';
+    betElement.style.lineHeight = 
     pullBackInProgress = true;
 }
 function pull_back_bet(amount) {
@@ -397,6 +407,8 @@ function pull_back_bet(amount) {
         play_decrement_sound();
     }
     amount = 0;
+    betElement.textContent = '$0';
+    check_for_chip_img();
     return amount;
 }
 function lose_bet(amount) {
@@ -433,7 +445,7 @@ function clear_table() {
     }
     update_moneyOnTable();
 
-    passLineChipsDisplay.textContent = '';
+    remove_chips_from_table(passLineChips);
     passLineBet = 0;
     passLineOddsElement.textContent = '';
     passLineOdds = 0;
@@ -603,7 +615,7 @@ function come_out_roll() {
         if (sum == 2 || sum == 3 || sum == 12) {
             message = 'Lost $' + passLineBet + ' on the Pass Line';
             message_display(message);
-            passLineChipsDisplay.textContent = '';
+            remove_chips_from_table(passLineChips);
             moneyOnTable -= passLineBet;
             passLineBet = 0;
             update_moneyOnTable();
@@ -777,14 +789,103 @@ function score_roll() {
 // ########################################################################
 
 // PASS LINE AND DONT PASS BAR
-function pass_line() {
+function pass_line() { // adds bet to pass line
     if (stagedBet >= minBet) {
         passLineBet = commit_bet(passLineBet);
-        passLineChipsDisplay.textContent = `$${passLineBet}`;
+        add_chips_to_table(passLineChips);
     } else {
         alert('The minimum bet is $' + minBet + '.');
     }
 }
+
+function add_chips_to_table(object) {
+    //chip structure
+    // object.location is the div element where the chips are going
+    // object.chips is an array where each chip img will get stored
+    // class table-chips is the size of the chip 60px x 60px
+    let index = 0;
+    let chipSpacing = 0;
+    object.chips = []
+    chipStructure = get_chip_structure(); // of the stagedBet
+
+    for (i = 0; i < chipStructure.black; i++) {
+        index = object.chips.length;
+        object.chips[index] = document.createElement('img');
+        thisChip = object.chips[index];
+        thisChip.src = 'img/black_chip.png';
+        thisChip.classList.add('table-chips');
+        thisChip.style.marginLeft = `${chipSpacing}px`;
+        object.location.appendChild(thisChip);
+        chipSpacing += 12;
+    }
+    for (i = 0; i < chipStructure.green; i++) {
+        index = object.chips.length;
+        object.chips[index] = document.createElement('img');
+        thisChip = object.chips[index];
+        thisChip.src = 'img/green_chip.png';
+        thisChip.classList.add('table-chips');
+        thisChip.style.marginLeft = `${chipSpacing}px`;
+        object.location.appendChild(thisChip);
+        chipSpacing += 12;
+    }
+    for (i = 0; i < chipStructure.red; i++) {
+        index = object.chips.length;
+        object.chips[index] = document.createElement('img');
+        thisChip = object.chips[index];
+        thisChip.src = 'img/red_chip.png';
+        thisChip.classList.add('table-chips');
+        thisChip.style.marginLeft = `${chipSpacing}px`;
+        object.location.appendChild(thisChip);
+        chipSpacing += 12;
+    }
+    for (i = 0; i < chipStructure.white; i++) {
+        index = object.chips.length;
+        object.chips[index] = document.createElement('img');
+        thisChip = object.chips[index];
+        thisChip.src = 'img/white_chip.png';
+        thisChip.classList.add('table-chips');
+        thisChip.style.marginLeft = `${chipSpacing}px`;
+        object.location.appendChild(thisChip);
+        chipSpacing += 12;
+    }
+}
+
+function remove_chips_from_table(object) {
+    for (const chip in object.chips) {
+    object.chips[chip].remove();
+    }
+}
+
+function get_chip_structure() {
+    temp = stagedBet;
+    if (temp >= 100) {
+        black = Math.floor(temp/100);
+        temp = temp % 100;
+    } else {
+        black = 0;
+    }
+    if (temp >= 25) {
+        green = Math.floor(temp/25);
+        temp = temp % 25;
+    } else {
+        green = 0;
+    }
+    if (temp >= 5) {
+        red = Math.floor(temp/5);
+        temp = temp % 5;
+    } else {
+        red = 0;
+    }
+    if (temp >= 1) {
+        white = temp;
+    } else {
+        white = 0;
+    }
+
+
+    return {black, green, red, white};
+}
+
 function pass_line_odds() {
     if (placeBet[target] != 0) {
         bankroll += placeBet[target];
@@ -1575,7 +1676,15 @@ thirty.addEventListener('click', make_thirty);
 oneHundred.addEventListener('click', make_one_hundred);
 twoFifty.addEventListener('click', make_two_fifty);
 fiveHundred.addEventListener('click', make_five_hundred);
-rollButton.addEventListener('click', roll_dice);
+let isCoolDown = false;
+rollButton.addEventListener('click', function() {
+    if (isCoolDown) return;
+    roll_dice();
+    isCoolDown = true;
+    setTimeout (() => {
+        isCoolDown = false;
+    }, 1500);
+});
 pullBackButton.addEventListener('click', pull_back_in_progress);
 clearBetButton.addEventListener('click', reset_stagedBet);
 
@@ -2041,8 +2150,8 @@ dontPassBarElement.addEventListener('click', (e) => {
 
 passLineElement.addEventListener('click', (e) => {
     if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
-        passLineChipsDisplay.textContent = '';
-        passLineBet = pull_back_bet(passLineBet);
+        remove_chips_from_table(passLineChips);
+        passLineBet = pull_back_bet(passLineBet); // Sets value to 0
     } else if (pullBackInProgress == true && gameOn == true) {
         alert('Cannont Pull Back Pass Line While Game is On.');
         reset_stagedBet();

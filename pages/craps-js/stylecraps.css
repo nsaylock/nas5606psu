@@ -5,13 +5,14 @@ html, body {
 }
 
 #main-area, #bottom-container, #info-displays {
-    transform: scale(0.8);
+    transform: scale(0.9);
     transform-origin: 50% 0;
 }
 
 body {
     font-family: sans-serif;
-    background-image: url('img/casino_03.jpg');
+    background-color: black;
+    background-image: url('');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -243,6 +244,7 @@ button {
 #on-9 { left: 610px; }
 #on-10 { left: 715px; }
 .hidden { display: none;}
+.show { display: block;}
 
 #number-box-4, #number-box-5, #number-box-6,
 #number-box-8, #number-box-9, #number-box-10 {
@@ -473,12 +475,17 @@ button {
     flex-direction: row;
     justify-content: center;
 }
-.pass-line-label {
-    margin-left: 150px;
+#pass-line-chips {
+    position: absolute;
+    top: 67.8%;
+    left: 45%;
 }
-#pass-line-chips-display {
-    width: 100px;
-    margin-left: 50px;
+
+
+.table-chips {
+    position: absolute;
+    height: 60px;
+    width: 60px;
 }
 
 .side-bets-dice-display {
@@ -588,9 +595,12 @@ button {
 
 #staged-bet { 
     text-shadow: 2px 2px 0px black;
-    padding-top: 30px;
+    height: 105px;
+    line-height: 105px;
+    text-align: middle;
     font-size: 35px;
     font-weight: 600;
+    padding-right: 2px;
 }
 
 .bet-right {
@@ -712,7 +722,7 @@ button {
     flex-direction: row;
     justify-content: flex-start;
     position: absolute;
-    top: 670px;
+    top: 750px;
     z-index: 0;
 
 }
@@ -772,14 +782,14 @@ button {
     height: 150px;
     width: 300px;
 
-    top: 610px;
-    left: 310px;
+    top: 700px;
+    left: 340px;
     z-index: 1000;
-    column-gap: 15px;
+    column-gap: 35px;
 }
 
 @keyframes diceMove {
-    2%, 70% { transform: translate(-560px, -480px); }
+    0%, 70% { transform: translate(-590px, -480px); }
     100% { transform: none;}
 }
 
@@ -790,7 +800,7 @@ button {
 }
 
 @keyframes diceGrow {
-    2%, 70% { height: 375px; width: 375px;}
+    0%, 70% { height: 375px; width: 375px;}
     100% { height: 140px; width: 140px;}
 }
 
@@ -821,7 +831,7 @@ button {
     padding: 5px 20px;
     margin: 5px 20px 20px;
     position: absolute;
-    top: 790px;
+    top: 910px;
 }
 
 .money-label {
@@ -843,7 +853,7 @@ button {
 #message-box {
     width: 475px;
     margin-left: 70px;
-    font-size: 20px;
+    font-size: 22px;
     line-height: 30px;
     vertical-align: middle;
     text-align: center;
