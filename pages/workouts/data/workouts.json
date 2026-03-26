@@ -1,6 +1,6 @@
 {
-"sets": [1, 2, 3, 4],
-"reps": [6, 8, 10, 12, 15, 20],
+"sets": [2, 3, 4, 5],
+"reps": [8, 10, 12, 15, 20, 25],
 "workouts": 
     {
     "Legs": 
@@ -16,7 +16,7 @@
             "9": "Abduction Machine",
             "10": "Adduction Machine",
             "11": "Bulgarian Split Squat",
-            "12": "Leg Press Pine Machine",
+            "12": "Leg Press Pin Machine",
             "13": "Calf Pin Machine",
             "14": "BB Calf Raises",
             "15": "Seated Calf Plate Loader",
@@ -38,16 +38,16 @@
             "10": "Heavy 1-arm Crossover",
             "11": "High-Low Cable Flys",
             "12": "Bench Flys",
-            "15": "Floor Press",
-            "16": "Incline DB Bench",
-            "17": "Underhand DB Press",
-            "18": "Kneeling Landmine Press",
-            "19": "Incline Cable Press",
-            "20": "DB Pullover",
-            "21": "Incline Bench Flys",
-            "22": "Decline Pushups",
-            "23": "Cavaliere Crossover",
-            "24": "UCV Raise"
+            "13": "Floor Press",
+            "14": "Incline DB Bench",
+            "15": "Underhand DB Press",
+            "16": "Kneeling Landmine Press",
+            "17": "Incline Cable Press",
+            "18": "DB Pullover",
+            "19": "Incline Bench Flys",
+            "20": "Decline Pushups",
+            "21": "Cavaliere Crossover",
+            "22": "UCV Raise"
         },
     "Shoulders": 
         {

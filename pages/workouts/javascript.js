@@ -110,6 +110,7 @@ function get_new() {
 }
 
 function select_muscle_group() {
+    // Total of 136 Workouts
     let i = Math.ceil(Math.random()*8);
     switch (i) {
         case 1:
@@ -118,7 +119,7 @@ function select_muscle_group() {
             break;
         case 2:
             currentMG = "Chest";
-            size = 24;
+            size = 22;
             break;
         case 3:
             currentMG = "Shoulders";
@@ -147,31 +148,18 @@ function select_muscle_group() {
     }
 }
 
-
-function done() {
-    numCompleted++;
-    completedWorkoutsDict[currentMG].push(index);
-    const listLeft = document.createElement('div');
-    
-    listLeft.textContent = numCompleted + '. ' + currentName;
-    completedWorkoutsList.appendChild(listLeft);
-    const listRight = document.createElement('div');
-    listRight.textContent = `${currentSets} x ${currentReps} reps`;
-    listRight.classList.add('list-right');
-    completedWorkoutsList.appendChild(listRight);
-    // Make pop up to enter weight used
-    get_new();
-}
-
-function add_to_completed_list() {
-    // guess i dont need this
-
-}
-
 function new_workout(array) {
-    // alert('update name called');
-    let randNum = Math.ceil(Math.random()*size);
-    index = String(randNum);
+    // reset completed list to avoid infinite loop
+    if (completedWorkoutsDict[currentMG].length == size) {
+        completedWorkoutsDict[currentMG] = [];
+    }
+
+    do {
+        selector = Math.ceil(Math.random()*size);
+    } while (completedWorkoutsDict[currentMG].includes(selector));
+    completedWorkoutsDict[currentMG].push(selector);
+
+    index = String(selector);
 
     currentWorkout.name.textContent = array[index];
     currentMuscleGroup.textContent = currentMG;
@@ -187,4 +175,26 @@ function new_workout(array) {
     currentName = array[index];
     currentSets = setsArr[setsIndex];
     currentReps = repsArr[repsIndex];
+
 }
+
+function done() {
+    numCompleted++;
+
+    const listLeft = document.createElement('div');
+    listLeft.textContent = numCompleted + '. ' + currentName;
+    completedWorkoutsList.appendChild(listLeft);
+
+    const listRight = document.createElement('div');
+    listRight.textContent = `${currentSets} x ${currentReps} reps`;
+    listRight.classList.add('list-right');
+    completedWorkoutsList.appendChild(listRight);
+    // Make pop up to enter weight used
+    get_new();
+}
+
+function add_to_completed_list() {
+    // guess i dont need this
+
+}
+

@@ -152,7 +152,6 @@ aside {
 .main {
     display: flex;
     flex-direction: column;
-    border: 5px solid rgb(39, 39, 39);
     height: 80vh;
     width: 75vw;
     justify-self: center;
@@ -161,17 +160,18 @@ aside {
 }
 
 .current-container {
-    height: 15rem;
     text-align: center;
+    outline: 5px solid rgb(53, 53, 53);
+    padding: 15px 0;
 }
 
 .current-display {
     display: flex;
     flex-basis: 100px;
-    padding: 3rem 2rem 0;
+    padding: 2rem 1rem 0;
     font-size: 25px;
     font-weight: 600;
-    justify-content: space-around;
+    justify-content: center;
 }
 .bubble-display {
     border: 1px solid black;
@@ -225,7 +225,7 @@ aside {
 
 #skip, #done, #begin {
     border-radius: 10px;
-    border: 2px outset rgb(143, 143, 143);
+    border: 2px outset rgb(107, 107, 107);
     color: black;
     font-size: 22px;
     font-weight: 900;
@@ -247,19 +247,21 @@ aside {
 }
 
 .completed-container {
+    outline: 5px solid rgb(153, 153, 153);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 50px;
-
+    margin-top: 0px;
+    padding-bottom: 10px;
 }
 
 .completed-workouts-title {
     width: 95%;
     text-align: center;
-    margin: 1rem 0 0.5rem;
+    margin-bottom: 0.2rem;
     padding-bottom: 0.2rem;
+    font-size: 25px;
     border-style: solid;
     border-width: 0 0 1px;
     border-color: white;
@@ -278,42 +280,44 @@ aside {
     display: none;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 500px) {
     .main {
         padding: 1%;
-        width: 99vw;
+        width: 92vw;
     }
     #page-link {
-        margin-left: 26%;
+        margin-left: 32%;
     }
     .page-title {
         justify-content: flex-end;
-        right: 5%;
+        right: 10%;
         font-size: 30px;
         top: 15px;
     }
     #side-bar {
-        width: 23%;
+        width: 30%;
     }
     #begin {
         font-size: 16px;
     }
     .current-display {
         display: grid;
-        grid-template-columns: 50vw 50vw;
+        grid-template-columns: 46vw 46vw;
         font-size: 20px;
-        padding:0;
-        margin-top: 10px;
+        padding: 0;
+        margin-top: 15px;
         row-gap: 0;
     }
     #name, #muscle-group {
         grid-column-start: 1;
         grid-column-end: 3;
-        width: 98vw;
+        width: 95%;
+        justify-self: center;
     }
     #sets, #reps, #sets-label, #reps-label {
         width: 50%;
         justify-self: center;
+        
     }
 
     #muscle-group, #sets-label, #reps-label {
@@ -322,6 +326,7 @@ aside {
     
     .buttons-container {
         column-gap: 15%;
+        padding: 0 25px;
     }
 
     #completed-list {
