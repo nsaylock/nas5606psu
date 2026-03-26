@@ -25,25 +25,22 @@ a {
     background-color: gray;
 }
 
-.selection-menu-home-page {
+#selection-menu-home-page {
     margin-top: 50px;
-    border: 5px solid rgb(105, 69, 1);
-    background-color: rgb(212, 131, 8);
     border-radius: 15px;
-    height: 500px;
-    width: 50%;
+    height: 80vh;
+    width: 70%;
     font-size: 30px;
     font-weight: 900;
     text-align: center;
     /* Flex Menu Buttons*/
-    display: flex;
     flex-direction: column;
     justify-self: center;
     align-self: center;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    padding: 25px 50px 50px;
-    row-gap: 30px;
+    padding: 0px 10px 50px;
+    row-gap: 10px;
 }
 
 .menu-buttons-home-page {
@@ -51,17 +48,17 @@ a {
     border: 3px outset rgb(24,24,24);
     border-radius: 20px;
     height: 80px;
-    width: 75%;
+    width: 100%;
     color: white;
     font-size: 30px;
     font-weight: 900;
-    line-height: 80px;
+    line-height: 60px;
     text-align: middle;
     text-decoration: none;
     cursor: default;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.08s ease;
     flex-shrink: 1;
-    padding: 0 20px;
+    padding: 0 5px;
 }
 .menu-buttons-home-page:hover {
     background-color: rgb(44, 44, 44);
@@ -117,6 +114,10 @@ header {
     position: absolute;
     z-index: 0;
 }
+.page-title-text {
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+}
 
 aside {
     background-color: rgb(9, 5, 14);
@@ -141,6 +142,7 @@ aside {
 }
 
 .page-link {
+    color: black;
     display: block;
     width: 80%;
     height: 30px;
@@ -153,11 +155,9 @@ aside {
 
 
 
-.main {
-    display: flex;
+#main {
     flex-direction: column;
-    height: 80vh;
-    width: 75vw;
+    width: 700px;
     justify-self: center;
     padding-top: 25px;
     row-gap: 1rem;
@@ -169,26 +169,31 @@ aside {
     padding: 15px 0;
 }
 
-
+#current-label {
+    justify-self: flex-start;
+    margin-left: 100px;
+    margin-bottom: 0;
+    font-size: 30px;
+    font-weight: 900;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
 
 .current-display {
     flex-basis: 100px;
     padding: 2rem 1rem 0;
     font-size: 25px;
     font-weight: 600;
-    justify-content: center;
-
     display: grid;
     grid-template-columns: 50% 50%;
-    margin-top: 15px;
-    row-gap: 0;
+    grid-template-rows: 50px 60px 50px 30px;
+    margin: 5px 0 30px;
 }
 .bubble-display {
     border: 1px solid black;
     border-radius: 10px;
     color: black;
-    height: 3rem;
-    line-height: 3rem;
+    height: 50px;
+    line-height: 50px;
     text-align: middle;
     background-color: white;
 }
@@ -198,7 +203,10 @@ aside {
     width: 75%;
     justify-self: center;
 }
-
+#muscle-group {
+    font-size: 20px;
+    margin-bottom: 25px;
+}
 
 
 #sets, #reps, #sets-label, #reps-label {
@@ -207,25 +215,13 @@ aside {
     
 }
 
-#muscle-group, #sets-label, #reps-label {
-    margin-top: 5px;
-} 
-
-.labels-bar {
-    /* Same as current-display, shows type of workout and says 'sets' 'reps'*/
-    display: flex;
-    flex-basis: 100px;
-    padding: 5px 2rem;
-    font-size: 25px;
-    justify-content: space-around;
-    
-}
 .labels {
     /* Same as bubble-display so they stay locked to each other*/
     border-radius: 10px;
     color: white;
-    height: 3rem;
+    height: 35px;
     font-size: 18px;
+
 }
 
 .buttons-container {
@@ -290,15 +286,18 @@ aside {
     display: none;
 }
 
+.flex {
+    display: flex;
+}
+
 @media (max-width: 500px) {
-    .main {
+    #main {
         padding: 1%;
         width: 92vw;
     }
     
     #page-title {
-        justify-content: flex-end;
-        right: 10%;
+        justify-content: center;
         font-size: 30px;
         top: 15px;
     }
@@ -308,10 +307,14 @@ aside {
     #begin {
         font-size: 20px;
     }
+    #current-label {
+        margin-left: 25px;
+        margin-bottom: 20px;
+    }
     .current-display {
         display: grid;
         grid-template-columns: 46vw 46vw;
-        font-size: 20px;
+        font-size: 24px;
         padding: 0;
         margin-top: 15px;
         row-gap: 0;
@@ -325,13 +328,12 @@ aside {
     #sets, #reps, #sets-label, #reps-label {
         width: 50%;
         justify-self: center;
-        
     }
 
     #muscle-group, #sets-label, #reps-label {
-        margin-top: 5px;
+        margin-top: 2px;
     } 
-    
+
     .buttons-container {
         column-gap: 15%;
         padding: 0 25px;

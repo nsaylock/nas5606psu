@@ -1,4 +1,3 @@
-let workoutIndex = '';
 let completedWorkoutsDict = {
     "Legs": [],
     "Chest": [],
@@ -10,6 +9,7 @@ let completedWorkoutsDict = {
     "Bodyweight": []
 };
 
+let hideSideBar = false;
 let workoutSelection = '';
 let setsArr = [];
 let repsArr = [];
@@ -22,8 +22,7 @@ let currentReps = '';
 let first = true;
 let numCompleted = 0;
 
-const pageTitleElement = document.getElementById('page-title-text');
-
+const currentWorkoutLabel = document.getElementById('current-label');
 // Side Bar
 const sideBarButton = document.getElementById('side-bar-button');
 const sideBar = document.getElementById('side-bar');
@@ -53,16 +52,12 @@ const completedWorkoutsList = document.getElementById('completed-list');
 
 // ------- EVENT LISTENERS
 
-button.skip.addEventListener('click', (e) => {
-    if (first == true) {
-        //Do nothing
-    } else {
-        get_new();
-    }
-});
+button.skip.addEventListener('click', get_new);
 button.done.addEventListener('click', done);
 button.begin.addEventListener('click', get_new);
 
+const mainMenuElement = document.getElementById('selection-menu-home-page');
+const mainElement = document.getElementById('main');
 
 
 const fullBodyButton = document.getElementById('full-body');
@@ -71,15 +66,19 @@ const pullButton = document.getElementById('pull');
 const legsButton = document.getElementById('legs');
 const absButton = document.getElementById('abs');
 const bodyweightButton = document.getElementById('bodyweight');
+const clearListButton = document.getElementById('clear');
+const main = {
+    fullBody: document.getElementById('full-body-main'),
+    push: document.getElementById('push-main'),
+    pull: document.getElementById('pull-main'),
+    legs: document.getElementById('legs-main')
+}
 
 // -------------------- FUNCTIONS
 
 window.addEventListener('load', function() {
     button.done.classList.add('hidden');
     button.skip.classList.add('hidden');
-    workoutSelection = 'full-body';
-    reload_page();
-    sideBar.classList.toggle('open');
 });
 
 fetch('data/workouts.json')
@@ -95,11 +94,23 @@ fetch('data/workouts.json')
     })
     .catch(error => console.error('Error loading JSON:', error));
 
+function switch_off_main_menu() {
+    mainMenuElement.classList.remove('flex');
+    mainMenuElement.classList.add('hidden');
+    mainElement.classList.remove('hidden');
+    mainElement.classList.add('flex');
+    hideSideBar = false;
+}
+
+function switch_buttons() {
+    button.begin.classList.toggle('hidden');
+    button.skip.classList.toggle('hidden');
+    button.done.classList.toggle('hidden');
+}
+
 function get_new() {
     if (first == true) {
-        button.begin.classList.toggle('hidden');
-        button.skip.classList.remove('hidden');
-        button.done.classList.remove('hidden');
+        switch_buttons();
         first = false;
     }
     // for full body
@@ -110,7 +121,7 @@ function get_new() {
 function select_muscle_group() {
     // Total of 136 Workouts
     switch (workoutSelection) {
-        case 'full-body':
+        case 'full Body':
             i = Math.ceil(Math.random() * 8);
             break;
         case 'push':
@@ -212,39 +223,106 @@ function done() {
 }
 
 function reload_page() {
-    sideBar.classList.toggle('open');
+    if (hideSideBar == true) {
+        sideBar.classList.toggle('open');
+        switch_buttons();
+        first = true;
+        clear_list();
+    }
     newTitle = workoutSelection.charAt(0).toUpperCase() + workoutSelection.slice(1);
+    if (newTitle == "Legs") {
+        newTitle = 'Lower Body';
+    }
     document.title = newTitle;
-    pageTitleElement.textContent = newTitle;
+    currentWorkoutLabel.textContent = newTitle;
+    currentMuscleGroup.textContent = 'Workout';
+    currentWorkout.name.textContent = '';
+    currentWorkout.sets.textContent = '';
+    currentWorkout.reps.textContent = '';
 
+}
+
+function clear_list() {
+    while (completedWorkoutsList.firstChild) {
+        completedWorkoutsList.removeChild(completedWorkoutsList.firstChild);
+    }
+    hideSideBar = true;
+    numCompleted = 0;
+    reset_completed_dict();
+}
+
+function reset_completed_dict() {
+    completedWorkoutsDict = {
+    "Legs": [],
+    "Chest": [],
+    "Shoulders": [],
+    "Triceps": [],
+    "Back": [],
+    "Biceps": [],
+    "Abs": [],
+    "Bodyweight": []
+};
 }
 
 
 fullBodyButton.addEventListener('click', (e) => {
-    workoutSelection = 'full-body';
+    workoutSelection = 'full Body';
+    hideSideBar = true;
     reload_page();
 });
 pushButton.addEventListener('click', (e) => {
     workoutSelection = 'push';
+    hideSideBar = true;
     reload_page();
 });
 
 pullButton.addEventListener('click', (e) => {
     workoutSelection = 'pull';
+    hideSideBar = true;
     reload_page();
+    
 });
 
 legsButton.addEventListener('click', (e) => {
     workoutSelection = 'legs';
+    hideSideBar = true;
     reload_page();
 });
 
 absButton.addEventListener('click', (e) => {
     workoutSelection = 'abs';
+    hideSideBar = true;
     reload_page();
 });
 
 bodyweightButton.addEventListener('click', (e) => {
     workoutSelection = 'bodyweight';
+    hideSideBar = true;
+    reload_page();
+});
+
+clearListButton.addEventListener('click', (e) => {
+    clear_list();
+    sideBar.classList.toggle('open');
+});
+
+main.fullBody.addEventListener('click', (e) => {
+    switch_off_main_menu();
+    workoutSelection = 'full Body';
+    reload_page();
+});
+main.push.addEventListener('click', (e) => {
+    switch_off_main_menu();
+    workoutSelection = 'push';
+    reload_page();
+});
+main.pull.addEventListener('click', (e) => {
+    switch_off_main_menu();
+    workoutSelection = 'pull';
+    reload_page();
+});
+main.legs.addEventListener('click', (e) => {
+    switch_off_main_menu();
+    workoutSelection = 'legs';
     reload_page();
 });

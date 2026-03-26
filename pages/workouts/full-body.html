@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full Body</title>
+    <title>Workout</title>
     <link rel="stylesheet" href="style.css">
     <script src="javascript.js" defer></script>
 </head>
 <body>
 <header>
-
+    
 
     <button id="side-bar-button"></button>
-    <div class="side-bar-label">Workout<br>Selection</div>
+    <div class="side-bar-label"></div>
     <aside id="side-bar">
         <button class="page-link" id="full-body">Full Body</button>
         <button class="page-link" id="push">Push</button>
@@ -20,15 +20,23 @@
         <button class="page-link" id="legs">Legs</button>
         <button class="page-link" id="abs">Abs</button>
         <button class="page-link" id="bodyweight">Bodyweight</button>
+        <button class="page-link" id="clear" style="background-color: rgb(182, 114, 13);">Clear List</button>
+        
     </aside>
 
 
-    <div id="page-title"><div id="page-title-text"></div></div>
+    <div id="page-title"><div class="page-title-text">Workout Generator</div></div>
 </header>
 <!-- Main Area -->
-<div class="main">
+<nav id="selection-menu-home-page" class="flex">
+    <button class="menu-buttons-home-page" id="full-body-main">Full Body</a>
+    <button class="menu-buttons-home-page" id="push-main">Push</button>
+    <button class="menu-buttons-home-page" id="pull-main">Pull</button>
+    <button class="menu-buttons-home-page" id="legs-main">Legs</button>
+</nav>
+<div id="main" class="hidden">
     <div class="current-container">
-        <h2>Current Workout</h2>
+        <div id="current-label">Current Workout</div>
         <div class="current-display">
             <div class='bubble-display' id="name"></div>
             <div class='labels' id="muscle-group">Workout</div>
