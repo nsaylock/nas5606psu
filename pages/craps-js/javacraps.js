@@ -39,7 +39,7 @@ let goodToPlace = false;
 //let moveDCBet = false;
 let gameOn = false;
 let oneOrTwo;
-
+let chipDisplay = 'blank';
 
 // Table Bet Storage Variables
 let passLineBet = 0;
@@ -73,6 +73,7 @@ window.addEventListener('load', (e) => {
   let rand = Math.ceil(Math.random() * 5);
   let location = `img/casino_0${rand}.jpg`;
   document.body.style.backgroundImage = "url('"+location+"')";
+  load_bankroll_chips();
 });
 
 // Numbers/Messages
@@ -236,10 +237,7 @@ const dontPassBarChipsDisplay = document.getElementById('dont-pass-chips-display
 
 const passLineElement = document.getElementById('pass-line');
 
-let passLineChips = {
-  location: document.getElementById('pass-line-chips'),
-  chips: []
-};
+
 const passLineOddsElement = document.getElementById('pass-line-odds');
 
 const original = {
@@ -247,7 +245,25 @@ const original = {
   betElementStyle: betElement.style,
   hardwaysTextElementStyle: hardwaysTextElement.four.textContent
 }
+// $$$$$$$$$$$$$$$$$$ CHIPS DISPLAY OBJECTS $$$$$$$$$$$$$$$$ //
 
+let bankrollChips = {
+  location: document.getElementById('bankroll-chips'),
+  stacks: [],
+  platinum: [],
+  brown: [],
+  gold: [],
+  purple: [],
+  black: [],
+  green: [],
+  red: [],
+  white: []
+}
+
+let passLineChips = {
+  location: document.getElementById('pass-line-chips'),
+  chips: []
+};
 
 // $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
 
@@ -257,15 +273,15 @@ function check_for_chip_img() {
     betContainerElement.style.backgroundImage = "url('')";
   } else {
     if (stagedBet > 0 && stagedBet < 5) {
-        betContainerElement.style.backgroundImage = "url('img/chips/white_chip.png')";
+        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/white_chip.png')";
       } else if (stagedBet >= 5 && stagedBet < 25) {
-        betContainerElement.style.backgroundImage = "url('img/chips/red_chip.png')";
+        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/red_chip.png')";
       } else if (stagedBet >= 25 && stagedBet < 100) {
-        betContainerElement.style.backgroundImage = "url('img/chips/green_chip_2.png')";
+        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/green_chip.png')";
       } else if (stagedBet >= 100 && stagedBet < 500) {
-        betContainerElement.style.backgroundImage = "url('img/chips/black_chip.png')";
+        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/black_chip.png')";
       } else {
-        betContainerElement.style.backgroundImage = "url('img/chips/purple_chip.png')";
+        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/purple_chip.png')";
     }
 
   }
@@ -372,12 +388,151 @@ function play_increment_sound() {
   incrementSound.play();
 }
 
+function load_bankroll_chips() {
+  //create 1 div for stack of black chips
+    bankrollChips.stacks[0] = document.createElement('div');
+    bankrollChips.stacks[0].classList.add('chip-stack');
+    bankrollChips.location.appendChild(bankrollChips.stacks[0]);
+// create 5 imgs of black_chip for $500 starting bankroll
+  for (i = 0; i < 5; i++) {
+    bankrollChips.black[i] = document.createElement('img');
+    bankrollChips.black[i].src = 'img/chips/side/blank/black_chip.png';
+    bankrollChips.black[i].classList.add('bankroll-chip-img');
+    bankrollChips.black[i].style.marginBottom = `${i*9}px`;
+    bankrollChips.stacks[0].appendChild(bankrollChips.black[i]);
+  }
+}
+
+function update_bankroll_chips() {
+  //object is bankrollChips {stacks[], plat[], brown[], gold[], purple[], etc}
+  chipStructure = get_chip_structure(bankroll);
+  let stackIndex = 0;
+  for (const color in chipStructure) {
+    if (chipStructure[color] != 0) {
+      console.log(chipStructure[color]);
+      
+      bankrollChips.stacks[stackIndex] = document.createElement('div');
+      thisStack = bankrollChips.stacks[stackIndex];
+      thisStack.classList.add('chip-stack');
+      thisStack.style.marginLeft = `${stackIndex*110}px`;
+      bankrollChips.location.appendChild(thisStack);
+      
+      for (i = 0; i < chipStructure[color]; i++) {
+        bankrollChips[color][i] = document.createElement('img');
+        thisChip = bankrollChips[color][i];
+        thisChip.src = `img/chips/side/blank/${color}_chip.png`;
+        thisChip.classList.add('bankroll-chip-img');
+        thisChip.style.marginBottom = `${i*9}px`;
+        thisStack.appendChild(thisChip);
+      }
+        
+      stackIndex++;
+    }
+  }
+  reset_chip_structure();
+}
+
+function add_chips_to_table(object) {
+//chip structure
+// object.location is the div element where the chips are going
+// object.chips is an array where each chip img will get stored
+// class table-chip-img is the size of the chip 60px x 60px
+  let index = 0;
+  let chipSpacing = 0;
+  object.chips = []
+  chipStructure = get_chip_structure(stagedBet); // of the stagedBet
+
+  for (i = 0; i < chipStructure.black; i++) {
+    index = object.chips.length;
+    object.chips[index] = document.createElement('img');
+    thisChip = object.chips[index];
+    thisChip.src = `img/chips/face/${chipDisplay}/black_chip.png`;
+    thisChip.classList.add('table-chip-img');
+    thisChip.style.marginLeft = `${chipSpacing}px`;
+    object.location.appendChild(thisChip);
+    chipSpacing += 12;
+  }
+  for (i = 0; i < chipStructure.green; i++) {
+    index = object.chips.length;
+    object.chips[index] = document.createElement('img');
+    thisChip = object.chips[index];
+    thisChip.src = `img/chips/face/${chipDisplay}/green_chip.png`;
+    thisChip.classList.add('table-chip-img');
+    thisChip.style.marginLeft = `${chipSpacing}px`;
+    object.location.appendChild(thisChip);
+    chipSpacing += 12;
+  }
+  for (i = 0; i < chipStructure.red; i++) {
+    index = object.chips.length;
+    object.chips[index] = document.createElement('img');
+    thisChip = object.chips[index];
+    thisChip.src = `img/chips/face/${chipDisplay}/red_chip.png`;
+    thisChip.classList.add('table-chip-img');
+    thisChip.style.marginLeft = `${chipSpacing}px`;
+    object.location.appendChild(thisChip);
+    chipSpacing += 12;
+  }
+  for (i = 0; i < chipStructure.white; i++) {
+    index = object.chips.length;
+    object.chips[index] = document.createElement('img');
+    thisChip = object.chips[index];
+    thisChip.src = `img/chips/face/${chipDisplay}/white_chip.png`;
+    thisChip.classList.add('table-chip-img');
+    thisChip.style.marginLeft = `${chipSpacing}px`;
+    object.location.appendChild(thisChip);
+    chipSpacing += 12;
+  }
+  reset_chip_structure();
+}
+
+function reset_chip_structure() {
+  chipStructure = {black:0, green:0, red:0, white:0};
+}
+
+function remove_chips_from_table(object) {
+  for (const chip in object.chips) {
+    object.chips[chip].remove();
+  }
+}
+
+function get_chip_structure(amount) {
+  temp = amount;
+  if (temp >= 100) {
+    black = Math.floor(temp/100);
+    temp = temp % 100;
+  } else {
+    black = 0;
+  }
+  if (temp >= 25) {
+    green = Math.floor(temp/25);
+    temp = temp % 25;
+  } else {
+    green = 0;
+  }
+  if (temp >= 5) {
+    red = Math.floor(temp/5);
+    temp = temp % 5;
+  } else {
+    red = 0;
+  }
+  if (temp >= 1) {
+    white = temp;
+  } else {
+    white = 0;
+  }
+  return {black, green, red, white};
+}
+
 
 // ####################### USEFUL FUNCTIONS ################################
 function update_bankroll() {
   bankroll -= stagedBet;
   bankrollElement.textContent = '$' + bankroll;
+  update_bankroll_chips();
 }
+
+
+
 function commit_bet(betToPlace) {
   betToPlace = stagedBet;
   moneyOnTable += betToPlace; // Testing purposes
@@ -791,93 +946,7 @@ function pass_line() { // adds bet to pass line
   }
 }
 
-function add_chips_to_table(object) {
-//chip structure
-// object.location is the div element where the chips are going
-// object.chips is an array where each chip img will get stored
-// class table-chips is the size of the chip 60px x 60px
-  let index = 0;
-  let chipSpacing = 0;
-  object.chips = []
-  chipStructure = get_chip_structure(); // of the stagedBet
 
-  for (i = 0; i < chipStructure.black; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = 'img/chips/black_chip.png';
-    thisChip.classList.add('table-chips');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-  for (i = 0; i < chipStructure.green; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = 'img/chips/green_chip_2.png';
-    thisChip.classList.add('table-chips');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-  for (i = 0; i < chipStructure.red; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = 'img/chips/red_chip.png';
-    thisChip.classList.add('table-chips');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-  for (i = 0; i < chipStructure.white; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = 'img/chips/white_chip.png';
-    thisChip.classList.add('table-chips');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-}
-
-function remove_chips_from_table(object) {
-  for (const chip in object.chips) {
-    object.chips[chip].remove();
-  }
-}
-
-function get_chip_structure() {
-  temp = stagedBet;
-  if (temp >= 100) {
-    black = Math.floor(temp/100);
-    temp = temp % 100;
-  } else {
-    black = 0;
-  }
-  if (temp >= 25) {
-    green = Math.floor(temp/25);
-    temp = temp % 25;
-  } else {
-    green = 0;
-  }
-  if (temp >= 5) {
-    red = Math.floor(temp/5);
-    temp = temp % 5;
-  } else {
-    red = 0;
-  }
-  if (temp >= 1) {
-    white = temp;
-  } else {
-    white = 0;
-  }
-
-
-  return {black, green, red, white};
-}
 
 function pass_line_odds() {
   if (placeBet[target] != 0) {
@@ -1733,13 +1802,13 @@ tallNumbersButton.addEventListener('click', (e) => {
 
 function set_bonus_bet() {
   if (smallNumbersBet != 0) {
-    smallNumbersButton.style.backgroundImage = "url('img/chips/red_chip.png')";
+    smallNumbersButton.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"red_chip.png')";
   }
   if (allNumbersBet != 0) {
-    allNumbersButton.style.backgroundImage = "url('img/chips/red_chip.png')";
+    allNumbersButton.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"red_chip.png')";
   }
   if (tallNumbersBet != 0) {
-    tallNumbersButton.style.backgroundImage = "url('img/chips/red_chip.png')";
+    tallNumbersButton.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"red_chip.png')";
   }
 }
 function check_bonus_bet(sum) {

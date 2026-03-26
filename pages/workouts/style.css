@@ -153,7 +153,7 @@ aside {
     display: flex;
     flex-direction: column;
     border: 5px solid rgb(39, 39, 39);
-    height: 60vh;
+    height: 80vh;
     width: 75vw;
     justify-self: center;
     padding-top: 25px;
@@ -224,11 +224,13 @@ aside {
 }
 
 #skip, #done, #begin {
-    border-radius: 5px;
-    font-size: 20px;
+    border-radius: 10px;
+    border: 2px outset rgb(143, 143, 143);
+    color: black;
+    font-size: 22px;
     font-weight: 900;
     height: 3rem;
-    width: 5rem;
+    width: 10rem;
 
 }
 
@@ -248,18 +250,28 @@ aside {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    margin-top: 50px;
 
 }
 
 .completed-workouts-title {
-    width: 100%;
+    width: 95%;
     text-align: center;
-    margin-top: 2rem;
+    margin: 1rem 0 0.5rem;
+    padding-bottom: 0.2rem;
+    border-style: solid;
+    border-width: 0 0 1px;
+    border-color: white;
 }
 
 #completed-list {
-    border: 1px solid white;
-    width: 75%;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    width: 95%;
+}
+.list-right {
+    justify-self: end;
 }
 
 .hidden {
@@ -268,6 +280,7 @@ aside {
 
 @media (max-width: 550px) {
     .main {
+        padding: 1%;
         width: 99vw;
     }
     #page-link {
@@ -286,11 +299,32 @@ aside {
         font-size: 16px;
     }
     .current-display {
-        justify-content: space-between;
-        padding: 3rem 8px 0;
+        display: grid;
+        grid-template-columns: 50vw 50vw;
         font-size: 20px;
+        padding:0;
+        margin-top: 10px;
+        row-gap: 0;
     }
-    .labels-bar {
-        padding: 5px 0;
+    #name, #muscle-group {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        width: 98vw;
+    }
+    #sets, #reps, #sets-label, #reps-label {
+        width: 50%;
+        justify-self: center;
+    }
+
+    #muscle-group, #sets-label, #reps-label {
+        margin-top: 5px;
+    } 
+    
+    .buttons-container {
+        column-gap: 15%;
+    }
+
+    #completed-list {
+        font-size: 18px;
     }
 }

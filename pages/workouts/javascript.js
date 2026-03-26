@@ -46,7 +46,8 @@ const button = {
 
 // Bottom
 const completedWorkoutsList = document.getElementById('completed-list');
-
+   
+//////
 
 // ------- EVENT LISTENERS
 
@@ -76,6 +77,11 @@ fetch('data/workouts.json')
     })
     .catch(error => console.error('Error loading JSON:', error));
 
+window.addEventListener('load', function() {
+    button.done.classList.add('hidden');
+    button.skip.classList.add('hidden');
+});
+
 // begin workout button ??
 //async function load_full_body() {
 //    const fullBodyURL = 'data/workouts.json';
@@ -94,6 +100,8 @@ fetch('data/workouts.json')
 function get_new() {
     if (first == true) {
         button.begin.classList.toggle('hidden');
+        button.skip.classList.remove('hidden');
+        button.done.classList.remove('hidden');
         first = false;
     }
     // for full body
@@ -143,11 +151,14 @@ function select_muscle_group() {
 function done() {
     numCompleted++;
     completedWorkoutsDict[currentMG].push(index);
-    const newDiv = document.createElement('div');
-    let previousWorkout = `${currentName} ------ ${currentSets} x ${currentReps} reps`;
+    const listLeft = document.createElement('div');
     
-    newDiv.textContent = numCompleted + '. ' + previousWorkout;
-    completedWorkoutsList.appendChild(newDiv);
+    listLeft.textContent = numCompleted + '. ' + currentName;
+    completedWorkoutsList.appendChild(listLeft);
+    const listRight = document.createElement('div');
+    listRight.textContent = `${currentSets} x ${currentReps} reps`;
+    listRight.classList.add('list-right');
+    completedWorkoutsList.appendChild(listRight);
     // Make pop up to enter weight used
     get_new();
 }
