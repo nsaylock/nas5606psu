@@ -106,7 +106,7 @@ header {
 .side-bar-label {
     font-size: 16px;
 }
-.page-title {
+#page-title {
     font-size: 36px;
     font-weight: 600;
     height: 55px;
@@ -124,6 +124,7 @@ aside {
     position: absolute;
     display: flex;
     flex-direction: column;
+    align-items: center;
     left: 0;
     top: 75px;
     row-gap: 25px;
@@ -131,7 +132,7 @@ aside {
 }
 
 #side-bar {
-    width: 15%;
+    width: 25%;
     transition: transform 0.3s ease-in-out;
     transform: translateX(-100%);
 }
@@ -139,9 +140,12 @@ aside {
     transform: translateX(0%);
 }
 
-#page-link {
+.page-link {
     display: block;
-    margin-left: 35%;
+    width: 80%;
+    height: 30px;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 /* End header and side bar */
@@ -165,13 +169,19 @@ aside {
     padding: 15px 0;
 }
 
+
+
 .current-display {
-    display: flex;
     flex-basis: 100px;
     padding: 2rem 1rem 0;
     font-size: 25px;
     font-weight: 600;
     justify-content: center;
+
+    display: grid;
+    grid-template-columns: 50% 50%;
+    margin-top: 15px;
+    row-gap: 0;
 }
 .bubble-display {
     border: 1px solid black;
@@ -182,6 +192,24 @@ aside {
     text-align: middle;
     background-color: white;
 }
+#name, #muscle-group {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    width: 75%;
+    justify-self: center;
+}
+
+
+
+#sets, #reps, #sets-label, #reps-label {
+    width: 50%;
+    justify-self: center;
+    
+}
+
+#muscle-group, #sets-label, #reps-label {
+    margin-top: 5px;
+} 
 
 .labels-bar {
     /* Same as current-display, shows type of workout and says 'sets' 'reps'*/
@@ -200,23 +228,6 @@ aside {
     font-size: 18px;
 }
 
-#name, #muscle-group {
-    width: 50%;
-    flex: 1 0 auto;
-
-}
-
-#sets, #sets-label {
-    width: 15%;
-    margin: 0 5%;
-    flex: 0 1 auto;
-}
-
-
-#reps, #reps-label {
-    width: 15%;
-}
-
 .buttons-container {
     display: flex;
     justify-content: center;
@@ -231,11 +242,10 @@ aside {
     font-weight: 900;
     height: 3rem;
     width: 10rem;
-
 }
 
 #begin {
-    width: 10rem;
+    width: 15rem;
     background-color: rgb(212, 131, 8);
 }
 #skip {
@@ -285,20 +295,18 @@ aside {
         padding: 1%;
         width: 92vw;
     }
-    #page-link {
-        margin-left: 32%;
-    }
-    .page-title {
+    
+    #page-title {
         justify-content: flex-end;
         right: 10%;
         font-size: 30px;
         top: 15px;
     }
     #side-bar {
-        width: 30%;
+        width: 38%;
     }
     #begin {
-        font-size: 16px;
+        font-size: 20px;
     }
     .current-display {
         display: grid;
@@ -332,4 +340,20 @@ aside {
     #completed-list {
         font-size: 18px;
     }
+    /* Home Page */
+.main-area {
+    height: 100vh;
+    align-items: center;
+}
+
+.selection-menu-home-page {
+    height: 75vh;
+    width: 60vw;
+    font-size: 26px;
+}
+
+.menu-buttons-home-page {
+    font-size: 24px;
+}
+
 }

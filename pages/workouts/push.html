@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Body</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="javascript.js" defer></script>
+</head>
+<body>
+<header>
+
+
+    <button id="side-bar-button"></button>
+    <div class="side-bar-label">Workout<br>Selection</div>
+    <aside id="side-bar">
+        <a id="page-link" >Push</a>
+        <a id="page-link" >Pull</a>
+        <a id="page-link" >Legs</a>
+    </aside>
+
+
+    <div class="page-title"><div>Full Body</div></div>
+</header>
+<!-- Main Area -->
+<div class="main">
+    <div class="current-container">
+        <h2>Current Workout</h2>
+        <div class="current-display">
+            <div class='bubble-display' id="name"></div>
+            <div class='labels' id="muscle-group">Workout</div>
+            <div class='bubble-display' id="sets"></div>
+            <div class='bubble-display' id="reps"></div>
+            <div class='labels' id="sets-label">Sets</div>
+            <div class='labels' id="reps-label">Reps</div>
+        </div>
+        
+        <div class="buttons-container">
+            <button id="begin">Begin Workout</button>
+            <button id="skip">Skip</button>
+            <button id="done">Done</button>
+        </div>
+    </div><!-- close current workout container -->
+    <div class="completed-container">
+        <div class="completed-workouts-title">Completed Workouts</div>
+        <div id="completed-list">
+            <div class="list-left"></div>
+            <div class="list-right"></div>
+        </div>
+    </div><!-- close completed workouts container-->
+</div> <!-- close main -->
+</body>
+</html>

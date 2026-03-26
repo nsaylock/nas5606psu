@@ -10,6 +10,7 @@ let completedWorkoutsDict = {
     "Bodyweight": []
 };
 
+let workoutSelection = '';
 let setsArr = [];
 let repsArr = [];
 let workoutsDict = {};
@@ -21,10 +22,11 @@ let currentReps = '';
 let first = true;
 let numCompleted = 0;
 
+const pageTitleElement = document.getElementById('page-title-text');
+
 // Side Bar
 const sideBarButton = document.getElementById('side-bar-button');
 const sideBar = document.getElementById('side-bar');
-const pageLink = document.getElementById('page-link');
 sideBarButton.addEventListener('click', () => {
     sideBar.classList.toggle('open');
 });
@@ -62,7 +64,23 @@ button.done.addEventListener('click', done);
 button.begin.addEventListener('click', get_new);
 
 
+
+const fullBodyButton = document.getElementById('full-body');
+const pushButton = document.getElementById('push');
+const pullButton = document.getElementById('pull');
+const legsButton = document.getElementById('legs');
+const absButton = document.getElementById('abs');
+const bodyweightButton = document.getElementById('bodyweight');
+
 // -------------------- FUNCTIONS
+
+window.addEventListener('load', function() {
+    button.done.classList.add('hidden');
+    button.skip.classList.add('hidden');
+    workoutSelection = 'full-body';
+    reload_page();
+    sideBar.classList.toggle('open');
+});
 
 fetch('data/workouts.json')
     .then(response => {
@@ -76,26 +94,6 @@ fetch('data/workouts.json')
 
     })
     .catch(error => console.error('Error loading JSON:', error));
-
-window.addEventListener('load', function() {
-    button.done.classList.add('hidden');
-    button.skip.classList.add('hidden');
-});
-
-// begin workout button ??
-//async function load_full_body() {
-//    const fullBodyURL = 'data/workouts.json';
-//    const request = new Request(fullBodyURL);
-//    const response = await fetch(request);
-//    const workoutsJSON = await response.json();
-
-//    return workoutsJSON;
-    
-
-    //const repsArr = workoutsJSON.reps;
-    //const workoutDict = workoutsJSON.workouts; //Keys from the JSON file
-
-//}
 
 function get_new() {
     if (first == true) {
@@ -111,7 +109,27 @@ function get_new() {
 
 function select_muscle_group() {
     // Total of 136 Workouts
-    let i = Math.ceil(Math.random()*8);
+    switch (workoutSelection) {
+        case 'full-body':
+            i = Math.ceil(Math.random() * 8);
+            break;
+        case 'push':
+            i = Math.ceil(Math.random() * 3) + 1;
+            break;
+        case 'pull':
+            i = Math.ceil(Math.random() * 2) + 4;
+            break;
+        case 'legs':
+            i = 1;
+            break;
+        case 'abs':
+            i = 7;
+            break;
+        case 'bodyweight':
+            i = 8;
+            break;
+    }
+    
     switch (i) {
         case 1:
             currentMG = "Legs";
@@ -193,8 +211,40 @@ function done() {
     get_new();
 }
 
-function add_to_completed_list() {
-    // guess i dont need this
+function reload_page() {
+    sideBar.classList.toggle('open');
+    newTitle = workoutSelection.charAt(0).toUpperCase() + workoutSelection.slice(1);
+    document.title = newTitle;
+    pageTitleElement.textContent = newTitle;
 
 }
 
+
+fullBodyButton.addEventListener('click', (e) => {
+    workoutSelection = 'full-body';
+    reload_page();
+});
+pushButton.addEventListener('click', (e) => {
+    workoutSelection = 'push';
+    reload_page();
+});
+
+pullButton.addEventListener('click', (e) => {
+    workoutSelection = 'pull';
+    reload_page();
+});
+
+legsButton.addEventListener('click', (e) => {
+    workoutSelection = 'legs';
+    reload_page();
+});
+
+absButton.addEventListener('click', (e) => {
+    workoutSelection = 'abs';
+    reload_page();
+});
+
+bodyweightButton.addEventListener('click', (e) => {
+    workoutSelection = 'bodyweight';
+    reload_page();
+});
