@@ -58,6 +58,7 @@ let dontComeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let dontComeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let chipStructure = {black: 0, green: 0, red: 0, white: 0};
 let prevChipStructure = {black: 5, green: 0, red: 0, white: 0};
+let prevStagedBet = 0;
 
 let smallNumbersHit = {2:false, 3:false, 4:false, 5:false, 6:false};
 let tallNumbersHit = {8:false, 9:false, 10:false, 11:false, 12:false};
@@ -70,6 +71,9 @@ let tallNumbersBet = 0;
 let allTallTrue = false;
 let allTallPaid = false;
 
+// Animation Variable
+let soundDelay = 0;
+
 window.addEventListener('load', (e) => {
   let rand = Math.ceil(Math.random() * 5);
   let location = `img/casino_0${rand}.jpg`;
@@ -79,8 +83,8 @@ window.addEventListener('load', (e) => {
 
 // Numbers/Messages
 const betElement = document.getElementById('staged-bet');
-const betContainerElement = document.getElementById('bet-left');
-const bankrollElement = document.getElementById('bankroll');
+const betContainerElement = document.getElementById('staged-bet-container');
+const bankrollElement = document.getElementById('bankroll-amount');
 
 const dice1Element = document.getElementById('dice1');
 const dice2Element = document.getElementById('dice2');
@@ -247,6 +251,11 @@ const original = {
   hardwaysTextElementStyle: hardwaysTextElement.four.textContent
 }
 // $$$$$$$$$$$$$$$$$$ CHIPS DISPLAY OBJECTS $$$$$$$$$$$$$$$$ //
+const stagedBetChips = {
+  location: document.getElementById('staged-bet-chips'),
+  chip: []
+}
+
 const bankrollDiv = document.getElementById('bankroll-chips');
 
 let bankrollChips = {
@@ -274,52 +283,35 @@ let bankrollStack = {
 
 let passLineChips = {
   location: document.getElementById('pass-line-chips'),
-  chips: []
+  chip: []
 };
 
 // $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
 
-function check_for_chip_img() {
-  betElement.style = original.betElementStyle;
-  if (stagedBet == 0) {
-    betContainerElement.style.backgroundImage = "url('')";
-  } else {
-    if (stagedBet > 0 && stagedBet < 5) {
-        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/white_chip.png')";
-      } else if (stagedBet >= 5 && stagedBet < 25) {
-        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/red_chip.png')";
-      } else if (stagedBet >= 25 && stagedBet < 100) {
-        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/green_chip.png')";
-      } else if (stagedBet >= 100 && stagedBet < 500) {
-        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/black_chip.png')";
-      } else {
-        betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/purple_chip.png')";
-    }
-    update_bankroll_chips(bankroll - stagedBet);
-  }
-}
+
 function incrementbyone() {
   if (stagedBet < bankroll) {
     stagedBet++;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
   }
 }
 function incrementbyfive() {
   if (stagedBet < bankroll) {
     stagedBet += 5;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
+
   }
 }
 function decrementbyone() {
   if (stagedBet > 0) {
     stagedBet--;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_decrement_sound();
-    check_for_chip_img();
   } else {
     betElement.textContent = '$0';
     betElement.style = original.betElementStyle;
@@ -330,8 +322,8 @@ function decrementbyfive() {
   if (stagedBet >= 5) {
     stagedBet = stagedBet - 5;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_decrement_sound();
-    check_for_chip_img();
   } else {
     betElement.textContent = '$0';
     betElement.style = original.betElementStyle;
@@ -344,8 +336,8 @@ function make_twenty_five() {
   } else {
     stagedBet = 25;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
   }
 }
 function make_thirty() {
@@ -354,8 +346,8 @@ function make_thirty() {
   } else {
     stagedBet = 30;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
   }
 }
 function make_one_hundred() {
@@ -364,8 +356,8 @@ function make_one_hundred() {
   } else {
     stagedBet = 100;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
   }
 }
 function make_two_fifty() {
@@ -374,8 +366,8 @@ function make_two_fifty() {
   } else {
     stagedBet = 250;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
   }
 }
 function make_five_hundred() {
@@ -384,20 +376,142 @@ function make_five_hundred() {
   } else {
     stagedBet = 500;
     betElement.textContent = '$' + stagedBet;
+    update_staged_bet_chips();
     play_increment_sound();
-    check_for_chip_img();
   }
 }
 function play_decrement_sound() {
-  soundSelector = Math.floor(Math.random()*3)+1;
-  decrementSound = new Audio(`sounds/Chips_Remove_${soundSelector}.mp3`);
-  decrementSound.play();
+  if (playSound = true) {
+    soundSelector = Math.floor(Math.random()*3)+1;
+    decrementSound = new Audio(`sounds/Chips_Remove_${soundSelector}.mp3`);
+    decrementSound.play();
+  }
+  
 }
+let playSound = true;
 function play_increment_sound() {
   pullBackInProgress = false;
-  soundSelector = Math.floor(Math.random()*4)+1;
-  incrementSound = new Audio(`sounds/Chips_Add_${soundSelector}.mp3`);
-  incrementSound.play();
+  setTimeout(() => {
+    if (playSound == true) {
+    soundSelector = Math.floor(Math.random()*4)+1;
+    incrementSound = new Audio(`sounds/Chips_Add_${soundSelector}.mp3`);
+    incrementSound.play();
+    }
+  }, duration/1.5);
+}
+
+function update_staged_bet_chips() {
+  update_bankroll_chips(bankroll - stagedBet);
+  move_chips_animation('staged-bet');
+}
+
+function animated_update_staged_bet_chips() {
+  if (stagedBet != prevStagedBet) {
+    let index = 0;
+    let chipSpacing = 0;
+    for (const img in stagedBetChips.chip) {
+      stagedBetChips.chip[img].remove();
+    }
+    //stagedBetChips.chip = []
+    chipStructure = get_chip_structure(stagedBet); // of the stagedBet
+    for (const color in chipStructure) {
+      if (chipStructure[color] != 0) {
+        for (i = 0; i < chipStructure[color]; i++) {
+          index = stagedBetChips.chip.length;
+          stagedBetChips.chip[index] = document.createElement('img');
+          thisChip = stagedBetChips.chip[index];
+          thisChip.src = `img/chips/side/${chipDisplay}/${color}_chip.png`;
+          thisChip.classList.add('side-chip-img');
+          thisChip.style.marginBottom = `${chipSpacing}px`;
+          stagedBetChips.location.appendChild(thisChip);
+          chipSpacing += 9;
+        }
+      }
+    }
+    reset_chip_structure();
+    prevStagedBet = stagedBet;
+    playSound = true;
+  } else {
+    playSound = false;
+  }
+}
+
+const chipVessel = {
+  bottomContainer: document.getElementById('bottom-container'),
+  chip: []
+}
+
+let animationComplete = true;
+
+function move_chips_animation(area) {
+  let exitAnimationFunction = false;
+  //if (animationComplete == false) {
+  //  exitAnimationFunction = true;
+  //}
+  switch (area) {
+    case 'staged-bet':
+      amount = stagedBet - prevStagedBet;
+      chipOrientation = 'side';
+      if (amount > 0) {
+        origin = 'bottomContainer';
+        startingLocation = 'chips-animation-bankroll-location';
+        endingLocation = 'staged-bet';
+        animation = 'move-chips-bankroll-to-staged-bet';
+        duration = 200;
+        break;
+        
+      } else if (amount < 0) {
+        startingLocation = 'move-chips-staged-bet-location';
+        endingLocation = 'move-chips-bankroll-location';
+        break;
+      } else {
+        exitAnimationFunction = true;
+        break;
+      }
+  }
+
+  if (exitAnimationFunction == false) {
+    //animationComplete = false;
+    let index = 0;
+    let chipSpacing = 0;
+    chipVessel.chip = []
+    chipStructure = get_chip_structure(amount); //amount to move
+
+    newDiv = document.createElement('div');
+    newDiv.id = startingLocation;
+    chipVessel[origin].appendChild(newDiv);
+    // loading the boat
+    for (const color in chipStructure) {
+      if (chipStructure[color] != 0) {
+        for (i = 0; i < chipStructure[color]; i++) {
+          index = chipVessel.chip.length;
+          chipVessel.chip[index] = document.createElement('img');
+          thisChip = chipVessel.chip[index];
+          thisChip.src = `img/chips/${chipOrientation}/${chipDisplay}/${color}_chip.png`;
+          thisChip.classList.add(`${chipOrientation}-chip-img`);
+          thisChip.style.marginBottom = `${chipSpacing}px`;
+          newDiv.appendChild(thisChip);
+          chipSpacing += 9;
+        }
+      }
+    }
+    newDiv.classList.add(animation);
+    setTimeout(() => {
+      newDiv.remove()
+      update_animation_end_location(endingLocation);
+    }, duration);
+
+    reset_chip_structure();
+  }
+  return duration;
+}
+
+function update_animation_end_location(location) {
+  switch (location) {
+    case 'staged-bet':
+      animated_update_staged_bet_chips();
+      break;
+  }
 }
 
 function load_bankroll_chips() {
@@ -446,7 +560,6 @@ function update_bankroll_chips(amount) {
         
     }
   }
-
   reset_chip_structure();
 }
 
@@ -455,52 +568,26 @@ function update_bankroll_chips(amount) {
 function add_chips_to_table(object) {
 //chip structure
 // object.location is the div element where the chips are going
-// object.chips is an array where each chip img will get stored
+// object.chip is an array where each chip img will get stored
 // class table-chip-img is the size of the chip 60px x 60px
   let index = 0;
   let chipSpacing = 0;
-  object.chips = []
+  object.chip = []
   chipStructure = get_chip_structure(stagedBet); // of the stagedBet
 
-  for (i = 0; i < chipStructure.black; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = `img/chips/face/${chipDisplay}/black_chip.png`;
-    thisChip.classList.add('table-chip-img');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-  for (i = 0; i < chipStructure.green; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = `img/chips/face/${chipDisplay}/green_chip.png`;
-    thisChip.classList.add('table-chip-img');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-  for (i = 0; i < chipStructure.red; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = `img/chips/face/${chipDisplay}/red_chip.png`;
-    thisChip.classList.add('table-chip-img');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
-  }
-  for (i = 0; i < chipStructure.white; i++) {
-    index = object.chips.length;
-    object.chips[index] = document.createElement('img');
-    thisChip = object.chips[index];
-    thisChip.src = `img/chips/face/${chipDisplay}/white_chip.png`;
-    thisChip.classList.add('table-chip-img');
-    thisChip.style.marginLeft = `${chipSpacing}px`;
-    object.location.appendChild(thisChip);
-    chipSpacing += 12;
+  for (const color in chipStructure) {
+    if (chipStructure[color] != 0) {
+      for (i = 0; i < chipStructure[color]; i++) {
+        index = object.chip.length;
+        object.chip[index] = document.createElement('img');
+        thisChip = object.chip[index];
+        thisChip.src = `img/chips/face/${chipDisplay}/${color}_chip.png`;
+        thisChip.classList.add('table-chip-img');
+        thisChip.style.marginLeft = `${chipSpacing}px`;
+        object.location.appendChild(thisChip);
+        chipSpacing += 12;
+      }
+    }
   }
   reset_chip_structure();
 }
@@ -510,8 +597,8 @@ function reset_chip_structure() {
 }
 
 function remove_chips_from_table(object) {
-  for (const chip in object.chips) {
-    object.chips[chip].remove();
+  for (const img in object.chip) {
+    object.chip[img].remove();
   }
 }
 
@@ -547,7 +634,7 @@ function get_chip_structure(amount) {
 function update_bankroll() {
   bankroll -= stagedBet;
   bankrollElement.textContent = '$' + bankroll;
-  update_bankroll_chips();
+  update_bankroll_chips(bankroll);
 }
 
 function commit_bet(betToPlace) {
@@ -555,7 +642,9 @@ function commit_bet(betToPlace) {
   moneyOnTable += betToPlace; // Testing purposes
   update_moneyOnTable();
   update_bankroll();
+  playSound = true;
   play_increment_sound();
+  update_staged_bet_chips();
   return betToPlace;
 }
 
@@ -567,13 +656,14 @@ function change_bet(betToCommit) {
 }
 
 function pull_back_in_progress() {
+  stagedBet = 0;
+  update_staged_bet_chips();
   betElement.textContent = 'Pull';
   betElement.style.lineHeight = 
   pullBackInProgress = true;
 }
 
 function pull_back_bet(amount) {
-  stagedBet = 0;
   bankroll += amount;
   moneyOnTable -= amount;
   update_moneyOnTable();
@@ -582,7 +672,6 @@ function pull_back_bet(amount) {
     play_decrement_sound();
   }
   amount = 0;
-  check_for_chip_img();
   return amount;
 }
 
@@ -594,10 +683,15 @@ function lose_bet(amount) {
 }
 
 function reset_stagedBet() {
-  stagedBet = 0;
-  betElement.textContent = '$0';
-  betElement.style.fontSize = '30px';
-  check_for_chip_img();
+  if (stagedBet != 0) {
+    stagedBet = 0;
+    betElement.textContent = '$0';
+    betElement.style.fontSize = '30px';
+    playSound = true;
+    play_decrement_sound();
+    update_staged_bet_chips();
+  }
+  
 }
 
 function update_moneyOnTable() {
@@ -819,8 +913,10 @@ function come_out_roll() {
 }
 
 function move_behind_pass_line() {
-  moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target]} 
-  Place Bet Behind the Pass Line for better odds?`);
+  setTimeout (() => { 
+    moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target]} 
+Place Bet Behind the Pass Line for better odds?`)
+}, 1500);
   if (moveBehindPassLine == true) {
     if ((target == 5 || target == 9) && placeBet[target] % 2 != 0) {
       roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
