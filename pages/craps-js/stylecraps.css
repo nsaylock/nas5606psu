@@ -636,9 +636,8 @@ button {
 }
 
 #increment1, #decrement1, #increment5, 
-#decrement5, #twenty-five, #thirty, 
-#two-fifty, #one-hundred, #clear-bet,
-#five-hundred {
+#decrement5, #increment25, #increment100, 
+#decrement100, #decrement25, #clear-bet {
     outline: 2px solid black;
     border-radius: 5px;
     height: 50px;
@@ -652,30 +651,23 @@ button {
 
 
 #increment1:active, #decrement1:active, #increment5:active, 
-#decrement5:active, #twenty-five:active, #thirty:active, 
-#two-fifty:active, #one-hundred:active, #pull-back-button:active,
-#clear-bet:active, #five-hundred:active {
+#decrement5:active, #increment25:active, #increment100:active, 
+#decrement100:active, #decrement25:active, #pull-back-button:active,
+#clear-bet:active {
     transform: scale(0.97);
 }
 #clear-bet {
     background-color: rgb(20, 90, 30);
     border-color: rgb(20, 90, 30);
+    height: 110px;
     font-size: 22px;
+    grid-column: 6;
+    grid-row-start: 1;
+    grid-row-end: 3;
 }
 #clear-bet:hover {
     background-color: rgb(45, 167, 63);
     border-color: rgb(45, 167, 63);
-}
-
-#five-hundred {
-    color: gold;
-    background-color: rgb(65, 5, 134);
-    border-color: rgb(65, 5, 134);
-}
-#five-hundred:hover {
-    color: rgb(65, 5, 134);
-    background-color: goldenrod;
-    border-color: goldenrod;
 }
 
 #increment1, #decrement1 {
@@ -697,37 +689,21 @@ button {
     border-color: rgb(116, 22, 6);
 }
 
-#twenty-five {
+#increment25, #decrement25 {
     background-color: rgb(11, 153, 11);
     border-color: rgb(11, 153, 11);
 }
-#twenty-five:hover {
+#increment25:hover, #decrement25:hover {
     background-color: rgb(6, 122, 6);
     border-color: rgb(6, 122, 6);
 }
-#thirty {
-    background-color: rgb(199, 112, 14);
-    border-color: rgb(199, 112, 14);
-}
-#thirty:hover {
-    background-color: rgb(163, 91, 8);
-    border-color: rgb(163, 91, 8);
-}
-#two-fifty {
-    background-color: rgb(0, 87, 121);
-    border-color: rgb(0, 87, 121);
-    color: white;
-} 
-#two-fifty:hover {
-    background-color: rgb(1, 76, 105);
-    border-color: rgb(1, 76, 105);
-} 
-#one-hundred {
+
+#increment100, #decrement100  {
     background-color: black;
     border-color: black;
     color: white;
 }
-#one-hundred:hover {
+#increment100:hover,#decrement100:hover {
     background-color: rgb(34, 34, 34);
 }
 /* ^^^^^^^^^^^^^^^^^^^^^^^^^ END BETTING SECTION ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
@@ -792,7 +768,7 @@ button {
 }
 .move-chips-bankroll-to-staged-bet {
     animation: moveChipsBankrolltoStagedBet;
-    animation-duration: 200ms;
+    animation-duration: 100ms;
 }
 
 .bankroll-table {

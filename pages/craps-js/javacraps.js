@@ -103,15 +103,14 @@ const dice = {
 }
 
 // Betting Buttons
-const incrementButton = document.getElementById('increment1');
-const decrementButton = document.getElementById('decrement1');
-const plus5button = document.getElementById('increment5');
-const minus5button = document.getElementById('decrement5');
-const twentyFive = document.getElementById('twenty-five');
-const thirty = document.getElementById('thirty');
-const oneHundred = document.getElementById('one-hundred');
-const twoFifty = document.getElementById('two-fifty');
-const fiveHundred = document.getElementById('five-hundred');
+const increment1 = document.getElementById('increment1');
+const decrement1 = document.getElementById('decrement1');
+const increment5 = document.getElementById('increment5');
+const decrement5 = document.getElementById('decrement5');
+const increment25 = document.getElementById('increment25');
+const increment100 = document.getElementById('increment100');
+const decrement25 = document.getElementById('decrement25');
+const decrement100 = document.getElementById('decrement100');
 const rollButton = document.getElementById('roll-button');
 const pullBackButton = document.getElementById('pull-back-button');
 const clearBetButton = document.getElementById('clear-bet');
@@ -289,97 +288,26 @@ let passLineChips = {
 // $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
 
 
-function incrementbyone() {
-  if (stagedBet < bankroll) {
-    stagedBet++;
+function increment(amount) {
+  if (stagedBet + amount < bankroll) {
+    stagedBet += amount;
     betElement.textContent = '$' + stagedBet;
     update_staged_bet_chips();
     play_increment_sound();
   }
 }
-function incrementbyfive() {
-  if (stagedBet < bankroll) {
-    stagedBet += 5;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_increment_sound();
 
-  }
-}
-function decrementbyone() {
-  if (stagedBet > 0) {
-    stagedBet--;
+function decrement(amount) {
+  if (stagedBet - amount < 0) {
+    //do nothing
+  } else {
+    stagedBet -= amount;
     betElement.textContent = '$' + stagedBet;
     update_staged_bet_chips();
     play_decrement_sound();
-  } else {
-    betElement.textContent = '$0';
-    betElement.style = original.betElementStyle;
   }
+}
 
-}
-function decrementbyfive() {
-  if (stagedBet >= 5) {
-    stagedBet = stagedBet - 5;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_decrement_sound();
-  } else {
-    betElement.textContent = '$0';
-    betElement.style = original.betElementStyle;
-  }
-
-}
-function make_twenty_five() {
-  if (bankroll < 25) {
-    alert(`You only have $${bankroll} left in your bankroll`);
-  } else {
-    stagedBet = 25;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_increment_sound();
-  }
-}
-function make_thirty() {
-  if (bankroll < 30) {
-    alert(`You only have $${bankroll} left in your bankroll`);
-  } else {
-    stagedBet = 30;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_increment_sound();
-  }
-}
-function make_one_hundred() {
-  if (bankroll < 100) {
-    alert(`You only have $${bankroll} left in your bankroll`);
-  } else {
-    stagedBet = 100;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_increment_sound();
-  }
-}
-function make_two_fifty() {
-  if (bankroll < 250) {
-    alert(`You only have $${bankroll} left in your bankroll`);
-  } else {
-    stagedBet = 250;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_increment_sound();
-  }
-}
-function make_five_hundred() {
-  if (bankroll < 500) {
-    alert(`You only have $${bankroll} left in your bankroll`);
-  } else {
-    stagedBet = 500;
-    betElement.textContent = '$' + stagedBet;
-    update_staged_bet_chips();
-    play_increment_sound();
-  }
-}
 function play_decrement_sound() {
   if (playSound = true) {
     soundSelector = Math.floor(Math.random()*3)+1;
@@ -457,7 +385,7 @@ function move_chips_animation(area) {
         startingLocation = 'chips-animation-bankroll-location';
         endingLocation = 'staged-bet';
         animation = 'move-chips-bankroll-to-staged-bet';
-        duration = 200;
+        duration = 100;
         break;
         
       } else if (amount < 0) {
@@ -503,7 +431,6 @@ function move_chips_animation(area) {
 
     reset_chip_structure();
   }
-  return duration;
 }
 
 function update_animation_end_location(location) {
@@ -1864,15 +1791,14 @@ let i = Number(number);
 // ###################### EVENT LISTENERS #############################################
 // ####################################################################################
 
-incrementButton.addEventListener('click', incrementbyone);
-decrementButton.addEventListener('click', decrementbyone);
-plus5button.addEventListener('click', incrementbyfive);
-minus5button.addEventListener('click', decrementbyfive);
-twentyFive.addEventListener('click', make_twenty_five);
-thirty.addEventListener('click', make_thirty);
-oneHundred.addEventListener('click', make_one_hundred);
-twoFifty.addEventListener('click', make_two_fifty);
-fiveHundred.addEventListener('click', make_five_hundred);
+increment1.addEventListener('click', function() {increment(1)});
+increment5.addEventListener('click', function() {increment(5)});
+increment25.addEventListener('click', function() {increment(25)});
+increment100.addEventListener('click', function() {increment(100)});
+decrement1.addEventListener('click', function() {decrement(1)});
+decrement5.addEventListener('click', function() {decrement(5)});
+decrement25.addEventListener('click', function() {decrement(25)});
+decrement100.addEventListener('click', function() {decrement(100)});
 let isCoolDown = false;
 rollButton.addEventListener('click', function() {
   if (isCoolDown) return;
