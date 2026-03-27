@@ -1,0 +1,98 @@
+function update_bankroll_chips() {
+  //object is bankrollChips {stack[], plat[], brown[], gold[], purple[], etc}
+  chipStructure = get_chip_structure(bankroll);
+  stackIndex = 0; 
+/* --- Trying to modify existing instead of re generating -- 
+  for (const color in chipStructure) {
+    alert('starting '+ color + ' stackIndex = ' + stackIndex)
+    let difference = chipStructure[color] - prevChipStructure[color];
+    thisStack = bankrollStack[color];
+    alert(color + ' '+ chipStructure[color] + ' - ' + prevChipStructure[color] + ' = ' + difference);
+    if (difference > 0) {
+      // add the difference
+      if (thisStack == 0) {
+        alert('Creating Stack at ' + color);
+        
+        bankrollStack[color] = document.createElement('div');
+        thisStack = bankrollStack[stackIndex];
+        thisStack.classList.add('chip-stack');
+        thisStack.style.marginLeft = `${stackIndex*110}px`;
+        bankrollDiv.appendChild(thisStack);
+        
+      }
+      alert('adding chips')
+      for (i = 0; i < difference; i++) {
+        bankrollChips[color][i] = document.createElement('img');
+        thisChip = bankrollChips[color][i];
+        thisChip.src = `img/chips/side/blank/${color}_chip.png`;
+        thisChip.classList.add('bankroll-chip-img');
+        thisChip.style.marginBottom = `${i*9}px`;
+        thisStack.appendChild(thisChip);
+      }
+      stackIndex++;
+      alert('stackIndex = '+ stackIndex)
+    } else if (difference < 0) {
+      // remove the difference
+      alert('subtracting chips')
+      for (j = 0; j < Math.abs(difference); j++) {
+        thisStack.removeChild(thisStack.lastChild);
+      }
+      if (chipStructure[color] == 0) {
+        // remove one stack
+        alert('popping stack')
+        bankrollDiv.removeChild(thisStack);
+        //delete bankrollStack[stackIndex];
+        bankrollStack.splice(stackIndex, 1);
+        alert(bankrollStack.length + ' stacks left')
+        bankrollStack[stackIndex].style.marginLeft = `${stackIndex*110}px`;
+        //stackIndex--;
+        alert('stackIndex = '+ stackIndex)
+      } else {
+        stackIndex++;
+        alert('stackIndex = '+ stackIndex)
+      }
+
+    } else if (chipStructure[color] == 0 && prevChipStructure[color] == 0) {
+      alert('No Chips Needed')
+      // do nothing
+    } else {
+      // number of chips stays the same
+      allIMGs = bankrollStack[stackIndex].getElementsByTagName('*');
+      alert('Chip Stack stays the same: '+ color+' length '+allIMGs.length);
+      stackIndex++;
+      
+    }
+  }
+  prevChipStructure = chipStructure;
+*/
+
+  // ----------- generate whole new bankroll each timee -------------
+  for (const divs in bankrollStack) {
+    if (bankrollDiv.firstChild) {
+      bankrollDiv.removeChild(bankrollDiv.firstChild);
+    }
+  }
+  for (const color in chipStructure) {
+    if (chipStructure[color] != 0) {
+      
+      bankrollStack[color] = document.createElement('div');
+      thisStack = bankrollStack[color];
+      thisStack.classList.add('chip-stack');
+      //thisStack.style.marginLeft = `${stackIndex*110}px`;
+      bankrollDiv.appendChild(thisStack);
+      
+      for (i = 0; i < chipStructure[color]; i++) {
+        bankrollChips[color][i] = document.createElement('img');
+        thisChip = bankrollChips[color][i];
+        thisChip.src = `img/chips/side/blank/${color}_chip.png`;
+        thisChip.classList.add('bankroll-chip-img');
+        thisChip.style.marginBottom = `${i*9}px`;
+        thisStack.appendChild(thisChip);
+      }
+        
+      stackIndex++;
+    }
+  }
+
+  reset_chip_structure();
+}

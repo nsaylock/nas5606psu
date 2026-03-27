@@ -57,6 +57,7 @@ let stagedDontComeBet = 0;
 let dontComeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let dontComeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let chipStructure = {black: 0, green: 0, red: 0, white: 0};
+let prevChipStructure = {black: 5, green: 0, red: 0, white: 0};
 
 let smallNumbersHit = {2:false, 3:false, 4:false, 5:false, 6:false};
 let tallNumbersHit = {8:false, 9:false, 10:false, 11:false, 12:false};
@@ -246,10 +247,9 @@ const original = {
   hardwaysTextElementStyle: hardwaysTextElement.four.textContent
 }
 // $$$$$$$$$$$$$$$$$$ CHIPS DISPLAY OBJECTS $$$$$$$$$$$$$$$$ //
+const bankrollDiv = document.getElementById('bankroll-chips');
 
 let bankrollChips = {
-  location: document.getElementById('bankroll-chips'),
-  stacks: [],
   platinum: [],
   brown: [],
   gold: [],
@@ -259,6 +259,18 @@ let bankrollChips = {
   red: [],
   white: []
 }
+
+let bankrollStack = {
+  platinum: 0,
+  brown: 0,
+  gold: 0,
+  purple: 0,
+  black: 0,
+  green: 0,
+  red: 0,
+  white: 0
+};
+
 
 let passLineChips = {
   location: document.getElementById('pass-line-chips'),
@@ -283,7 +295,7 @@ function check_for_chip_img() {
       } else {
         betContainerElement.style.backgroundImage = "url('img/chips/face/"+chipDisplay+"/purple_chip.png')";
     }
-
+    update_bankroll_chips(bankroll - stagedBet);
   }
 }
 function incrementbyone() {
@@ -390,32 +402,38 @@ function play_increment_sound() {
 
 function load_bankroll_chips() {
   //create 1 div for stack of black chips
-    bankrollChips.stacks[0] = document.createElement('div');
-    bankrollChips.stacks[0].classList.add('chip-stack');
-    bankrollChips.location.appendChild(bankrollChips.stacks[0]);
+    
+    bankrollStack.black = document.createElement('div');
+    bankrollStack.black.classList.add('chip-stack');
+    bankrollDiv.appendChild(bankrollStack.black);
 // create 5 imgs of black_chip for $500 starting bankroll
   for (i = 0; i < 5; i++) {
     bankrollChips.black[i] = document.createElement('img');
     bankrollChips.black[i].src = 'img/chips/side/blank/black_chip.png';
     bankrollChips.black[i].classList.add('bankroll-chip-img');
     bankrollChips.black[i].style.marginBottom = `${i*9}px`;
-    bankrollChips.stacks[0].appendChild(bankrollChips.black[i]);
+    bankrollStack.black.appendChild(bankrollChips.black[i]);
   }
+
 }
 
-function update_bankroll_chips() {
-  //object is bankrollChips {stacks[], plat[], brown[], gold[], purple[], etc}
-  chipStructure = get_chip_structure(bankroll);
-  let stackIndex = 0;
+function update_bankroll_chips(amount) {
+  //object is bankrollChips {stack[], plat[], brown[], gold[], purple[], etc}
+  chipStructure = get_chip_structure(amount);
+
+  // ----------- generate whole new bankroll each timee -------------
+  for (const divs in bankrollStack) {
+    if (bankrollDiv.firstChild) {
+      bankrollDiv.removeChild(bankrollDiv.firstChild);
+    }
+  }
   for (const color in chipStructure) {
     if (chipStructure[color] != 0) {
-      console.log(chipStructure[color]);
       
-      bankrollChips.stacks[stackIndex] = document.createElement('div');
-      thisStack = bankrollChips.stacks[stackIndex];
+      bankrollStack[color] = document.createElement('div');
+      thisStack = bankrollStack[color];
       thisStack.classList.add('chip-stack');
-      thisStack.style.marginLeft = `${stackIndex*110}px`;
-      bankrollChips.location.appendChild(thisStack);
+      bankrollDiv.appendChild(thisStack);
       
       for (i = 0; i < chipStructure[color]; i++) {
         bankrollChips[color][i] = document.createElement('img');
@@ -426,11 +444,13 @@ function update_bankroll_chips() {
         thisStack.appendChild(thisChip);
       }
         
-      stackIndex++;
     }
   }
+
   reset_chip_structure();
 }
+
+  
 
 function add_chips_to_table(object) {
 //chip structure
@@ -523,15 +543,12 @@ function get_chip_structure(amount) {
   return {black, green, red, white};
 }
 
-
 // ####################### USEFUL FUNCTIONS ################################
 function update_bankroll() {
   bankroll -= stagedBet;
   bankrollElement.textContent = '$' + bankroll;
   update_bankroll_chips();
 }
-
-
 
 function commit_bet(betToPlace) {
   betToPlace = stagedBet;
@@ -541,17 +558,20 @@ function commit_bet(betToPlace) {
   play_increment_sound();
   return betToPlace;
 }
+
 function change_bet(betToCommit) {
   bankroll += betToCommit;
   moneyOnTable -= betToCommit; // Testing Purposes
   betToCommit = commit_bet(betToCommit);
   return betToCommit;
 }
+
 function pull_back_in_progress() {
   betElement.textContent = 'Pull';
   betElement.style.lineHeight = 
   pullBackInProgress = true;
 }
+
 function pull_back_bet(amount) {
   stagedBet = 0;
   bankroll += amount;
@@ -565,21 +585,25 @@ function pull_back_bet(amount) {
   check_for_chip_img();
   return amount;
 }
+
 function lose_bet(amount) {
   moneyOnTable -= amount;
   update_moneyOnTable();
   amount = 0;
   return amount;
 }
+
 function reset_stagedBet() {
   stagedBet = 0;
   betElement.textContent = '$0';
   betElement.style.fontSize = '30px';
   check_for_chip_img();
 }
+
 function update_moneyOnTable() {
   moneyOnTableElement.textContent = '$' + moneyOnTable;
 }
+
 function message_display(message) {
   rollName = display_roll_message(sum);
   newMessage = rollName + ' - ' + message;
@@ -589,6 +613,7 @@ function message_display(message) {
   document.getElementById('message-2').textContent = document.getElementById('message-1').textContent;
   document.getElementById('message-1').textContent = newMessage;
 }
+
 function clear_table() {
   message = 'All bets cleared';
   message_display(message);
@@ -843,7 +868,7 @@ function move_behind_pass_line() {
   }
 }
 
-  function score_roll() {
+function score_roll() {
   // Score bets on come line first in case of 7 out
 
   if (sum == 7) {
