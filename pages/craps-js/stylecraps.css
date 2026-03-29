@@ -342,9 +342,6 @@ button {
     padding: 35px 0 0 5px;
 }
 
-
-
-
 .place-bet-display-row {
     height: 40px;
     width: 746px;
@@ -352,14 +349,13 @@ button {
     flex-direction: row;
     margin: 1px 0 0 2px;
 }
-.place-boxes-text {
+.place-boxes {
     outline: 2px solid white;
     height: 100%;
     width: 100%;
 }
 #place-blank {
     outline: none;
-    margin-right: 10px;
 }
 #come {
     outline: 2px solid white;
@@ -393,18 +389,18 @@ button {
     width: 100px;
     margin-left: 89px;
 }
-#place-4, #place-5, #place-6,
-#place-8, #place-9, #place-10 {
-    color: yellow;
-    text-shadow: 2px 2px 0px black;
-    font-size: 25px;
-    font-weight: 600;
-    line-height: 40px;
-    text-align: center;
-    text-align: middle;
+
+#place-4-chips {
+    position: absolute;
+    top: 320px;
+    left: 186px;
 }
 
-
+#place-4-button, #place-6-button {
+    outline: 3px solid red;
+    
+    z-index: 100;
+}
 
 
 #field {
