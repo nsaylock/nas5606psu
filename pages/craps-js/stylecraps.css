@@ -4,10 +4,7 @@ html, body {
     height: 100%;
 }
 
-#main-area, #info-displays {
-    transform: scale(0.9);
-    transform-origin: 50% 0;
-}
+
 
 body {
     font-family: sans-serif;
@@ -40,12 +37,12 @@ body::before {
 
 #main-area {
     background-color: rgb(20, 90, 30);
-    min-height: 980px;
-    width: 1200px;
+    min-height: 880px;
+    width: 1350px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 2px 20px 20px 20px;
+    padding: 2px 30px 20px 30px;
     position: absolute;
     top: 15px;
 }
@@ -62,8 +59,8 @@ body::before {
 }
 
 .bonus-container {
-    min-height: 75px;
-    margin: 10px 20px 20px 0;
+    min-height: 50px;
+    margin: 0px 30px 20px 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -84,7 +81,7 @@ body::before {
     width: 40px;
     line-height: 40px;
     border-radius: 23px;
-    margin: 0 6px;
+    margin: 0 8px;
     text-align: middle;
     text-align: center;
     font-size: 20px;
@@ -103,13 +100,13 @@ body::before {
     background-position: center;
     background-size: 80px 80px;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 600;
     text-align: center;
     text-align: middle;
-    line-height: 28px;
-    height: 60px;
-    width: 140px;
+    line-height: 18px;
+    height: 40px;
+    width: 150px;
     z-index: 0;
     position: relative;
     padding-top: 5px;
@@ -156,25 +153,22 @@ body::before {
     background-image: url('');
 }
 
-
-
 .middle-container {
     min-height: 705px;
-    width: 1200px;
+    width: 1350px;
     display: flex;
     justify-content: center;
 }
 
-
-
 .main-left {
     height: 620px;
-    width: 750px;
+    width: 1000px;
     margin-right: 30px;
+
 }
 
 .main-right {
-    outline: 2px solid white;
+    border: 6px solid white;
     height: 600px;
     width: 350px;
 }
@@ -185,16 +179,23 @@ body::before {
     display: grid;
     grid-template-columns: 50% 50%;
 }
+.side-bets-button-grid {
+    position: absolute;
+    height: 500px;
+    width: 344px;
+    top: 145px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
 
 .dc-pb-parent {
-    height: 200px;
+    height: 210px;
     width: 100%;
     display: flex;
 }
 
 .dont-come-line {
-    width: 120px;
-    padding: 2px;
+    width: 145px;
     display: flex;
 }
 
@@ -203,23 +204,18 @@ body::before {
 }
 
 .dont-come-row {
-    height: 60px;
-    padding: 2px;
+    height: 64px;
+    padding: 0px;
     display: flex;
 }
 
 .placebet-row {
-    height: 116px;
+    height: 132px;
     margin-top: 16px;
-    padding: 2px;
+    padding: 0px;
     display: flex;
 }
 
-.test-container {
-    outline: 2px solid white;
-    height: 100px;
-    width:  100px;
-}
 /* ///////////////////////// BUTTONS ///////////////////////////////////////// */
 button {
     background-color: transparent;
@@ -235,47 +231,51 @@ button {
 #on-4, #on-5, #on-6, 
 #on-8, #on-9, #on-10 {
     position: absolute;
-    height: 70px;
-    width: 70px;
-    top: 170px;
-    z-index: 20;
+    height: 65px;
+    width: 65px;
+    top: 140px;
+    z-index: 100;
 }
-#on-4 { left: 182px; }
-#on-5 { left: 288px; }
-#on-6 { left: 396px; }
-#on-8 { left: 502px; }
-#on-9 { left: 610px; }
-#on-10 { left: 715px; }
+#on-4 { left: 190px; }
+#on-5 { left: 330px; }
+#on-6 { left: 470px; }
+#on-8 { left: 612px; }
+#on-9 { left: 752px; }
+#on-10 { left: 892px; }
 .hidden { display: none;}
 .show { display: block;}
 
 #number-box-4, #number-box-5, #number-box-6,
 #number-box-8, #number-box-9, #number-box-10 {
-    outline: 2px solid white;
+    
     color: white;
     font-size: 30px;
     text-shadow: 2px 2px 0px black;
     height: 100%;
     width: 100%;
-    line-height: 100%;
+    line-height: 50px;
     text-align: middle;
     z-index: 0;
-    padding-top: 25px;
 }
 
+
+
 .come-bet-container {
+    outline: 1px solid blue;
+    position: absolute;
+    height: 130px;
+    top: 175px;
+    width: 125px;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 #come-4, #come-5, #come-6,
 #come-8, #come-9, #come-10 {
-    color: rgb(194, 6, 6);
-    height: 40px;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 40px;
-    text-align: center;
+    background-color: rgba(194, 6, 6, 0.685);
+    position: absolute;
+    top: 0;
+    left: 32px;
 }
 #come-4-odds, #come-5-odds, #come-6-odds,
 #come-8-odds, #come-9-odds, #come-10-odds {
@@ -288,14 +288,17 @@ button {
 }
 
 #dont-come {
-    outline: 2px solid white;
+    border-style: solid;
+    border-color: white;
+    border-width: 4px 5px 2px 6px;
     color:rgb(170, 109, 29);
     text-shadow: 2px 2px 0px black;
     font-size: 30px;
     font-weight: 600;
     line-height: 40px;
-    height: 239px;
-    width: 100%;
+    height: 265px;
+    width: 102%;
+    margin-right: -2px;
 }
 .dont-come-label {
     margin-top: 50px;
@@ -313,14 +316,13 @@ button {
 #dont-come-container-4, #dont-come-container-5,
 #dont-come-container-6, #dont-come-container-8,
 #dont-come-container-9, #dont-come-container-10 {
-    outline: 2px solid white;
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: center;
-    z-index: 1;
-
+    z-index: 0;
 }
+
 .dont-come-text {
     color: rgb(170, 109, 29);
     text-shadow: 2px 2px 0px black;
@@ -343,27 +345,50 @@ button {
 }
 
 .place-bet-display-row {
-    height: 40px;
-    width: 746px;
+    height: 50px;
+    width: 100%;
     display: flex;
     flex-direction: row;
-    margin: 1px 0 0 2px;
 }
 .place-boxes {
-    outline: 2px solid white;
     height: 100%;
     width: 100%;
+    border-color: white;
+    border-style: solid;
+    border-width: 4px 4px 4px 2px;
 }
+
+#number-box-4, #number-box-5, #number-box-6,
+#number-box-8, #number-box-9, #number-box-10,
+#dont-come-container-4, #dont-come-container-5,
+#dont-come-container-6, #dont-come-container-8,
+#dont-come-container-9, #dont-come-container-10
+{
+    border-color: white;
+    border-style: solid;
+    border-width: 6px 4px 4px 2px;
+}
+
+#number-box-10, #dont-come-container-10 {
+    border-width: 4px 6px 4px 2px;
+}
+#place-10-button {
+    border-color: white;
+    border-style: solid;
+    border-width: 0 3px 0 0;
+}
+
 #place-blank {
-    outline: none;
+    border: none;
+    width: 92%;
 }
 #come {
-    outline: 2px solid white;
-    height: 75px;
-    width: 746px;
-    
+    border: 4px solid white;
+    border-width: 4px 6px 4px 6px;
+    height: 80px;
+    width: 100%;
     margin-left: 170px;
-    margin: 5px 0 0 2px;
+    margin: 5px 0 0 0;
     padding-bottom: 5px;
     display: flex;
     flex-direction: row;
@@ -376,41 +401,41 @@ button {
     vertical-align: middle;
     text-align: center;
     align-self: center;
-    margin-left: 255px;
+    margin-left: 360px;
 }
 
 #come-chips-display {
-    color: rgb(194, 6, 6);
-    text-shadow: 2px 2px 0px black;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 75px;
-    text-align: middle;
     width: 100px;
-    margin-left: 89px;
+    position: relative;
+    top: 5px;
+    left: 75px;
 }
 
-#place-4-chips {
+#place-4-chips, #place-5-chips, #place-6-chips,
+#place-8-chips, #place-9-chips, #place-10-chips {
     position: absolute;
-    top: 320px;
-    left: 186px;
+    top: 302px;
+    z-index: 0;
 }
 
-#place-4-button, #place-6-button {
-    outline: 3px solid red;
-    
-    z-index: 100;
+#place-4-button, #place-5-button, #place-6-button,
+#place-8-button, #place-9-button, #place-10-button {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    z-index: 1000;
 }
 
 
 #field {
-    outline: 2px solid white;
+    border-width: 2px 6px 4px 6px;
+    border-style: solid;
+    border-color: white;
     color: yellow;
     text-shadow: 2px 2px 0px black;
     height: 80px;
-    width: 746px;
+    width: 100%;
     line-height: 35px;
-    margin: 5px 0 0 2px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -432,16 +457,18 @@ button {
 }
 
 #dont-pass {
-    outline: 2px solid white;
+    border-style: solid;
+    border-color: white;
+    border-width: 4px 6px 4px 6px;
     color: white;
     text-shadow: 2px 2px 0px black;
     font-size: 20px;
-    height: 35px;
-    width: 746px;
-    line-height: 30px;
+    height: 45px;
+    width: 100%;
+    line-height: 40px;
     vertical-align: middle;
     text-align: center;
-    margin: 15px 0 0 2px;
+    margin: 10px 0 0 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -457,27 +484,28 @@ button {
 }
 
 #pass-line {
-    outline: 2px solid white;
+    border-style: solid;
+    border-color: white;
+    border-width: 2px 6px 6px 6px;
     background-color: rgb(20, 90, 30);
     color: yellow;
     text-shadow: 2px 2px 0px black;
     font-size: 35px;
     font-weight: 600;
-    height: 50px;
-    width: 746px;
-    line-height: 50px;
+    height: 60px;
+    width: 100%;
+    line-height: 58px;
     word-spacing: 10px;
     vertical-align: middle;
     text-align: center;
-    margin: 5px 0 0 2px;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 #pass-line-chips {
     position: absolute;
-    top: 582px;
-    left: 550px;
+    top: 574px;
+    left: 700px;
 }
 
 
@@ -515,7 +543,35 @@ button {
     color: white;
     text-shadow: 2px 2px 0px black;
     line-height: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     padding-top: 0px;
+}
+
+#hard-6-button, #hard-10-button, #hard-8-button, #hard-4-button,
+#craps-3-button, #craps-12-button, #craps-11-button, #craps-2-button {
+    position: relative;
+    z-index: 100;
+}
+
+#hard-6-chips, #hard-8-chips,
+#craps-3-chips, #craps-11-chips {
+    position: absolute;
+    height: 122px;
+    width: 175px;
+    display: flex;
+    align-items: center;
+}
+
+
+#hard-10-chips, #hard-4-chips, #craps-12-chips, #craps-2-chips {
+    position: absolute;
+    height: 122px;
+    width: 175px;
+    display: flex;
+    align-items: center;
 }
 
 #any-craps {
@@ -527,11 +583,11 @@ button {
 }
 
 #off-puck {
-    position: fixed;
+    position: absolute;
     height: 100px;
     width: 100px;
-    top: 150px;
-    left: 765px;
+    top: 120px;
+    left: 965px;
     z-index: 20;
 }
 
@@ -559,18 +615,14 @@ button {
 
 
 #staged-bet-container {
-    background-image: url('');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 130px 130px;
     width: 210px;
-    
+    height: 100%;
     justify-items: center;
     font-size: 30px;
     color: rgb(233, 229, 13);
     font-weight: 600;
-    margin-right: 10px
-  
+    margin: 10px 0 0 640px;
+    z-index: 10;
 }
 
 
@@ -581,13 +633,12 @@ button {
     align-items: flex-end;
     justify-content: center;
     width: 120px;
-    height: 120px;
-    bottom: 155px;
+    bottom: 95px;
+    z-index: -1;
 }
 .side-chip-img {
     position: absolute;
     height: 50px;
-    z-index: -1;
 }
 
 #staged-bet { 
@@ -601,13 +652,16 @@ button {
     margin-right: 8px;
 }
 
-.bet-contol-buttons {
-    width: 550px;
-    height: 120px;
+.bet-control-buttons {
+    width: 475px;
+    height: 95px;
     display: grid;
     justify-content: end;
     grid-column: inherit;
-    grid-template-columns: repeat(6, 90px);
+    grid-template-columns: repeat(6, 75px);
+    position: absolute;
+    top: 10px;
+    left: 150px;
     
 }
 
@@ -617,8 +671,8 @@ button {
     border-color: rgb(53, 69, 161);
     color: white;
     font-size: 25px;
-    width: 80px;
-    height: 110px;
+    width: 65px;
+    height: 90px;
     grid-row-start: 1;
     grid-row-end: 3;
     border-radius: 5px;
@@ -636,10 +690,10 @@ button {
 #decrement100, #decrement25, #clear-bet {
     outline: 2px solid black;
     border-radius: 5px;
-    height: 50px;
-    width: 80px;
+    height: 40px;
+    width: 65px;
     font-weight: 600;
-    font-size: 22px;
+    font-size: 18px;
     border-style:outset;
     transition: background-color 0.1s ease, border-color 0.1s ease,
                 transform 0.02s ease;
@@ -655,7 +709,7 @@ button {
 #clear-bet {
     background-color: rgb(20, 90, 30);
     border-color: rgb(20, 90, 30);
-    height: 110px;
+    height: 90px;
     font-size: 22px;
     grid-column: 6;
     grid-row-start: 1;
@@ -707,12 +761,12 @@ button {
 #bottom-container {
     font-size: 25px;
     width: 1200px;
-    height: 270px;
+    height: 190px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     position: absolute;
-    top: 700px;
+    top: 680px;
 }
 
 .bankroll-container {
@@ -721,23 +775,24 @@ button {
 
 #bankroll-chips {
     /* container that holds the chip imgs in bankroll area*/
-    height: 150px;
+    height: 100px;
     width: 500px;
     margin-left: 25px;
     display: flex;
+    z-index: 1;
     
 }
 
 .chip-stack {
-    height: 150px;
-    width: 110px;
+    height: 100px;
+    width: 68px;
     display: flex;
     align-items: flex-end;
 }
 
 .bankroll-chip-img {
     position: absolute;
-    height: 50px;
+    height: 30px;
 }
 
 #chips-animation-bankroll-location {
@@ -769,10 +824,11 @@ button {
 
 .bankroll-table {
     position: absolute;
-    z-index: -1;
+    z-index: 0;
     width: 580px;
-    top: 110px;
-    left: -15px;
+    height: 100px;
+    top: 120px;
+    left: -20px;
 }
 
 #roll-button {
@@ -780,7 +836,7 @@ button {
     outline: 2px solid black;
     background-color: rgb(173, 143, 7);
     color: white;
-    height: 100px;
+    height: 80px;
     width: 220px;
     font-size: 50px;
     font-weight: 600;
@@ -789,7 +845,7 @@ button {
     border-style: outset;
     border-width: 10px;;
     border-color: rgb(173, 143, 7);
-    margin: 30px 50px;
+    margin: 5px 120px;
     
 }
 #roll-button:hover {
@@ -809,14 +865,14 @@ button {
     height: 150px;
     width: 300px;
 
-    top: 750px;
-    left: 850px;
+    top: 740px;
+    left: 1050px;
     z-index: 1000;
     column-gap: 35px;
 }
 
 @keyframes diceMove {
-    0%, 70% { transform: translate(-590px, -480px); }
+    0%, 70% { transform: translate(-750px, -480px); }
     100% { transform: none;}
 }
 

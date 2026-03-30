@@ -56,8 +56,24 @@ let comeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let stagedDontComeBet = 0;
 let dontComeBet = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
 let dontComeBetOdds = {4:0, 5:0, 6:0, 8:0, 9:0, 10:0};
-let chipStructure = {black: 0, green: 0, red: 0, white: 0};
-let prevChipStructure = {black: 5, green: 0, red: 0, white: 0};
+let chipStructure = {
+  platinum: 0,
+  brown: 0,
+  gold: 0,
+  purple: 0,
+  black: 0,
+  green: 0,
+  red: 0,
+  white: 0};
+let prevChipStructure = {
+  platinum: 0,
+  brown: 0,
+  gold: 0,
+  purple: 0,
+  black: 5,
+  green: 0,
+  red: 0,
+  white: 0};
 let prevStagedBet = 0;
 
 let smallNumbersHit = {2:false, 3:false, 4:false, 5:false, 6:false};
@@ -205,10 +221,10 @@ const dontcomeLineChipsDisplayElement = {
 }
 
 const hardwaysElement = {
-  four: document.getElementById('hardways-4'),
-  six: document.getElementById('hardways-6'),
-  eight: document.getElementById('hardways-8'),
-  ten: document.getElementById('hardways-10')
+  four: document.getElementById('hard-4-button'),
+  six: document.getElementById('hard-6-button'),
+  eight: document.getElementById('hard-8-button'),
+  ten: document.getElementById('hard-10-button')
 }
 
 const hardwaysTextElement = {
@@ -219,10 +235,10 @@ const hardwaysTextElement = {
 }
 
 const crapsElement = {
-  two: document.getElementById('craps-2'),
-  three: document.getElementById('craps-3'),
-  eleven: document.getElementById('craps-11'),
-  twelve: document.getElementById('craps-12')
+  two: document.getElementById('craps-2-button'),
+  three: document.getElementById('craps-3-button'),
+  eleven: document.getElementById('craps-11-button'),
+  twelve: document.getElementById('craps-12-button')
 }
 const crapsTextElement = {
   two: document.getElementById('craps-2-text'),
@@ -250,6 +266,127 @@ const original = {
   hardwaysTextElementStyle: hardwaysTextElement.four.textContent
 }
 // $$$$$$$$$$$$$$$$$$ CHIPS DISPLAY OBJECTS $$$$$$$$$$$$$$$$ //
+let placeBetFourChips = {
+  location: document.getElementById('place-4-chips'),
+  chip: [],
+  leftSpacing: 194
+};
+
+let placeBetFiveChips = {
+  location: document.getElementById('place-5-chips'),
+  chip: [],
+  leftSpacing: 336
+};
+
+let placeBetSixChips = {
+  location: document.getElementById('place-6-chips'),
+  chip: [],
+  leftSpacing: 478
+};
+
+let placeBetEightChips = {
+  location: document.getElementById('place-8-chips'),
+  chip: [],
+  leftSpacing: 620
+};
+
+let placeBetNineChips = {
+  location: document.getElementById('place-9-chips'),
+  chip: [],
+  leftSpacing: 762
+};
+
+let placeBetTenChips = {
+  location: document.getElementById('place-10-chips'),
+  chip: [],
+  leftSpacing: 900
+};
+
+let hardwaysChips = {
+  six: {
+    location: document.getElementById('hard-6-chips'),
+    chip: [],
+    leftSpacing: 1092
+
+  },
+  eight: {
+    location: document.getElementById('hard-8-chips'),
+    chip: [],
+    leftSpacing: 1092
+  },
+  ten: {
+    location: document.getElementById('hard-10-chips'),
+    chip: [],
+    leftSpacing: 1262
+  },
+  four: {
+    location: document.getElementById('hard-4-chips'),
+    chip: [],
+    leftSpacing: 1262
+  }
+}
+
+let crapsChips = {
+  three: {
+    location: document.getElementById('craps-3-chips'),
+    chip: [],
+  leftSpacing: 1092
+  },
+  twelve: {
+    location: document.getElementById('craps-12-chips'),
+    chip: [],
+  leftSpacing: 1262
+  },
+  two: {
+    location: document.getElementById('craps-2-chips'),
+    chip: [],
+  leftSpacing: 1262
+  },
+  eleven: {
+    location: document.getElementById('craps-11-chips'),
+    chip: [],
+  leftSpacing: 1092
+  }
+}
+
+let comeBetChips = {
+  line: {
+    location: document.getElementById('come-chips-display'),
+    chip: [],
+    leftSpacing: 75
+  },
+  4: {
+    location: document.getElementById('come-4'),
+    chip: [],
+    leftSpacing: 32
+  },
+  5: {
+    location: document.getElementById('come-5'),
+    chip: [],
+    leftSpacing: 32
+  },
+  6: {
+    location: document.getElementById('come-6'),
+    chip: [],
+    leftSpacing: 32
+  },
+  8: {
+    location: document.getElementById('come-8'),
+    chip: [],
+    leftSpacing: 32
+  },
+  9: {
+    location: document.getElementById('come-9'),
+    chip: [],
+    leftSpacing: 32
+  },
+  10: {
+    location: document.getElementById('come-10'),
+    chip: [],
+    leftSpacing: 32
+  }
+}
+
 const stagedBetChips = {
   location: document.getElementById('staged-bet-chips'),
   chip: []
@@ -303,6 +440,9 @@ function decrement(amount) {
   } else {
     stagedBet -= amount;
     betElement.textContent = '$' + stagedBet;
+    if (stagedBet == 0) {
+      betElement.textContent = '';
+    }
     update_staged_bet_chips();
     play_decrement_sound();
   }
@@ -339,7 +479,7 @@ function play_increment_sound() {
 function update_staged_bet_chips() {
   if (stagedBet != prevStagedBet) {
     let index = 0;
-    let chipSpacing = 0;
+    let chipCount = 0;
     for (const img in stagedBetChips.chip) {
       stagedBetChips.chip[img].remove();
     }
@@ -353,9 +493,9 @@ function update_staged_bet_chips() {
           thisChip = stagedBetChips.chip[index];
           thisChip.src = `img/chips/side/${chipDisplay}/${color}_chip.png`;
           thisChip.classList.add('side-chip-img');
-          thisChip.style.marginBottom = `${chipSpacing}px`;
+          thisChip.style.marginBottom = `${chipCount * 8}px`;
           stagedBetChips.location.appendChild(thisChip);
-          chipSpacing += 9;
+          chipCount += 1;
         }
       }
     }
@@ -401,13 +541,12 @@ function move_chips_animation(area) {
         exitAnimationFunction = true;
         break;
       }
-      break;
   }
 
   if (exitAnimationFunction == false) {
     //animationComplete = false;
     let index = 0;
-    let chipSpacing = 0;
+    let chipCount = 0;
     chipVessel.chip = []
     chipStructure = get_chip_structure(amount); //amount to move
 
@@ -423,9 +562,9 @@ function move_chips_animation(area) {
           thisChip = chipVessel.chip[index];
           thisChip.src = `img/chips/${chipOrientation}/${chipDisplay}/${color}_chip.png`;
           thisChip.classList.add(`${chipOrientation}-chip-img`);
-          thisChip.style.marginBottom = `${chipSpacing}px`;
+          thisChip.style.marginBottom = `${chipCount * 9}px`;
           newDiv.appendChild(thisChip);
-          chipSpacing += 9;
+          chipCount += 1;
         }
       }
     }
@@ -458,7 +597,7 @@ function load_bankroll_chips() {
     bankrollChips.black[i] = document.createElement('img');
     bankrollChips.black[i].src = 'img/chips/side/blank/black_chip.png';
     bankrollChips.black[i].classList.add('bankroll-chip-img');
-    bankrollChips.black[i].style.marginBottom = `${i*9}px`;
+    bankrollChips.black[i].style.marginBottom = `${i*5.4}px`;
     bankrollStack.black.appendChild(bankrollChips.black[i]);
   }
 
@@ -487,7 +626,7 @@ function update_bankroll_chips(amount) {
         thisChip = bankrollChips[color][i];
         thisChip.src = `img/chips/side/blank/${color}_chip.png`;
         thisChip.classList.add('bankroll-chip-img');
-        thisChip.style.marginBottom = `${i*9}px`;
+        thisChip.style.marginBottom = `${i*5.4}px`;
         thisStack.appendChild(thisChip);
       }
         
@@ -498,13 +637,13 @@ function update_bankroll_chips(amount) {
 
   
 
-function add_chips_to_table(object) {
+function add_chips_to_table(object, stagedBet) {
 //chip structure
 // object.location is the div element where the chips are going
 // object.chip is an array where each chip img will get stored
 // class table-chip-img is the size of the chip 60px x 60px
   let index = 0;
-  let chipSpacing = 0;
+  let chipCount = 0;
   object.chip = [];
   chipStructure = get_chip_structure(stagedBet); // of the stagedBet
 
@@ -516,17 +655,27 @@ function add_chips_to_table(object) {
         thisChip = object.chip[index];
         thisChip.src = `img/chips/face/${chipDisplay}/${color}_chip.png`;
         thisChip.classList.add('table-chip-img');
-        thisChip.style.marginLeft = `${chipSpacing}px`;
+        thisChip.style.marginLeft = `${chipCount * 12}px`;
         object.location.appendChild(thisChip);
-        chipSpacing += 12;
+        chipCount += 1;
       }
     }
   }
+  object.location.style.left = `${object.leftSpacing - (chipCount-1) * 6}px`;
   reset_chip_structure();
 }
 
 function reset_chip_structure() {
-  chipStructure = {black:0, green:0, red:0, white:0};
+  chipStructure = {
+    platinum: 0,
+    brown: 0,
+    gold: 0,
+    purple: 0,
+    black: 0,
+    green: 0,
+    red: 0,
+    white: 0
+  };
 }
 
 function remove_chips_from_table(object) {
@@ -537,6 +686,30 @@ function remove_chips_from_table(object) {
 
 function get_chip_structure(amount) {
   temp = amount;
+  if (temp >= 15000) {
+    platinum = Math.floor(temp/15000);
+    temp = temp % 15000;
+  } else {
+    platinum = 0;
+  }
+  if (temp >= 5000) {
+    brown = Math.floor(temp/5000);
+    temp = temp % 5000;
+  } else {
+    brown = 0;
+  }
+  if (temp >= 1000) {
+    gold = Math.floor(temp/1000);
+    temp = temp % 1000;
+  } else {
+    gold = 0;
+  }
+  if (temp >= 500) {
+    purple = Math.floor(temp/500);
+    temp = temp % 500;
+  } else {
+    purple = 0;
+  }
   if (temp >= 100) {
     black = Math.floor(temp/100);
     temp = temp % 100;
@@ -560,7 +733,7 @@ function get_chip_structure(amount) {
   } else {
     white = 0;
   }
-  return {black, green, red, white};
+  return {platinum, brown, gold, purple, black, green, red, white};
 }
 
 // ####################### USEFUL FUNCTIONS ################################
@@ -596,7 +769,6 @@ function pull_back_in_progress() {
   stagedBet = 0;
   update_staged_bet_chips();
   betElement.textContent = 'Pull';
-  betElement.style.lineHeight = 
   pullBackInProgress = true;
 }
 
@@ -605,6 +777,8 @@ function pull_back_bet(amount) {
   moneyOnTable -= amount;
   update_moneyOnTable();
   update_bankroll();
+  stagedBet = 0;
+  update_staged_bet_chips();
   if (amount != 0) {
     play_decrement_sound();
   }
@@ -620,9 +794,9 @@ function lose_bet(amount) {
 }
 
 function reset_stagedBet() {
-  if (stagedBet != 0) {
+  if (stagedBet != 0 || pullBackInProgress == true) {
     stagedBet = 0;
-    betElement.textContent = '$0';
+    betElement.textContent = '';
     betElement.style.fontSize = '30px';
     playSound = true;
     play_decrement_sound();
@@ -847,6 +1021,8 @@ function come_out_roll() {
   if (dontComeBet[sum] != 0 && dontComeBet[sum] != undefined) {
     score_dont_come_bets();
   }
+
+  score_craps_bets();
 }
 
 function move_behind_pass_line() {
@@ -997,8 +1173,9 @@ function score_roll() {
 // PASS LINE AND DONT PASS BAR
 function pass_line() { // adds bet to pass line
   if (stagedBet >= minBet) {
+    add_chips_to_table(passLineChips, stagedBet);
     passLineBet = commit_bet(passLineBet);
-    add_chips_to_table(passLineChips);
+
   } else {
     alert('The minimum bet is $' + minBet + '.');
   }
@@ -1082,10 +1259,6 @@ function score_pass_line_odds(target) {
   passLineOdds = 0;
 }
 
-let placeBetFourChips = {
-  location: document.getElementById('place-4-chips'),
-  chip: []
-};
 
 // PLACE BETS
 function place_bet(selector) {
@@ -1099,28 +1272,28 @@ Pull back bet to change.`);
   } else {
     switch (selector) {
       case 4:
+        add_chips_to_table(placeBetFourChips, stagedBet);
         placeBet[4] = commit_bet(placeBet[4]);
-        add_chips_to_table(placeBetFourChips);
         break;
       case 5:
+        add_chips_to_table(placeBetFiveChips, stagedBet);
         placeBet[5] = commit_bet(placeBet[5]);
-        placeBetElement.five.textContent = '$' + placeBet[5];
         break;
       case 6:
+        add_chips_to_table(placeBetSixChips, stagedBet);
         placeBet[6] = commit_bet(placeBet[6]);
-        placeBetElement.six.textContent = '$' + placeBet[6];
         break;
       case 8:
+        add_chips_to_table(placeBetEightChips, stagedBet);
         placeBet[8] = commit_bet(placeBet[8]);
-        placeBetElement.eight.textContent = '$' + placeBet[8];
         break;
       case 9:
+        add_chips_to_table(placeBetNineChips, stagedBet);
         placeBet[9] = commit_bet(placeBet[9]);
-        placeBetElement.nine.textContent = '$' + placeBet[9];
         break;
       case 10:
+        add_chips_to_table(placeBetTenChips, stagedBet);
         placeBet[10] = commit_bet(placeBet[10]);
-        placeBetElement.ten.textContent = '$' + placeBet[10];
         break;
     }
   }
@@ -1164,28 +1337,20 @@ function hardways_bet(selector) {
     } else {
       switch (selector) {
         case 4:
+          add_chips_to_table(hardwaysChips.four, stagedBet);
           hardwaysBet[4] = commit_bet(hardwaysBet[4]);
-          hardwaysTextElement.four.textContent = '$' + hardwaysBet[4];
-          hardwaysTextElement.four.style.color = 'yellow';
-          hardwaysTextElement.four.style.fontSize = '25px';
         break;
           case 6:
+          add_chips_to_table(hardwaysChips.six, stagedBet);
           hardwaysBet[6] = commit_bet(hardwaysBet[6]);
-          hardwaysTextElement.six.textContent = '$' + hardwaysBet[6];
-          hardwaysTextElement.six.style.color = 'yellow';
-          hardwaysTextElement.six.style.fontSize = '25px';
           break;
         case 8:
+          add_chips_to_table(hardwaysChips.eight, stagedBet);
           hardwaysBet[8] = commit_bet(hardwaysBet[8]);
-          hardwaysTextElement.eight.textContent = '$' + hardwaysBet[8];
-          hardwaysTextElement.eight.style.color = 'yellow';
-          hardwaysTextElement.eight.style.fontSize = '25px';
           break;
         case 10:
+          add_chips_to_table(hardwaysChips.ten, stagedBet);
           hardwaysBet[10] = commit_bet(hardwaysBet[10]);
-          hardwaysTextElement.ten.textContent = '$' + hardwaysBet[10];
-          hardwaysTextElement.ten.style.color = 'yellow';
-          hardwaysTextElement.ten.style.fontSize = '25px';
           break;
       }
     }
@@ -1224,28 +1389,20 @@ function craps_bet(selector) {
   } else {
     switch (selector) {
       case 2:
+        add_chips_to_table(crapsChips.two, stagedBet);
         crapsBet[2] = commit_bet(crapsBet[2]);
-        crapsTextElement.two.textContent = '$' + crapsBet[2];
-        crapsTextElement.two.style.color = 'yellow';
-        crapsTextElement.two.style.fontSize = '25px';
         break;
       case 3:
+        add_chips_to_table(crapsChips.three, stagedBet);
         crapsBet[3] = commit_bet(crapsBet[3]);
-        crapsTextElement.three.textContent = '$' + crapsBet[3];
-        crapsTextElement.three.style.color = 'yellow';
-        crapsTextElement.three.style.fontSize = '25px';
         break;
       case 11:
+        add_chips_to_table(crapsChips.eleven, stagedBet);
         crapsBet[11] = commit_bet(crapsBet[11]);
-        crapsTextElement.eleven.textContent = '$' + crapsBet[11];
-        crapsTextElement.eleven.style.color = 'yellow';
-        crapsTextElement.eleven.style.fontSize = '25px';
         break;
       case 12:
+        add_chips_to_table(crapsChips.twelve, stagedBet);
         crapsBet[12] = commit_bet(crapsBet[12]);
-        crapsTextElement.twelve.textContent = '$' + crapsBet[12];
-        crapsTextElement.twelve.style.color = 'yellow';
-        crapsTextElement.twelve.style.fontSize = '25px';
         break;
     }
     }
@@ -1258,22 +1415,18 @@ function score_craps_bets() {
       switch (sum) {
         case 2:
           payout = crapsBet[2] * 30;
-          crapsBet[2] = lose_bet(crapsBet[2]);
           oneRollWinner = 2;
           break;
         case 3:
           payout = crapsBet[3] * 15;
-          crapsBet[3] = lose_bet(crapsBet[3]);
           oneRollWinner = 3;
           break;
         case 11:
           payout = crapsBet[11] * 15;
-          crapsBet[11] = lose_bet(crapsBet[11]);
           oneRollWinner = 11;
           break;
         case 12:
           payout = crapsBet[12] * 30;
-          crapsBet[12] = lose_bet(crapsBet[12]);
           oneRollWinner = 12;
           break;
       }
@@ -1290,28 +1443,24 @@ function score_craps_bets() {
 
 function reset_craps_bets_text() {
   if (oneRollWinner == 2) {
-    crapsTextElement.two.textContent = 'WINNER!';
+    // Keep bet down
   } else {
-    crapsTextElement.two.textContent = '30 to 1';
-    crapsTextElement.two.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.two);
   }
   if (oneRollWinner == 12) {
-    crapsTextElement.twelve.textContent = 'WINNER!';
+    // Keep Chips Down
   } else {
-    crapsTextElement.twelve.textContent = '30 to 1';
-    crapsTextElement.twelve.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.twelve);
   }
   if (oneRollWinner == 11) {
-    crapsTextElement.eleven.textContent = 'WINNER!';
+    // Keep chips down
   } else {
-    crapsTextElement.eleven.textContent = '15 to 1';
-    crapsTextElement.eleven.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.eleven);
   }
   if (oneRollWinner == 3) {
-    crapsTextElement.three.textContent = 'WINNER';
+    // Keep Chips Down
   } else {
-    crapsTextElement.three.textContent = '15 to 1';
-    crapsTextElement.three.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.three);
   }
   oneRollWinner = 0;
 }
@@ -1360,8 +1509,8 @@ function come_bet() { // Place the Staged Bet on the Come Line
     alert(`You already have a Bet on the Come Line.
 Pull back bet to change.`);
   } else {
+    add_chips_to_table(comeBetChips.line, stagedBet);
     stagedComeBet = commit_bet(stagedComeBet);
-    comeLineChipsDisplayElement.textContent = '$' + stagedComeBet;
   }
 }
 
@@ -1425,7 +1574,7 @@ function on_the_come_line() { // Score Bets on Come Line or Move if Point
   if (sum == 2 || sum == 3 || sum == 12) {
     message = 'Lost $' + stagedComeBet + ' on the Come Line';
     message_display(message);
-    comeLineChipsDisplayElement.textContent = '';
+    remove_chips_from_table(comeBetChips.line);
     moneyOnTable -= stagedComeBet;
     stagedComeBet = 0;
     update_moneyOnTable();
@@ -1437,45 +1586,21 @@ function on_the_come_line() { // Score Bets on Come Line or Move if Point
     if (sum == 7) {
       bankroll += stagedComeBet;
       update_bankroll();
+      remove_chips_from_table(comeBetChips.line);
       stagedComeBet = lose_bet(stagedComeBet);
-      comeLineChipsDisplayElement.textContent = ''; // Make say bet returned until next roll
       message = `Won $${stagedComeBet} on the Come Line`;
       message_display(message);
     }
   } else {
     move_come_bet();
-    comeLineChipsDisplayElement.textContent = '';
+    remove_chips_from_table(comeBetChips.line);
     stagedComeBet = 0;
   }
 }
 
 function move_come_bet() { // Move the Come Line to Come Bet area
-  switch (sum) {
-    case 4:
-      comeBet[4] = stagedComeBet;
-      comeBetChipsDisplayElement.four.textContent = '$' + comeBet[4];
-      break;
-    case 5:
-      comeBet[5] = stagedComeBet;
-      comeBetChipsDisplayElement.five.textContent = '$' + comeBet[5];
-      break;
-    case 6:
-      comeBet[6] = stagedComeBet;
-      comeBetChipsDisplayElement.six.textContent = '$' + comeBet[6];
-      break;
-    case 8:
-      comeBet[8] = stagedComeBet;
-      comeBetChipsDisplayElement.eight.textContent = '$' + comeBet[8];
-      break;
-    case 9:
-      comeBet[9] = stagedComeBet;
-      comeBetChipsDisplayElement.nine.textContent = '$' + comeBet[9];
-      break;
-    case 10:
-      comeBet[10] = stagedComeBet;
-      comeBetChipsDisplayElement.ten.textContent = '$' + comeBet[10];
-      break;
-  }
+  comeBet[sum] = stagedComeBet;
+  add_chips_to_table(comeBetChips[sum], stagedComeBet);
   message = `$${stagedComeBet} Come Bet moved`;
   message_display(message);
 }
@@ -2009,7 +2134,7 @@ function clear_bonus_bet() {
 
 placeBetElement.four.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    //reset_place_bet_text(4);
+    remove_chips_from_table(placeBetFourChips);
     placeBet[4] = pull_back_bet(placeBet[4]);
   } else {
     place_bet(4);
@@ -2017,7 +2142,7 @@ placeBetElement.four.addEventListener('click', (e) => {
 });
 placeBetElement.five.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    //reset_place_bet_text(5);
+    remove_chips_from_table(placeBetFiveChips);
     placeBet[5] = pull_back_bet(placeBet[5]);
   } else {
     if (stagedBet % 5 != 0) {
@@ -2029,7 +2154,7 @@ placeBetElement.five.addEventListener('click', (e) => {
 });
 placeBetElement.six.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    //reset_place_bet_text(6);
+    remove_chips_from_table(placeBetSixChips);
     placeBet[6] = pull_back_bet(placeBet[6]);
   } else {
     if (stagedBet % 6 != 0) {
@@ -2042,7 +2167,7 @@ placeBetElement.six.addEventListener('click', (e) => {
 });
 placeBetElement.eight.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    //reset_place_bet_text(8);
+    remove_chips_from_table(placeBetEightChips);
     placeBet[8] = pull_back_bet(placeBet[8]);
   } else {
     if (stagedBet % 6 != 0) {
@@ -2055,7 +2180,7 @@ placeBetElement.eight.addEventListener('click', (e) => {
 });
 placeBetElement.nine.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    //reset_place_bet_text(9);
+    remove_chips_from_table(placeBetNineChips);
     placeBet[9] = pull_back_bet(placeBet[9]);
   } else {
     if (stagedBet % 5 != 0) {
@@ -2068,7 +2193,7 @@ placeBetElement.nine.addEventListener('click', (e) => {
 });
 placeBetElement.ten.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    //reset_place_bet_text(10);
+    remove_chips_from_table(placeBetTenChips);
     placeBet[10] = pull_back_bet(placeBet[10]);
   } else {
     place_bet(10);
@@ -2312,8 +2437,7 @@ passLineOddsElement.addEventListener('click', (e) => {
 
 hardwaysElement.four.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    hardwaysTextElement.four.textContent = '7 to 1';
-    hardwaysTextElement.four.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(hardwaysChips.four);
     hardwaysBet[4] = pull_back_bet(hardwaysBet[4]);
   } else {
     hardways_bet(4);
@@ -2321,8 +2445,7 @@ hardwaysElement.four.addEventListener('click', (e) => {
 });
 hardwaysElement.six.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    hardwaysTextElement.six.textContent = '9 to 1';
-    hardwaysTextElement.six.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(hardwaysChips.six);
     hardwaysBet[6] = pull_back_bet(hardwaysBet[6]);
   } else {
     hardways_bet(6);
@@ -2330,8 +2453,7 @@ hardwaysElement.six.addEventListener('click', (e) => {
 });
 hardwaysElement.eight.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    hardwaysTextElement.eight.textContent = '9 to 1';
-    hardwaysTextElement.eight.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(hardwaysChips.eight);
     hardwaysBet[8] = pull_back_bet(hardwaysBet[8]);
   } else {
     hardways_bet(8);
@@ -2339,8 +2461,7 @@ hardwaysElement.eight.addEventListener('click', (e) => {
 });
 hardwaysElement.ten.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    hardwaysTextElement.ten.textContent = '7 to 1';
-    hardwaysTextElement.ten.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(hardwaysChips.ten);
     hardwaysBet[10] = pull_back_bet(hardwaysBet[10]);
   } else {
     hardways_bet(10);
@@ -2351,8 +2472,7 @@ hardwaysElement.ten.addEventListener('click', (e) => {
 
 crapsElement.two.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    crapsTextElement.two.textContent = '30 to 1';
-    crapsTextElement.two.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.two);
     crapsBet[2] = pull_back_bet(crapsBet[2]);
   } else {
     craps_bet(2);
@@ -2360,8 +2480,7 @@ crapsElement.two.addEventListener('click', (e) => {
 });
 crapsElement.three.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    crapsTextElement.three.textContent = '15 to 1';
-    crapsTextElement.three.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.three);
     crapsBet[3] = pull_back_bet(crapsBet[3]);
   } else {
     craps_bet(3);
@@ -2369,8 +2488,7 @@ crapsElement.three.addEventListener('click', (e) => {
 });
 crapsElement.eleven.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    crapsTextElement.eleven.textContent = '15 to 1';
-    crapsTextElement.eleven.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.eleven);
     crapsBet[11] = pull_back_bet(crapsBet[11]);
   } else {
     craps_bet(11);
@@ -2378,8 +2496,7 @@ crapsElement.eleven.addEventListener('click', (e) => {
 });
 crapsElement.twelve.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    crapsTextElement.twelve.textContent = '30 to 1';
-    crapsTextElement.twelve.style = original.hardwaysTextElementStyle;
+    remove_chips_from_table(crapsChips.twelve);
     crapsBet[12] = pull_back_bet(crapsBet[12]);
   } else {
     craps_bet(12);
