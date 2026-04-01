@@ -60,7 +60,9 @@ body::before {
 
 .bonus-container {
     min-height: 50px;
-    margin: 0px 30px 20px 0;
+    position: absolute;
+    top: 12px;
+    left: 135px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -79,7 +81,7 @@ body::before {
     border-style: solid;
     height: 40px;
     width: 40px;
-    line-height: 40px;
+    line-height: 42px;
     border-radius: 23px;
     margin: 0 8px;
     text-align: middle;
@@ -111,6 +113,20 @@ body::before {
     position: relative;
     padding-top: 5px;
 }
+
+#first, #second, #third {
+    color: gold;
+    height: 50px;
+    width:140px;
+    text-shadow: 2px 2px 0px black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    text-align: middle;
+    line-height: 24px;
+}
+
 #first {
     /* all small numbers spacing*/
     margin-left: 20px;
@@ -124,36 +140,25 @@ body::before {
     margin-right: 20px;
 }
 #small-button, #all-button, #tall-button {
-    background-size: 60px 60px;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: gold;
-    height: 60px;
-    width:140px;
-    text-shadow: 2px 2px 0px black;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 20px;
-    font-weight: 600;
-    text-align: center;
-    text-align: middle;
-    line-height: 28px;
-    z-index: 10;
-    position: absolute;
-    top: -7px;
-    left: 0;
-}
-#small-button {
-    background-image: url('');
+    z-index: 100;
 }
 
-#all-button {
-    background-image: url('');
+#small-button, #all-button, #tall-button,
+#small-bonus-chips, #all-bonus-chips, #tall-bonus-chips {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: -2px;
+    left: 0px;
+    display: flex;
 }
-#tall-button {
-    background-image: url('');
+
+#small-bonus-chips, #all-bonus-chips, #tall-bonus-chips {
+    margin-left: 35px;
 }
 
 .middle-container {
+    margin-top: 73px;
     min-height: 705px;
     width: 1350px;
     display: flex;
@@ -276,75 +281,91 @@ button {
 #come-8, #come-9, #come-10 {
     position: absolute;
     top: 36px;
-    left: 10px;
+    left: 30px;
 }
 #come-4-odds, #come-5-odds, #come-6-odds,
 #come-8-odds, #come-9-odds, #come-10-odds {
     position: absolute;
-    top: 60px;
+    top: 53px;
     left: 40px;
 }
 
 .rotate-odds-bet {
-    transform: rotate(40deg);
+    transform: rotate(90deg);
 }
 
 #dont-come {
     border-style: solid;
     border-color: white;
-    border-width: 4px 5px 2px 6px;
+    border-width: 6px 5px 2px 6px;
     color:rgb(170, 109, 29);
     text-shadow: 2px 2px 0px black;
     font-size: 30px;
     font-weight: 600;
     line-height: 40px;
+    display: flex;
+    padding-top: 35px;
     height: 265px;
     width: 102%;
     margin-right: -2px;
 }
+
+#dont-come-line-button {
+    position: absolute;
+    height: 265px;
+    width: 125px;
+    z-index: 100;
+}
+
 .dont-come-label {
     margin-top: 50px;
 }
 #dont-come-chips-display {
-    color: rgb(170, 109, 29);
-    height: 50px;
-    font-size: 30px;
-    line-height: 50px;
-    text-align: middle;
-    text-align: center;
+    position: absolute;
+    top: 280px;
+    left: 60px;
 }
 
 
-#dont-come-container-4, #dont-come-container-5,
-#dont-come-container-6, #dont-come-container-8,
-#dont-come-container-9, #dont-come-container-10 {
+.dont-come-bet-container {
+    border-color: white;
+    border-style: solid;
+    border-width: 6px 4px 4px 2px;
     display: flex;
     flex-direction: row;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
     z-index: 0;
 }
 
-.dont-come-text {
-    color: rgb(170, 109, 29);
-    text-shadow: 2px 2px 0px black;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 60px;
-    text-align: middle;
+#dc-4-button, #dc-5-button, #dc-6-button,
+#dc-8-button, #dc-9-button, #dc-10-button {
+    position: absolute;
+    width: 130px;
+    height: 55px;
+    justify-content: center;
+    z-index: 100;
 }
 
 #dc-4, #dc-5, #dc-6, #dc-8, #dc-9, #dc-10 {
-    position: relative;
+    position: absolute;
+    width: 65px;
+    height: 55px;
+    top: 100px;
+    left: 160px;
 }
 #dc-4-odds, #dc-5-odds, #dc-6-odds,
 #dc-8-odds, #dc-9-odds, #dc-10-odds {
-    color: black;
-    font-size: 20px;
-    font-weight: 600;
-    text-shadow: none;
-    padding: 35px 0 0 5px;
+    top: 115px;
+    position: absolute;
 }
+
+#dc-4-odds { left: 210px; }
+#dc-5-odds { left: 355px; }
+#dc-6-odds { left: 500px; }
+#dc-8-odds { left: 645px; }
+#dc-9-odds { left: 790px; }
+#dc-10-odds { left: 935px; }
 
 .place-bet-display-row {
     height: 50px;
@@ -361,18 +382,6 @@ button {
 }
 
 
-#dont-come-container-4, #dont-come-container-5,
-#dont-come-container-6, #dont-come-container-8,
-#dont-come-container-9, #dont-come-container-10
-{
-    border-color: white;
-    border-style: solid;
-    border-width: 6px 4px 4px 2px;
-}
-
-#dont-come-container-10 {
-    border-width: 6px 6px 4px 2px;
-}
 #number-box-10 {
     border-color: white;
     border-style: solid;
@@ -440,7 +449,7 @@ button {
     color: yellow;
     text-shadow: 2px 2px 0px black;
     height: 80px;
-    width: 100%;
+    width: 988px;
     line-height: 35px;
     display: flex;
     flex-direction: row;
@@ -452,17 +461,27 @@ button {
     vertical-align: middle;
     text-align: center;
     align-self: center;
-    margin-left: 170px;
 }
-#field-chips-display {
-    font-size: 30px;
-    line-height: 100px;
-    text-align: middle;
-    width: 100px;
-    margin-left: 70px;
+#field-chips {
+    position:absolute;
+    top: 452px;
+    left: 750px;
+
 }
 
-#dont-pass {
+#field-button {
+    position: absolute;
+    height: 80px;
+    width: 988px;
+}
+
+.dont-dice {
+    position:absolute;
+    height: 25px;
+    margin: 10px 0 0 165px;
+}
+
+.dont-pass {
     border-style: solid;
     border-color: white;
     border-width: 4px 6px 4px 6px;
@@ -470,23 +489,25 @@ button {
     text-shadow: 2px 2px 0px black;
     font-size: 20px;
     height: 45px;
-    width: 100%;
-    line-height: 40px;
-    vertical-align: middle;
+    width: 988px;
+    line-height: 47px;
+    text-align: middle;
     text-align: center;
     margin: 10px 0 0 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
-.dont-pass-label {
-    margin-left: 150px;
+
+#dont-pass-chips {
+    position: absolute;
+    top: 532px;
 }
-#dont-pass-chips-display {
-    font-size: 25px;
-    color: yellow;
-    width: 100px;
-    margin-left: 50px;
+
+#dont-pass-button {
+    position: absolute;
+    height: 45px;
+    width: 988px;
 }
 
 #pass-line {
@@ -510,7 +531,7 @@ button {
 }
 #pass-line-chips {
     position: absolute;
-    top: 574px;
+    top: 585px;
     left: 700px;
 }
 
@@ -528,7 +549,7 @@ button {
 }
 
 #hw-6-text, #hw-8-text, #hw-4-text, #hw-10-text,
-#craps-3-text, #craps-2-text, #craps-12-text, #craps-11-text {
+#horn-3-text, #horn-2-text, #horn-12-text, #horn-11-text {
     font-size: 20px;
     font-weight: 600;
     margin-top: 15px;
@@ -544,7 +565,7 @@ button {
 }
 
 #hardways-6, #hardways-10, #hardways-8, #hardways-4, 
-#craps-3, #craps-12, #craps-11, #craps-2 {
+#horn-3, #horn-12, #horn-11, #horn-2 {
     outline: 2px solid white;
     color: white;
     text-shadow: 2px 2px 0px black;
@@ -557,13 +578,13 @@ button {
 }
 
 #hard-6-button, #hard-10-button, #hard-8-button, #hard-4-button,
-#craps-3-button, #craps-12-button, #craps-11-button, #craps-2-button {
+#horn-3-button, #horn-12-button, #horn-11-button, #horn-2-button {
     position: relative;
     z-index: 100;
 }
 
 #hard-6-chips, #hard-8-chips,
-#craps-3-chips, #craps-11-chips {
+#horn-3-chips, #horn-11-chips {
     position: absolute;
     height: 122px;
     width: 175px;
@@ -572,7 +593,7 @@ button {
 }
 
 
-#hard-10-chips, #hard-4-chips, #craps-12-chips, #craps-2-chips {
+#hard-10-chips, #hard-4-chips, #horn-12-chips, #horn-2-chips {
     position: absolute;
     height: 122px;
     width: 175px;
@@ -598,13 +619,20 @@ button {
 }
 
 /* --------------------------Betting Section --------------------------*/
-#pass-line-odds {
+.pass-line-odds {margin-left: 5px;}
+.pass-line-odds, #pass-line-odds-button {
     height: 50px;
-    width: 980px;
-    margin: 5px 0 0 2px;
-    display: flex;
-    justify-content: center;
-    padding-left: 400px;
+    width: 992px;
+}
+
+#pass-line-odds-chips {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+}
+#pass-line-odds-button {
+    position: absolute;
+    top: 646px;
 }
 
 .bet-container {
@@ -797,6 +825,12 @@ button {
     height: 30px;
 }
 
+.odds-chip-img {
+    position: absolute;
+    height: 35px;
+    width: 60px;
+}
+
 #chips-animation-bankroll-location {
     height: 150px;
     width: 110px;
@@ -880,7 +914,7 @@ button {
 
 .dice-move {
     animation: diceMove;
-    animation-duration: 1.5s;
+    animation-duration: 1.2s;
     animation-delay: 0s;
 }
 
@@ -891,7 +925,7 @@ button {
 
 .dice-grow {
     animation: diceGrow;
-    animation-duration:  1.5s;
+    animation-duration:  1.2s;
     animation-delay: 0s;
 }
 
