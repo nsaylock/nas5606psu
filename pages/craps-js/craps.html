@@ -282,9 +282,8 @@
         <button id="any-craps"><h2>Any Craps</h2></button>
       </div> <!-- close main-right-->
     </div> <!-- Close middle container-->
-  
-
   </div> <!-- Close table div-->
+  
   <img id="off-puck" src="img/off.png">
 
 
@@ -294,58 +293,93 @@
   </div>
 
   <div id="bottom-container">
-   <!-- <div id="chips-animation-bankroll-location">
-      <img class="side-chip-img" src="img/chips/side/blank/red_chip.png">
-    </div> -->
     <div class="bet-container">
       <div class="bet-control-buttons">
-        <button id="pull-back-button">
-          <img src="img/pull_back_arrow.png" style="height: 40px; width: 40px; margin: 5px 3px 0 0;">
-        </button>
-        <button id="increment1">$1</button>
-        <button id="increment5">$5</button>
-        <button id="increment25">$25</button>
-        <button id="increment100">$100</button>
-        <button id="clear-bet">$0</button>
-        <button id="decrement1">-$1</button>
-        <button id="decrement5">-$5</button>
-        <button id="decrement25">-$25</button>
-        <button id="decrement100">-$100</button>
+        
+        <div class="control-column">
+          <button id="increment1">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$1</div>
+          <button id="decrement1">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment5">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$5</div>
+          <button id="decrement5">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment25">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$25</div>
+          <button id="decrement25">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment100">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$100</div>
+          <button id="decrement100">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="clear-bet">Clear</button>
+          <button id="pull-back-button">Pull</button>
+        </div>
+        
+
       </div>
+
       <div id="staged-bet-container">
         <div id="staged-bet-chips"></div>
         <div id="staged-bet"></div>
       </div>
     </div>
+      <button id="roll-button" class="hidden">ROLL</button>
 
     <div class="bankroll-container">
       <div id="bankroll-chips"></div>
       <!--<img class="bankroll-table" src="img/bankroll_table.png">-->
-      <button id="roll-button">ROLL</button>
     </div>
     
-
   </div> <!-- Close Bottom Container-->
+  <div id="money-container">
+  <div class="bankroll-label">Bankroll
+    <div id="bankroll-amount">$500</div>
+  </div>
+  <div class = 'money-label'>Money On Table
+    <div id="money-on-table">$0</div>
+  </div>
+</div> <!--close money container-->
+<div id="message-box">
+  <div id="message-1"></div>
+  <div id="message-2"></div>
+  <div id="message-3"></div>
+  <div id="message-4"></div>
+  <div id="message-5"></div>
+</div>
+<button id="show-money-button"></button>
 </div> <!-- close main-area-->
 
-<div id="info-displays">
-  <div class="money-container">
-    <div class="bankroll-label">Bankroll
-      <div id="bankroll-amount">$500</div>
-    </div>
-    <div class = 'money-label'>Money On Table
-      <div id="money-on-table">$0</div>
-    </div>
-  </div> <!--close money container-->
-  
-  <div id="message-box">
-    <div id="message-1"></div>
-    <div id="message-2"></div>
-    <div id="message-3"></div>
-    <div id="message-4"></div>
-    <div id="message-5"></div>
-  </div>
-</div>
+
+
+
+
+
 
 <!-- Animation Ghosts-->
 </body>
