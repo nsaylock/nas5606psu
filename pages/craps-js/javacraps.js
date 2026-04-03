@@ -67,10 +67,12 @@ const moneyContainer = document.getElementById('money-container');
 const bankrollElement = document.getElementById('bankroll-amount');
 const moneyOnTableElement = document.getElementById('money-on-table');
 const showMoneyButton = document.getElementById('show-money-button');
+const doubleArrow = document.getElementById('double-arrow');
 showMoneyButton.addEventListener('click', show_money);
 
 function show_money() {
   moneyContainer.classList.toggle('open');
+  doubleArrow.classList.toggle('open');
 }
 
 const offPuckElement = document.getElementById('off-puck');
@@ -311,7 +313,7 @@ let placeBet = {
 
 let come = {
   line: {
-    button: document.getElementById('come'),
+    button: document.getElementById('come-line-button'),
     location: document.getElementById('come-chips-display'),
     amount: 0,
     chip: [],
@@ -321,72 +323,72 @@ let come = {
     location: document.getElementById('come-4'),
     amount: 0,
     chip: [],
-    top: 32,
+    bottom: 42,
     odds: {
       location: document.getElementById('come-4-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 65
+      leftSpacing: 70
     }
   },
   5: {
     location: document.getElementById('come-5'),
     amount: 0,
     chip: [],
-    top: 32,
+    bottom: 42,
     odds: {
       location: document.getElementById('come-5-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 65
+      leftSpacing: 70
     }
   },
   6: {
     location: document.getElementById('come-6'),
     amount: 0,
     chip: [],
-    top: 32,
+    bottom: 42,
     odds: {
       location: document.getElementById('come-6-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 65
+      leftSpacing: 70
     }
   },
   8: {
     location: document.getElementById('come-8'),
     amount: 0,
     chip: [],
-    top: 32,
+    bottom: 42,
     odds: {
       location: document.getElementById('come-8-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 65
+      leftSpacing: 70
     }
   },
   9: {
     location: document.getElementById('come-9'),
     amount: 0,
     chip: [],
-    top: 32,
+    bottom: 42,
     odds: {
       location: document.getElementById('come-9-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 65
+      leftSpacing: 70
     }
   },
   10: {
     location: document.getElementById('come-10'),
     amount: 0,
     chip: [],
-    top: 32,
+    bottom: 42,
     odds: {
       location: document.getElementById('come-10-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 65
+      leftSpacing: 70
     }
   }
 }
@@ -404,12 +406,12 @@ let dontCome = {
     location: document.getElementById('dc-4'),
     amount: 0,
     chip: [],
-    leftSpacing: 180,
+    leftSpacing: 40,
     odds: {
       location: document.getElementById('dc-4-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 220
+      leftSpacing: 80
     }
   },
   5: {
@@ -417,12 +419,12 @@ let dontCome = {
     location: document.getElementById('dc-5'),
     amount: 0,
     chip: [],
-    leftSpacing: 320,
+    leftSpacing: 40,
     odds: {
       location: document.getElementById('dc-5-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 360
+      leftSpacing: 80
     }
   },
   6: {
@@ -430,12 +432,12 @@ let dontCome = {
     location: document.getElementById('dc-6'),
     amount: 0,
     chip: [],
-    leftSpacing: 465,
+    leftSpacing: 40,
     odds: {
       location: document.getElementById('dc-6-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 505
+      leftSpacing: 80
     }
   },
   8: {
@@ -443,12 +445,12 @@ let dontCome = {
     location: document.getElementById('dc-8'),
     amount: 0,
     chip: [],
-    leftSpacing: 615,
+    leftSpacing: 40,
     odds: {
       location: document.getElementById('dc-8-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 655
+      leftSpacing: 80
     }
   },
   9: {
@@ -456,12 +458,12 @@ let dontCome = {
     location: document.getElementById('dc-9'),
     amount: 0,
     chip: [],
-    leftSpacing: 760,
+    leftSpacing: 40,
     odds: {
       location: document.getElementById('dc-9-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 800
+      leftSpacing: 80
     }
   },
   10: {
@@ -469,12 +471,12 @@ let dontCome = {
     location: document.getElementById('dc-10'),
     amount: 0,
     chip: [],
-    leftSpacing: 905,
+    leftSpacing: 40,
     odds: {
       location: document.getElementById('dc-10-odds'),
       amount: 0,
       chip: [],
-      leftSpacing: 945
+      leftSpacing: 80
     }
   }
 }
@@ -509,7 +511,7 @@ let bankrollStack = {
 };
 
 let passLine = {
-  button: document.getElementById('pass-line'),
+  button: document.getElementById('pass-line-button'),
   amount: 0,
   chips: {
     location: document.getElementById('pass-line-chips'),
@@ -761,9 +763,15 @@ function add_chips_to_table(object, bet, orientation, imgClass, rotation) {
 // class table-chip-img is the size of the chip 60px x 60px
   let index = 0;
   let chipCount = 0;
+  let totalChips = 0;
+  let firstChip = true;
   object.chip = [];
   chipStructure = get_chip_structure(bet); // of the stagedBet
-
+  
+  for (const color in chipStructure) {
+    totalChips += chipStructure[color];
+  }
+  
   for (const color in chipStructure) {
     if (chipStructure[color] != 0) {
       for (i = 0; i < chipStructure[color]; i++) {
@@ -773,18 +781,19 @@ function add_chips_to_table(object, bet, orientation, imgClass, rotation) {
         thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip.png`;
         thisChip.classList.add(`${imgClass}-chip-img`);
 
-        if (object.top != undefined) {
-          thisChip.style.marginTop = `${chipCount * 8}px`;
-          object.location.style.top = `${object.top - (chipCount-1) * 4}px`;
+        if (object.bottom != undefined) {
+          thisChip.style.marginBottom = `${chipCount *8}px`;
+          object.location.style.bottom = `${object.bottom - (chipCount-1) *4}px`;
         } else {
           if (rotation == 'rotated') {
             
             thisChip.classList.add(`rotate-odds-bet`);
             thisChip.style.marginLeft = `${chipCount *6}px`;
-            object.location.style.left = `${object.leftSpacing - (chipCount-1) * 3}px`;
+            object.location.style.left = `${object.leftSpacing - (totalChips * 3)}px`;
           } else {
-            thisChip.style.marginLeft = `${chipCount * 12}px`;
-            object.location.style.left = `${object.leftSpacing - (chipCount-1) * 6}px`;
+            object.location.style.left = `${object.leftSpacing - (totalChips*4)}px`;
+            thisChip.style.marginLeft = `${chipCount * 8}px`;
+            
           }
         }
         object.location.appendChild(thisChip);

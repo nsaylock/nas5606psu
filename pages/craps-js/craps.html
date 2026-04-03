@@ -37,166 +37,233 @@
     </div> <!-- Close bonus container-->
     <div class="middle-container">
       <div class="main-left">
-        <div class="dc-pb-parent">
-          <div class="dont-come-line">
-            <button id="dont-come">
-              <div class="dont-come-label">Don't Come
-                <img src="img/dice/white_6.png" style="height: 35px; position: absolute; top: 275px; left: 58px;">
-                <img src="img/dice/white_6.png" style="height: 35px; position: absolute; top: 275px; left: 98px;">
-              </div>
-              <div id="dont-come-chips-display"></div>
-              <button id="dont-come-line-button"></button>
-            </button>
+
+      <div class="dont-come-row">
+        <div class="dont-come-bet-container">
+          <div id="dc-4">
+            
           </div>
-          <div class="dc-pb">
-            <div class="dont-come-row">
+          <div id="dc-4-odds"></div>
+          <button id="dc-4-button"></button>
+        </div>
 
-              <div class="dont-come-bet-container">
-                <div id="dc-4"></div>
-                <div id="dc-4-odds"></div>
-                <button id="dc-4-button"></button>
-              </div>
+        <div class="dont-come-bet-container">
+          <div id="dc-5"></div>
+          <div id="dc-5-odds"></div>
+          <button id="dc-5-button"></button>
+        </div>
 
-              <div class="dont-come-bet-container">
-                <div id="dc-5"></div>
-                <div id="dc-5-odds"></div>
-                <button id="dc-5-button"></button>
-              </div>
+        <div class="dont-come-bet-container">
+          <div id="dc-6"></div>
+          <div id="dc-6-odds"></div>
+          <button id="dc-6-button"></button>
+        </div>
 
-              <div class="dont-come-bet-container">
-                <div id="dc-6"></div>
-                <div id="dc-6-odds"></div>
-                <button id="dc-6-button"></button>
-              </div>
+        <div class="dont-come-bet-container">
+          <div id="dc-8"></div>
+          <div id="dc-8-odds"></div>
+          <button id="dc-8-button"></button>
+        </div>
 
-              <div class="dont-come-bet-container">
-                <div id="dc-8"></div>
-                <div id="dc-8-odds"></div>
-                <button id="dc-8-button"></button>
-              </div>
+        <div class="dont-come-bet-container">
+          <div id="dc-9"></div>
+          <div id="dc-9-odds"></div>
+          <button id="dc-9-button"></button>
+        </div>
 
-              <div class="dont-come-bet-container">
-                <div id="dc-9"></div>
-                <div id="dc-9-odds"></div>
-                <button id="dc-9-button"></button>
-              </div>
+        <div class="dont-come-bet-container">
+          <div id="dc-10"></div>
+          <div id="dc-10-odds"></div>
+          <button id="dc-10-button"></button>
+        </div>
+      </div>
 
-              <div class="dont-come-bet-container">
-                <div id="dc-10"></div>
-                <div id="dc-10-odds"></div>
-                <button id="dc-10-button"></button>
-              </div>
-              
 
-            </div> <!-- close dc-pb-->
-            <div class="placebet-row">
-              <div class="number-box">
-                <img id='on-4' class="hidden" src="img/on.png">4
-                <div class="come-bet-container">
-                  <div id="come-4"></div>
-                  <div id="come-4-odds"></div>
-                  <button id="number-box-4"></button>
-                </div>
-              </div>
-              <div class="number-box">
-                <img id='on-5'class="hidden" src="img/on.png">5
-                <div class="come-bet-container">
-                    <div id="come-5"></div>
-                    <div id="come-5-odds"></div>
-                    <button id="number-box-5"></button>
-                </div>
-              </div>
-              <div class="number-box">
-                <img id='on-6' class="hidden" src="img/on.png">6
-                <div class="come-bet-container">
-                    <div id="come-6"></div>
-                    <div id="come-6-odds"></div>
-                    <button id="number-box-6"></button>
-                </div>
-              </div>
-              <div class="number-box">
-                <img id='on-8' class="hidden" src="img/on.png">8
-                <div class="come-bet-container">
-                  <div id="come-8"></div>
-                  <div id="come-8-odds"></div>
-                  <button id="number-box-8"></button>
-                </div>
-              </div>
-              <div class="number-box">
-                <img id='on-9' class="hidden" src="img/on.png">9
-                <div class="come-bet-container">
-                    <div id="come-9"></div>
-                    <div id="come-9-odds"></div>
-                    <button id="number-box-9"></button>
-                </div>
-              </div>
-              <div class="number-box">
-                <img id='on-10' class="hidden" src="img/on.png">10
-                <div class="come-bet-container">
-                    <div id="come-10"></div>
-                    <div id="come-10-odds"></div>
-                    <button id="number-box-10"></button>
-                </div>
-              </div>
+          <img id='on-4' class="hidden" src="img/on.png">
+          <img id='on-5'class="hidden" src="img/on.png">
+          <img id='on-6' class="hidden" src="img/on.png">
+          <img id='on-8' class="hidden" src="img/on.png">
+          <img id='on-9' class="hidden" src="img/on.png">
+          <img id='on-10' class="hidden" src="img/on.png">
+
+      <div class="number-pb-container">
+        
+        
+          <div class="come-bet-container">
+            <div class="number-box">4</div>
+            <div id="come-4">
+              <img src="img/chips/face/blank/green_chip.png" class="table-chip-img">
+            </div>
+            <div id="come-4-odds"></div>
+            <button id="number-box-4"></button>
+          </div>
+
+        
+          
+          <div class="come-bet-container">
+            <div class="number-box">5</div>
+            <div id="come-5"></div>
+            <div id="come-5-odds"></div>
+            <button id="number-box-5"></button>
+          </div>
+
+        <div class="come-bet-container">
+          <div class="number-box">6</div>
+          <div id="come-6"></div>
+          <div id="come-6-odds"></div>
+          <button id="number-box-6"></button>
+        </div>
+        
+          <div class="come-bet-container">
+            <div class="number-box">8</div>
+            <div id="come-8"></div>
+            <div id="come-8-odds"></div>
+            <button id="number-box-8"></button>
+          </div>
+
+        
+          <div class="come-bet-container">
+            <div class="number-box">9</div>
+            <div id="come-9"></div>
+            <div id="come-9-odds"></div>
+            <button id="number-box-9"></button>
+          </div>
+          
+        
+          <div class="come-bet-container">
+            <div class="number-box">10</div>
+            <div id="come-10"></div>
+            <div id="come-10-odds"></div>
+            <button id="number-box-10"></button>
+          </div>
+  
+      <div class="place-boxes">
+        <div id="place-4-chips"></div>
+        <button id="place-4-button"></button>
+      </div>
+      <div class="place-boxes">
+        <div id="place-5-chips"></div>
+        <button id="place-5-button"></button>
+      </div>
+      <div class="place-boxes">
+        <div id="place-6-chips"></div>
+        <button id="place-6-button"></button>
+      </div>
+      <div class="place-boxes">
+        <div id="place-8-chips"></div>
+        <button id="place-8-button"></button>
+      </div>
+      <div class="place-boxes">
+        <div id="place-9-chips"></div>
+        <button id="place-9-button"></button>
+      </div>
+      <div class="place-boxes">
+        <div id="place-10-chips"></div>
+        <button id="place-10-button"></button>
+      </div>
+    
+    </div> <!-- close dc-pb-->
+            
+
+        <div class="middle-field-container">
+          <div class="dont-come-line">
+            
+            <div class="dont-come-label">Don't Come<br>
+              <img src="img/dice/white_6.png" style="height: 35px; margin-top: 10px;">
+              <img src="img/dice/white_6.png" style="height: 35px;">
+            </div>
+            <div id="dont-come-chips-display"></div>
+            <button id="dont-come-line-button"></button>
+      
+          </div>
+
+
+          <div class="come-field-container">
+
+            <div class="come-line">C O M E
+              <div id="come-chips-display"></div>
+              <button id="come-line-button"></button>
             </div>
 
+            <div id="field">2 3 4 9 10 11 12<br>FIELD
+              <div id="field-chips"></div>
+              <button id="field-button"></button>
+            </div>
           </div>
-        </div>
-        <div class="place-bet-display-row">
-          <div class="place-boxes" id="place-blank"></div>
-          <div class="place-boxes">
-            <div id="place-4-chips"></div>
-            <button id="place-4-button"></button>
-          </div>
-          <div class="place-boxes">
-            <div id="place-5-chips"></div>
-            <button id="place-5-button"></button>
-          </div>
-          <div class="place-boxes">
-            <div id="place-6-chips"></div>
-            <button id="place-6-button"></button>
-          </div>
-          <div class="place-boxes">
-            <div id="place-8-chips"></div>
-            <button id="place-8-button"></button>
-          </div>
-          <div class="place-boxes">
-            <div id="place-9-chips"></div>
-            <button id="place-9-button"></button>
-          </div>
-          <div class="place-boxes">
-            <div id="place-10-chips"></div>
-            <button id="place-10-button"></button>
-          </div>
-        </div>
-        <button id="come">
-          <div class="come-label">C O M E</div>
-          <div id="come-chips-display">
-          </div>
-        </button>
-        <div id="field">
-          <div class="field-label">2 3 4 9 10 11 12<br>FIELD</div>
-          <div id="field-chips"></div>
-          <button id="field-button"></button>
+
         </div>
 
-          <div class="dont-pass">Don't Pass Bar
-            <img src="img/dice/white_6.png" class="dont-dice">
-            <img src="img/dice/white_6.png" class="dont-dice" style="margin-left: 220px;">
+<div class="bet-control-buttons">
+        
+        <div class="control-column">
+          <button id="increment1">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$1</div>
+          <button id="decrement1">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment5">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$5</div>
+          <button id="decrement5">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment25">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$25</div>
+          <button id="decrement25">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment100">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">$100</div>
+          <button id="decrement100">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="clear-bet">Clear</button>
+          <button id="pull-back-button">Pull</button>
+        </div>
+        
+
+      </div>
+
+<div class="pass-line-container">
+
+          <div class="dont-pass">
+            <div class="dont-pass-label"> Don't Pass Bar</div>
+              <img src="img/dice/white_6.png" class="dont-dice">
+              <img src="img/dice/white_6.png" class="dont-dice">
+            
             <div id="dont-pass-chips"></div>
             <button id="dont-pass-button"></button>
           </div>
 
-        </button>
-        <button id="pass-line">PASS LINE
+        <div class="pass-line">PASS LINE
           <div id="pass-line-chips"></div>
-        </button>
+          <button id="pass-line-button"></button>
+        </div>
 
         <div class="pass-line-odds">
           <div id="pass-line-odds-chips"></div>
           <button id="pass-line-odds-button"></button>
         </div>
-
+</div>
       </div> <!-- close main-left-->
 
       <div class="main-right">
@@ -284,7 +351,7 @@
     </div> <!-- Close middle container-->
   </div> <!-- Close table div-->
   
-  <img id="off-puck" src="img/off.png">
+  <img id="off-puck" class="hidden"src="img/off.png">
 
 
   <div id="dice-display">
@@ -294,55 +361,7 @@
 
   <div id="bottom-container">
     <div class="bet-container">
-      <div class="bet-control-buttons">
-        
-        <div class="control-column">
-          <button id="increment1">
-            <img src="img/increase.png" class="arrow increase" >
-          </button>
-          <div class="control-label">$1</div>
-          <button id="decrement1">
-            <img src="img/decrease.png" class="arrow decrease">
-          </button>
-        </div>
-
-        <div class="control-column">
-          <button id="increment5">
-            <img src="img/increase.png" class="arrow increase" >
-          </button>
-          <div class="control-label">$5</div>
-          <button id="decrement5">
-            <img src="img/decrease.png" class="arrow decrease">
-          </button>
-        </div>
-
-        <div class="control-column">
-          <button id="increment25">
-            <img src="img/increase.png" class="arrow increase" >
-          </button>
-          <div class="control-label">$25</div>
-          <button id="decrement25">
-            <img src="img/decrease.png" class="arrow decrease">
-          </button>
-        </div>
-
-        <div class="control-column">
-          <button id="increment100">
-            <img src="img/increase.png" class="arrow increase" >
-          </button>
-          <div class="control-label">$100</div>
-          <button id="decrement100">
-            <img src="img/decrease.png" class="arrow decrease">
-          </button>
-        </div>
-
-        <div class="control-column">
-          <button id="clear-bet">Clear</button>
-          <button id="pull-back-button">Pull</button>
-        </div>
-        
-
-      </div>
+      
 
       <div id="staged-bet-container">
         <div id="staged-bet-chips"></div>
@@ -372,7 +391,9 @@
   <div id="message-4"></div>
   <div id="message-5"></div>
 </div>
-<button id="show-money-button"></button>
+<button id="show-money-button">
+  <img src="img/double_arrow.png" id="double-arrow">
+</button>
 </div> <!-- close main-area-->
 
 
