@@ -539,7 +539,7 @@ button {
     grid-column: inherit;
     grid-template-columns: 75px 75px 75px 75px 110px;
     position: absolute;
-    top: 480px;
+    bottom: 20px;
 }
 
 .control-column {
@@ -768,8 +768,8 @@ button {
 
 #staged-bet-container {
     position: absolute;
-    bottom: 110px;
-    left: 20px;
+    bottom: 125px;
+    left: 60px;
     width: 300px;
     height: 100px;
     display: flex;
@@ -849,7 +849,8 @@ button {
     display: flex;
     flex-direction: column;
     position: relative;
-    left: 550px;
+    left: 500px;
+    bottom: 10px;
     width: 500px;
     height: 150px;
 }
@@ -933,17 +934,17 @@ button {
     position: absolute;
     outline: 1px solid white;
     border: 3px solid white;
-    border-radius: 10px;
+    border-radius: 20px;
     background-color: rgb(172, 22, 22);
     color: white;
     text-shadow: 3px 3px 0 black;
-    height: 65px;
+    height: 80px;
     width: 400px;
-    font-size: 35px;
+    font-size: 40px;
     font-weight: 600;
     padding: 0 25px;
-    bottom: 10px;
-    left: 20px;
+    bottom: 40px;
+    left: 0px;
     transition: transform 0.1s ease-in-out;
 }
 #roll-button:hover {
@@ -1000,8 +1001,8 @@ button {
 
 #show-money-button {
     position: absolute;
-    bottom: 95px;
-    left: 540px;
+    bottom: 105px;
+    left: 500px;
     background-color: rgb(20,90,30);
     border: 2px outset rgb(12, 58, 19);
     border-radius: 5px;
