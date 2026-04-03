@@ -816,6 +816,8 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
           thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip_${rotation}.png`;  
         } else {
           thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip.png`;
+          rotation = Math.ceil(Math.random() * 60);
+          thisChip.style.transform = `rotate(${rotation}deg)`;
         }
         
         thisChip.classList.add(`${imgClass}-chip-img`);
