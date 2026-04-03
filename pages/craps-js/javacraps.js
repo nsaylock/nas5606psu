@@ -243,23 +243,27 @@ let field = {
   chips: {
     location: document.getElementById('field-chips'),
     chip: [],
-    leftSpacing: 750
+    leftSpacing: 575
   }
 }
 
 let dontPassBar = {
   button: document.getElementById('dont-pass-button'),
-  bet: 0,
+  location: document.getElementById('dont-pass-chips'),
+  amount: 0,
   chips: {
     location: document.getElementById('dont-pass-chips'),
     chip: [],
-    leftSpacing: 200
+    leftSpacing: 55
   },
-  oddsBet: 0,
-  oddsChips: {
-    location: document.getElementById('dont-pass-chips'),
-    chip: [],
-    leftSpacing: 300
+  odds: {
+    location: document.getElementById('dont-pass-odss-chips'),
+    amount: 0,
+    chips: {
+      location: document.getElementById('dont-pass-chips'),
+      chip: [],
+      leftSpacing: 90
+    }
   }
 }
 
@@ -268,48 +272,68 @@ const original = {
 }
 
 let placeBet = {
-  button: {
-    4: document.getElementById('place-4-button'),
-    5: document.getElementById('place-5-button'),
-    6: document.getElementById('place-6-button'),
-    8: document.getElementById('place-8-button'),
-    9: document.getElementById('place-9-button'),
-    10: document.getElementById('place-10-button')
-  },
-  bet: { 4:0, 5:0, 6:0, 8:0, 9:0, 10:0 },
-  chips: {
     4: {
-      location: document.getElementById('place-4-chips'),
-      chip: [],
-      leftSpacing: 194
+      button: document.getElementById('place-4-button'),
+      amount: 0,
+      multiplier: 9/5,
+      chips: {
+        location: document.getElementById('place-4-chips'),
+        chip: [],
+        leftSpacing: 47
+      }
     },
     5: {
-      location: document.getElementById('place-5-chips'),
-      chip: [],
-      leftSpacing: 338
+      button: document.getElementById('place-5-button'),
+      amount: 0,
+      multiplier: 7/5,
+      chips: {
+        location: document.getElementById('place-5-chips'),
+        chip: [],
+        leftSpacing: 47
+      }
     },
     6: {
-      location: document.getElementById('place-6-chips'),
-      chip: [],
-      leftSpacing: 482
+      button: document.getElementById('place-6-button'),
+      amount: 0,
+      multiplier: 7/6,
+      chips: {
+        location: document.getElementById('place-6-chips'),
+        chip: [],
+        leftSpacing: 47
+      }
     },
     8: {
-      location: document.getElementById('place-8-chips'),
-      chip: [],
-      leftSpacing: 630
+      button: document.getElementById('place-8-button'),
+      amount: 0,
+      multiplier: 7/6,
+      chips: {
+        location: document.getElementById('place-8-chips'),
+        chip: [],
+        leftSpacing: 47
+      }
     },
     9: {
-      location: document.getElementById('place-9-chips'),
-      chip: [],
-      leftSpacing: 772
+      button: document.getElementById('place-9-button'),
+      amount: 0,
+      multiplier: 7/5,
+      chips : {
+        location: document.getElementById('place-9-chips'),
+        chip: [],
+        leftSpacing: 47
+      }
     },
     10: {
-      location: document.getElementById('place-10-chips'),
-      chip: [],
-      leftSpacing: 920
+      button: document.getElementById('place-10-button'),
+      amount: 0,
+      multiplier: 9/5,
+      chips: {
+        location: document.getElementById('place-10-chips'),
+        chip: [],
+        leftSpacing: 47
       }
     }
 };
+
 
 let come = {
   line: {
@@ -317,7 +341,7 @@ let come = {
     location: document.getElementById('come-chips-display'),
     amount: 0,
     chip: [],
-    leftSpacing: 75
+    leftSpacing: 352
   },
   4: {
     location: document.getElementById('come-4'),
@@ -516,7 +540,7 @@ let passLine = {
   chips: {
     location: document.getElementById('pass-line-chips'),
     chip: [],
-    leftSpacing: 700
+    leftSpacing: 250
   },
   odds: {
     button: document.getElementById('pass-line-odds-button'),
@@ -524,7 +548,7 @@ let passLine = {
     chips: {
       location: document.getElementById('pass-line-odds-chips'),
       chip: [],
-      leftSpacing: 800
+      leftSpacing: 250
     }
   }
 };
@@ -578,6 +602,7 @@ function play_decrement_sound() {
 let playSound = true;
 function play_increment_sound() {
   pullBackInProgress = false;
+  pullBackButton.style.boxShadow = 'none';
   if (playSoundAfterAnimation == true) {
     setTimeout(() => {
     if (playSound == true) {
@@ -610,9 +635,13 @@ function update_staged_bet_chips() {
           index = stagedBetChips.chip.length;
           stagedBetChips.chip[index] = document.createElement('img');
           thisChip = stagedBetChips.chip[index];
-          thisChip.src = `img/chips/side/${chipDisplay}/${color}_chip.png`;
+
+
+          let rotation = Math.ceil(Math.random() * 6);
+
+          thisChip.src = `img/chips/side/${chipDisplay}/${color}_chip_${rotation}.png`;
           thisChip.classList.add('side-chip-img');
-          thisChip.style.marginBottom = `${chipCount * 8}px`;
+          thisChip.style.marginBottom = `${chipCount * 6}px`;
           stagedBetChips.location.appendChild(thisChip);
           chipCount += 1;
         }
@@ -714,9 +743,10 @@ function load_bankroll_chips() {
 // create 5 imgs of black_chip for $500 starting bankroll
   for (i = 0; i < 5; i++) {
     bankrollChips.black[i] = document.createElement('img');
-    bankrollChips.black[i].src = 'img/chips/side/blank/black_chip.png';
+    let rotation = Math.ceil(Math.random() * 6);
+    bankrollChips.black[i].src = `img/chips/side/blank/black_chip_${rotation}.png`;
     bankrollChips.black[i].classList.add('bankroll-chip-img');
-    bankrollChips.black[i].style.marginBottom = `${i*5.4}px`;
+    bankrollChips.black[i].style.marginBottom = `${i*5}px`;
     bankrollStack.black.appendChild(bankrollChips.black[i]);
   }
 
@@ -743,7 +773,10 @@ function update_bankroll_chips(amount) {
       for (i = 0; i < chipStructure[color]; i++) {
         bankrollChips[color][i] = document.createElement('img');
         thisChip = bankrollChips[color][i];
-        thisChip.src = `img/chips/side/blank/${color}_chip.png`;
+
+        let rotation = Math.ceil(Math.random() * 6);
+
+        thisChip.src = `img/chips/side/blank/${color}_chip_${rotation}.png`;
         thisChip.classList.add('bankroll-chip-img');
         thisChip.style.marginBottom = `${i*5.4}px`;
         thisStack.appendChild(thisChip);
@@ -756,7 +789,7 @@ function update_bankroll_chips(amount) {
 
   
 
-function add_chips_to_table(object, bet, orientation, imgClass, rotation) {
+function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
 //chip structure
 // object.location is the div element where the chips are going
 // object.chip is an array where each chip img will get stored
@@ -778,14 +811,20 @@ function add_chips_to_table(object, bet, orientation, imgClass, rotation) {
         index = object.chip.length;
         object.chip[index] = document.createElement('img');
         thisChip = object.chip[index];
-        thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip.png`;
+        if (orientation == 'side') {
+          let rotation = Math.ceil(Math.random() * 6);
+          thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip_${rotation}.png`;  
+        } else {
+          thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip.png`;
+        }
+        
         thisChip.classList.add(`${imgClass}-chip-img`);
 
         if (object.bottom != undefined) {
           thisChip.style.marginBottom = `${chipCount *8}px`;
           object.location.style.bottom = `${object.bottom - (chipCount-1) *4}px`;
         } else {
-          if (rotation == 'rotated') {
+          if (oddsRotation == 'rotated') {
             
             thisChip.classList.add(`rotate-odds-bet`);
             thisChip.style.marginLeft = `${chipCount *6}px`;
@@ -876,6 +915,35 @@ function get_chip_structure(amount) {
 }
 
 // ####################### USEFUL FUNCTIONS ################################
+
+// Detect touch device
+function isTouchDevice() {
+  try {
+    document.createEvent("TouchEvent");
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+const move = (e) => {
+  try {
+    // Get coordinates for mouse or touch
+    var x = !isTouchDevice() ? e.pageX : e.touches.pageX;
+    var y = !isTouchDevice() ? e.pageY : e.touches.pageY;
+  } catch (e) {}
+
+  // Set position, subtracting 50px to center the div (adjust based on div size)
+  stagedBetChips.location.style.left = (x+15) + "px";
+  stagedBetChips.location.style.top = (y+50) + "px";
+};
+
+// Add event listeners for mouse and touch
+document.addEventListener("mousemove", (e) => move(e));
+document.addEventListener("touchmove", (e) => move(e));
+
+
+
 function update_bankroll() {
   bankroll -= stagedBet;
   if (stagedBet > bankroll) {
@@ -907,8 +975,15 @@ function change_bet(betToCommit) {
 function pull_back_in_progress() {
   stagedBet = 0;
   update_staged_bet_chips();
-  betElement.textContent = 'Pull';
-  pullBackInProgress = true;
+  if (pullBackInProgress == false) {
+    pullBackInProgress = true;
+    pullBackButton.style.boxShadow = '0 0 4px 3px goldenrod';
+  } else {
+    pullBackInProgress = false;
+    pullBackButton.style.boxShadow = 'none';
+  }
+  betElement.textContent = '';
+  
 }
 
 function pull_back_bet(amount) {
@@ -966,8 +1041,8 @@ function message_display(message) {
 function clear_table() {
   message = 'All bets cleared';
   message_display(message);
-  if (dontPassBar.bet != 0) {
-    moneyOnTable = dontPassBar.bet;
+  if (dontPassBar.amount != 0) {
+    moneyOnTable = dontPassBar.amount;
   } else {
     moneyOnTable = 0;
   }
@@ -980,8 +1055,8 @@ function clear_table() {
   remove_chips_from_table(passLine.odds.chips);
   passLine.odds.amount = 0;
 
-  for (const key in placeBet.bet) {
-    placeBet.bet[key] = 0;
+  for (const key in placeBet) {
+    placeBet[key].amount = 0;
     //reset_place_bet_text(key);
   }
   for (const key in hard) {
@@ -1003,7 +1078,8 @@ function clear_table() {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN SCORE FUNCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function roll_dice() {
   pullBackInProgress = false;
-  if (passLine.amount == 0 && dontPassBar.bet == 0) {
+  pullBackButton.style.boxShadow = 'none';
+  if (passLine.amount == 0 && dontPassBar.amount == 0) {
     alert('You must play the pass line to roll')
   } else {
     playSound = false;
@@ -1106,19 +1182,19 @@ function display_roll_message(sum) {
 }
 
 function come_out_roll() {
-  if (dontPassBar.bet != 0) {
+  if (dontPassBar.amount != 0) {
     if (sum == 7 || sum == 11) {
-      message = `Lost $${dontPassBar.bet} on the Don\'t Pass Line`;
+      message = `Lost $${dontPassBar.amount} on the Don\'t Pass Line`;
       message_display(message);
       remove_chips_from_table(dontPassBar.chips);
-      moneyOnTable -= dontPassBar.bet;
-      dontPassBar.bet = 0;
+      moneyOnTable -= dontPassBar.amount;
+      dontPassBar.amount = 0;
       rollButton.classList.add('hidden');
       update_moneyOnTable();
     } else if (sum == 2 || sum == 3) {
-      message = 'Won $' + dontPassBar.bet + ' on the Don\'t Pass Line';
+      message = 'Won $' + dontPassBar.amount + ' on the Don\'t Pass Line';
       message_display(message);
-      bankroll += dontPassBar.bet;
+      bankroll += dontPassBar.amount;
       update_bankroll();
     } else if (sum == 12) {
       message = 'Push on the Don\'t Pass Line';
@@ -1151,7 +1227,8 @@ function come_out_roll() {
       message = 'Point Established';
       message_display(message);
       display_on_marker();
-      if (placeBet.bet[target] != 0) {
+
+      if (placeBet[target].amount != 0) {
         move_behind_pass_line();
       }
     }
@@ -1164,14 +1241,14 @@ function come_out_roll() {
 
 function move_behind_pass_line() {
   setTimeout (() => { 
-    moveBehindPassLine = confirm(`Would you like to move your $${placeBet.bet[target]} 
+    moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target].amount} 
 Place Bet Behind the Pass Line for better odds?`)
 
     if (moveBehindPassLine == true) {
-      if ((target == 5 || target == 9) && placeBet.bet[target] % 2 != 0) {
+      if ((target == 5 || target == 9) && placeBet[target].amount % 2 != 0) {
         roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
         if (roundUpBet == true) {
-          passLine.odds.amount = placeBet.bet[target] + 1;
+          passLine.odds.amount = placeBet[target].amount + 1;
           bankroll -= 1; 
           // *** // Theres a case where this will make the bankroll go negative, consider handling
           update_bankroll();
@@ -1184,11 +1261,11 @@ Place Bet Behind the Pass Line for better odds?`)
     }
     if (moveBehindPassLine == true) {
       if (passLine.odds.amount == 0) {
-        passLine.odds.amount = placeBet.bet[target];
+        passLine.odds.amount = placeBet[target].amount;
       }
       add_chips_to_table(passLine.odds.chips, passLine.odds.amount, 'face', 'table', 'normal');
-      placeBet.bet[target] = 0;
-      remove_chips_from_table(placeBet.chips[target]);
+      placeBet[target].amount = 0;
+      remove_chips_from_table(placeBet[target].chips);
     } else {
       message = 'Player not moving Place Bet';
       message_display(message);
@@ -1206,8 +1283,8 @@ function score_roll() {
   }
 
   // Place Bets
-  for (const key in placeBet.bet) {
-    if (placeBet.bet[key] !== 0 && placeBet.bet[key] != undefined && key == sum) {
+  for (const key in placeBet) {
+    if (placeBet[key].amount !== 0 && placeBet[key].amount != undefined && key == sum) {
       score_place_bets(sum);
       break;
     }
@@ -1284,12 +1361,11 @@ function pass_line() { // adds bet to pass line
 
 
 function pass_line_odds() {
-  if (placeBet.bet[target] != 0) {
-    bankroll += placeBet.bet[target];
-    remove_chips_from_table(placeBet.chips[target]);
-    placeBet.bet[target] = 0;
+  if (placeBet[target].amount != 0) {
+    bankroll += placeBet[target].amount;
+    remove_chips_from_table(placeBet[target].chips);
+    placeBet[target].amount = 0;
   }
-  alert('1')
     add_chips_to_table(passLine.odds.chips, stagedBet, 'face', 'table', 'normal');
     passLine.odds.amount = commit_bet(passLine.odds.amount);
 }
@@ -1297,7 +1373,7 @@ function pass_line_odds() {
 function dont_pass_line() {
   if (stagedBet >= minBet) {
     add_chips_to_table(dontPassBar.chips, stagedBet, 'face', 'table', 'normal');
-    dontPassBar.bet = commit_bet(dontPassBar.bet);
+    dontPassBar.amount = commit_bet(dontPassBar.amount);
     rollButton.classList.remove('hidden');
   } else {
     alert('The minimum bet is $' + minBet + '.');
@@ -1306,18 +1382,18 @@ function dont_pass_line() {
 
 function score_pass_line() { // After game is on
   if (sum == 7) {
-    if (dontPassBar.bet != 0) {
-      bankroll += dontPassBar.bet;
+    if (dontPassBar.amount != 0) {
+      bankroll += dontPassBar.amount;
       update_bankroll();
-      message = `Won $${dontPassBar.bet} on the Don\'t Pass Bar`;
+      message = `Won $${dontPassBar.amount} on the Don\'t Pass Bar`;
       message_display(message);
       }
   } else {
-    if (dontPassBar.bet != 0) {
+    if (dontPassBar.amount != 0) {
       remove_chips_from_table(dontPassBar.chips);
-      dontPassBar.bet = lose_bet(dontPassBar.bet);
+      dontPassBar.amount = lose_bet(dontPassBar.amount);
       rollButton.classList.add('hidden');
-      message = `Lost $${dontPassBar.bet} on the Don\'t Pass Bar`;
+      message = `Lost $${dontPassBar.amount} on the Don\'t Pass Bar`;
       message_display(message);
     }
     if (passLine.amount != 0) {
@@ -1364,38 +1440,19 @@ function score_pass_line_odds(target) {
 function place_bet(selector) {
   if (stagedBet < minBet) {
     alert('The minimum bet is $' + minBet + '.');
-  } else if (placeBet.bet[selector] != 0) {
+  } else if (placeBet[selector].amount != 0) {
     alert(`You already have a Place Bet on ${selector}. 
 Pull back bet to change.`);
   } else if (passLine.odds.amount != 0 && target == selector) {
     // Do Nothing
   } else {
-    add_chips_to_table(placeBet.chips[selector], stagedBet, 'face', 'table', 'not-rotated');
-    placeBet.bet[selector] = commit_bet(placeBet.bet[selector]);
+    add_chips_to_table(placeBet[selector].chips, stagedBet, 'face', 'table', 'not-rotated');
+    placeBet[selector].amount = commit_bet(placeBet[selector].amount);
   }
 }
 
 function score_place_bets(sum) {
-  switch (sum) {
-    case 4:
-      payout = placeBet.bet[4]*9/5;
-      break;
-    case 5:
-      payout = placeBet.bet[5]*7/5;
-      break;
-    case 6:
-      payout = placeBet.bet[6]*7/6;
-      break;
-    case 8:
-      payout = placeBet.bet[8]*7/6;
-      break;
-    case 9:
-      payout = placeBet.bet[9]*7/5;
-      break;
-    case 10:
-      payout = placeBet.bet[10]*9/5;
-      break;
-  }
+  payout = placeBet[sum].amount * placeBet[sum].multiplier;
   bankroll += payout;
   update_bankroll();
   message = `Won $${payout} on place bet`;
@@ -1953,19 +2010,19 @@ bonus.tall.button.addEventListener('click', (e) => {
 });
 
 
-placeBet.button[4].addEventListener('click', (e) => {
+placeBet[4].button.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    remove_chips_from_table(placeBet.chips[4]);
-    placeBet.bet[4] = pull_back_bet(placeBet.bet[4]);
+    remove_chips_from_table(placeBet[4].chips);
+    placeBet[4].amount = pull_back_bet(placeBet[4].amount);
   } else {
     place_bet(4);
   }
-  prevClicked = placeBet.button[4];
+  prevClicked = placeBet[4].button;
 });
-placeBet.button[5].addEventListener('click', (e) => {
+placeBet[5].button.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    remove_chips_from_table(placeBet.chips[5]);
-    placeBet.bet[5] = pull_back_bet(placeBet.bet[5]);
+    remove_chips_from_table(placeBet[5].chips);
+    placeBet[5].amount = pull_back_bet(placeBet[5].amount);
   } else {
     if (stagedBet % 5 != 0) {
       alert('5 pays out 7:5. Bet must be divisible by 5')
@@ -1973,12 +2030,12 @@ placeBet.button[5].addEventListener('click', (e) => {
       place_bet(5);
     }
   }
-  prevClicked = placeBet.button[5];
+  prevClicked = placeBet[5].button;
 });
-placeBet.button[6].addEventListener('click', (e) => {
+placeBet[6].button.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    remove_chips_from_table(placeBet.chips[6]);
-    placeBet.bet[6] = pull_back_bet(placeBet.bet[6]);
+    remove_chips_from_table(placeBet[6].chips);
+    placeBet[6].amount = pull_back_bet(placeBet[6].amount);
   } else {
     if (stagedBet % 6 != 0) {
       alert('6 pays out 7:6. Bet must be divisible by 6')
@@ -1986,12 +2043,12 @@ placeBet.button[6].addEventListener('click', (e) => {
       place_bet(6);
     }
   }
-  prevClicked = placeBet.button[6];
+  prevClicked = placeBet[6].button;
 });
-placeBet.button[8].addEventListener('click', (e) => {
+placeBet[8].button.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    remove_chips_from_table(placeBet.chips[8]);
-    placeBet.bet[8] = pull_back_bet(placeBet.bet[8]);
+    remove_chips_from_table(placeBet[8].chips);
+    placeBet[8].amount = pull_back_bet(placeBet[8].amount);
   } else {
     if (stagedBet % 6 != 0) {
       alert('8 pays out 7:6. Bet must be divisible by 6')
@@ -1999,12 +2056,12 @@ placeBet.button[8].addEventListener('click', (e) => {
       place_bet(8);
     }
   }
-  prevClicked = placeBet.button[8];
+  prevClicked = placeBet[8].button;
 });
-placeBet.button[9].addEventListener('click', (e) => {
+placeBet[9].button.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    remove_chips_from_table(placeBet.chips[9]);
-    placeBet.bet[9] = pull_back_bet(placeBet.bet[9]);
+    remove_chips_from_table(placeBet[9].chips);
+    placeBet[9].amount = pull_back_bet(placeBet[9].amount);
   } else {
     if (stagedBet % 5 != 0) {
       alert('9 pays out 7:5. Bet must be divisible by 5')
@@ -2012,16 +2069,16 @@ placeBet.button[9].addEventListener('click', (e) => {
       place_bet(9);
     }
   }
-  prevClicked = placeBet.button[9];
+  prevClicked = placeBet[9].button;
 });
-placeBet.button[10].addEventListener('click', (e) => {
+placeBet[10].button.addEventListener('click', (e) => {
   if (pullBackInProgress == true) {
-    remove_chips_from_table(placeBet.chips[10]);
-    placeBet.bet[10] = pull_back_bet(placeBet.bet[10]);
+    remove_chips_from_table(placeBet[10].chips);
+    placeBet[10].amount = pull_back_bet(placeBet[10].amount);
   } else {
     place_bet(10);
   }
-  prevClicked = placeBet.button[10];
+  prevClicked = placeBet[10].button;
 });
 
 // Dont Come Line
@@ -2217,11 +2274,11 @@ field.button.addEventListener('click', (e) => {
 dontPassBar.button.addEventListener('click', (e) => {
   if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
     remove_chips_from_table(dontPassBar.chips);
-    dontPassBar.bet = pull_back_bet(dontPassBar.bet);
+    dontPassBar.amount = pull_back_bet(dontPassBar.amount);
   } else if (pullBackInProgress == true && gameOn == true) {
     alert('Cannont Pull Back While Game is On.');
     reset_stagedBet();
-  } else if (dontPassBar.bet != 0) {
+  } else if (dontPassBar.amount != 0) {
   //Do nothing
   } else if (gameOn == false) {
     dont_pass_line();
