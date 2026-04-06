@@ -162,7 +162,7 @@ let hard = {
     chips: {
       location: document.getElementById('hard-4-chips'),
       chip: [],
-      leftSpacing: 1260
+      leftSpacing: 60
       },
   },
   6: {
@@ -171,7 +171,7 @@ let hard = {
     chips: {
       location: document.getElementById('hard-6-chips'),
       chip: [],
-      leftSpacing: 1105
+      leftSpacing: 60
     },
   },
   8: {
@@ -180,7 +180,7 @@ let hard = {
     chips: {
       location: document.getElementById('hard-8-chips'),
       chip: [],
-      leftSpacing: 1105
+      leftSpacing: 60
       },
   },
   10: {
@@ -189,7 +189,7 @@ let hard = {
     chips: {
       location: document.getElementById('hard-10-chips'),
       chip: [],
-      leftSpacing: 1260
+      leftSpacing: 60
       }
   }
 }
@@ -201,7 +201,7 @@ let horn = {
     chips: {
       location: document.getElementById('horn-2-chips'),
       chip: [],
-      leftSpacing: 1260
+      leftSpacing: 60
       },
     multiplier: 30
   },
@@ -211,7 +211,7 @@ let horn = {
     chips: {
       location: document.getElementById('horn-3-chips'),
       chip: [],
-      leftSpacing: 1105
+      leftSpacing: 60
     },
     multiplier: 15
   },
@@ -221,7 +221,7 @@ let horn = {
     chips: {
       location: document.getElementById('horn-11-chips'),
       chip: [],
-      leftSpacing: 1105
+      leftSpacing: 60
       },
     multiplier: 15
   },
@@ -231,7 +231,7 @@ let horn = {
     chips: {
       location: document.getElementById('horn-12-chips'),
       chip: [],
-      leftSpacing: 1260
+      leftSpacing: 60
     },
     multiplier: 30
   }
@@ -279,7 +279,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-4-chips'),
         chip: [],
-        leftSpacing: 47
+        leftSpacing: 70
       }
     },
     5: {
@@ -289,7 +289,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-5-chips'),
         chip: [],
-        leftSpacing: 47
+        leftSpacing: 70
       }
     },
     6: {
@@ -299,7 +299,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-6-chips'),
         chip: [],
-        leftSpacing: 47
+        leftSpacing: 70
       }
     },
     8: {
@@ -309,7 +309,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-8-chips'),
         chip: [],
-        leftSpacing: 47
+        leftSpacing: 70
       }
     },
     9: {
@@ -319,7 +319,7 @@ let placeBet = {
       chips : {
         location: document.getElementById('place-9-chips'),
         chip: [],
-        leftSpacing: 47
+        leftSpacing: 70
       }
     },
     10: {
@@ -329,7 +329,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-10-chips'),
         chip: [],
-        leftSpacing: 47
+        leftSpacing: 70
       }
     }
 };
@@ -341,7 +341,7 @@ let come = {
     location: document.getElementById('come-chips-display'),
     amount: 0,
     chip: [],
-    leftSpacing: 352
+    leftSpacing: 262
   },
   4: {
     location: document.getElementById('come-4'),
@@ -548,7 +548,7 @@ let passLine = {
     chips: {
       location: document.getElementById('pass-line-odds-chips'),
       chip: [],
-      leftSpacing: 250
+      leftSpacing: 300
     }
   }
 };

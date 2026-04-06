@@ -10,10 +10,23 @@
 
 <body>
 <div id="main-area">
-        <div id="staged-bet-chips"></div>
+
+<div class="overlay"></div>
+<div id="staged-bet-chips"></div>
 
   <div class="table">
-    <div class="bonus-container">
+    
+    
+
+    <div class="table-left">
+      <div class="vert-pass-line"></div>
+      <div class="vert-dont-pass-bar"></div>
+    </div>
+
+    <div class="table-right">
+    <div class="main-top">
+
+      <div class="bonus-container">
       <div id="small-2">2</div>
       <div id="small-3">3</div>
       <div id="small-4">4</div>
@@ -37,8 +50,6 @@
       <div id="small-11">11</div>
       <div id="small-12">12</div>
     </div> <!-- Close bonus container-->
-    <div class="middle-table">
-      <div class="main-left">
 
       <div class="dont-come-row">
         <div class="dont-come-bet-container">
@@ -81,12 +92,24 @@
       </div>
 
         <div class="on-container">
-          <img id='on-4' class="hidden" src="img/on.png">
-          <img id='on-5' class="hidden" src="img/on.png">
-          <img id='on-6' class="hidden" src="img/on.png">
-          <img id='on-8' class="hidden" src="img/on.png">
-          <img id='on-9' class="hidden" src="img/on.png">
-          <img id='on-10' class="hidden" src="img/on.png">
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <img id='on-4' class="hidden" src="img/on.png">
+          </div>
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <img id='on-5' class="hidden" src="img/on.png">
+          </div>
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <img id='on-6' class="hidden" src="img/on.png">
+          </div>
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <img id='on-8' class="hidden" src="img/on.png">
+          </div>
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <img id='on-9' class="hidden" src="img/on.png">
+          </div>
+          <div style="width: 100%; display: flex; justify-content: center;">
+            <img id='on-10' class="hidden" src="img/on.png">
+          </div>
         </div>
           <img id="off-puck" src="img/off.png">
 
@@ -96,7 +119,7 @@
         
         
           <div class="come-bet-container">
-            <div class="number-box">4</div>
+            <div class="number-box"></div>
             <div id="come-4">
             </div>
             <div id="come-4-odds"></div>
@@ -104,21 +127,21 @@
           </div>
           
           <div class="come-bet-container">
-            <div class="number-box">5</div>
+            <div class="number-box"></div>
             <div id="come-5"></div>
             <div id="come-5-odds"></div>
             <button id="number-box-5"></button>
           </div>
 
         <div class="come-bet-container">
-          <div class="number-box">6</div>
+          <div class="number-box"></div>
           <div id="come-6"></div>
           <div id="come-6-odds"></div>
           <button id="number-box-6"></button>
         </div>
         
           <div class="come-bet-container">
-            <div class="number-box">8</div>
+            <div class="number-box"></div>
             <div id="come-8"></div>
             <div id="come-8-odds"></div>
             <button id="number-box-8"></button>
@@ -126,7 +149,7 @@
 
         
           <div class="come-bet-container">
-            <div class="number-box">9</div>
+            <div class="number-box"></div>
             <div id="come-9"></div>
             <div id="come-9-odds"></div>
             <button id="number-box-9"></button>
@@ -134,7 +157,7 @@
           
         
           <div class="come-bet-container">
-            <div class="number-box">10</div>
+            <div class="number-box"></div>
             <div id="come-10"></div>
             <div id="come-10-odds"></div>
             <button id="number-box-10"></button>
@@ -167,54 +190,47 @@
       </div>
     
     </div> <!-- close dc-pb-->
+    </div> <!-- close main-top-->
             
-
+      <div class="main-bottom">
+        <div class="main-bottom-left">
         <div class="middle-field-container">
           <div class="dont-come-line">
-            
-            <div class="dont-come-label">Don't Come<br>
-              <img src="img/dice/white_6.png" style="height: 35px; margin-top: 10px;">
-              <img src="img/dice/white_6.png" style="height: 35px;">
-            </div>
-            <div id="dont-come-chips-display"></div>
-            <button id="dont-come-line-button"></button>
-      
-          </div>
+              <div id="dont-come-chips-display"></div>
+              <button id="dont-come-line-button"></button>
+           </div>
 
 
           <div class="come-field-container">
 
-            <div class="come-line">
-              <div class="come-label">C O M E</div>
-              <div id="come-chips-display">
+            
 
-              </div>
+            <div class="come-line">
+              <div class="come-label"></div>
+              <div id="come-chips-display"></div>
               <button id="come-line-button"></button>
             </div>
 
-            <div id="field">2 3 4 9 10 11 12<br>FIELD
+            <div id="field">
               <div id="field-chips"></div>
               <button id="field-button"></button>
             </div>
+            
           </div>
 
-        </div>
-
+            
+        </div> <!-- close middle-field-->
 
 
 <div class="pass-line-container">
 
           <div class="dont-pass">
-            <div class="dont-pass-label"> Don't Pass Bar</div>
-              <img src="img/dice/white_6.png" class="dont-dice">
-              <img src="img/dice/white_6.png" class="dont-dice">
-            
             <div id="dont-pass-chips"></div>
             <div id="dont-pass-odds-chips"></div>
             <button id="dont-pass-button"></button>
           </div>
 
-        <div class="pass-line">PASS LINE
+        <div class="pass-line">
           <div id="pass-line-chips"></div>
           <button id="pass-line-button"></button>
         </div>
@@ -223,96 +239,70 @@
           <div id="pass-line-odds-chips"></div>
           <button id="pass-line-odds-button"></button>
         </div>
-        <button id="roll-button" class="hidden">ROLL</button>
 </div>
-      </div> <!-- close main-left-->
 
-      <div class="main-right">
-        <button id="seven-bet"><h2>Seven</h2></button>
+      </div><!-- close main-bottom-left -->
+    <div class="main-bottom-right">
+        <button id="seven-bet"></button>
         <div class="side-bets-grid">
-          <div id="hardways-6">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_3.png" class="side-bet-dice-size">
-              <img src="img/dice/white_3.png" class="side-bet-dice-size">
-            </div>
-            <div id="hw-6-text">9 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="hw-6-text"></div>
             <div id="hard-6-chips"></div>
-
+            <button id="hard-6-button"></button>
           </div>
-          <div id="hardways-10">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_5.png" class="side-bet-dice-size">
-              <img src="img/dice/white_5.png" class="side-bet-dice-size">
-            </div>
-            <div id="hw-10-text">7 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="hw-10-text"></div>
             <div id="hard-10-chips"></div>
+            <button id="hard-10-button"></button>
           </div>
-          <div id="hardways-8">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_4.png" class="side-bet-dice-size">
-              <img src="img/dice/white_4.png" class="side-bet-dice-size">
-            </div>
-            <div id="hw-8-text">9 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="hw-8-text"></div>
             <div id="hard-8-chips"></div>
+            <button id="hard-8-button"></button>
           </div>
-          <div id="hardways-4">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_2.png" class="side-bet-dice-size">
-              <img src="img/dice/white_2.png" class="side-bet-dice-size">
-            </div>
-            <div id="hw-4-text">7 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="hw-4-text"></div>
             <div id="hard-4-chips"></div>
+            <button id="hard-4-button"></button>
           </div>
 
-          <div id="horn-3">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_2.png" class="side-bet-dice-size">
-              <img src="img/dice/white_1.png" class="side-bet-dice-size">
-            </div>
-            <div id="horn-3-text">15 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="horn-3-text"></div>
             <div id="horn-3-chips"></div>
+            <button id="horn-3-button"></button>
           </div>
-          <div id="horn-12">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_6.png" class="side-bet-dice-size">
-              <img src="img/dice/white_6.png" class="side-bet-dice-size">
-            </div>
-            <div id="horn-12-text">30 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="horn-12-text"></div>
             <div id="horn-12-chips"></div>
+            <button id="horn-12-button"></button>
           </div>
-          <div id="horn-11">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_5.png" class="side-bet-dice-size">
-              <img src="img/dice/white_6.png" class="side-bet-dice-size">
-            </div>
-            <div id="horn-11-text">15 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="horn-11-text"></div>
             <div id="horn-11-chips"></div>
+            <button id="horn-11-button"></button>
           </div>
-          <div id="horn-2">
-            <div class="side-bets-dice-display">
-              <img src="img/dice/white_1.png" class="side-bet-dice-size">
-              <img src="img/dice/white_1.png" class="side-bet-dice-size">
-            </div>
-            <div id="horn-2-text">30 to 1</div>
+          <div class="side-bet-container">
+            <div class="side-bets-dice-display"></div>
+            <div id="horn-2-text"></div>
             <div id="horn-2-chips"></div>
+            <button id="horn-2-button"></button>
           </div>
         </div> <!-- Close Side Bets Div Grid-->
         <div class="side-bets-button-grid">
-          <button id="hard-6-button"></button>
-          <button id="hard-10-button"></button>
-          <button id="hard-8-button"></button>
-          <button id="hard-4-button"></button>
-          <button id="horn-3-button"></button>
-          <button id="horn-12-button"></button>
-          <button id="horn-11-button"></button>
-          <button id="horn-2-button"></button>
         </div>
-        <button id="any-craps"><h2>Any Craps</h2></button>
-      </div> <!-- close main-right-->
-    </div> <!-- Close middle container-->
+        <button id="any-craps"></button>
+      </div> <!-- close main-bottom-right-->
+    </div> <!-- Close main-bottom-->
+</div> <!-- close table-right -->
   </div> <!-- Close table div-->
   
-
 
   <div id="dice-display">
     <img id='dice1' src="img/dice/red_1.png">
@@ -375,12 +365,12 @@
         <div id="staged-bet"></div>
       </div>
     </div>
-      
 
     <div class="bankroll-container">
       <div class="bankroll-label-on-table">B A N K  R O L L</div>
       <div id="bankroll-chips"></div>
     </div>
+    <button id="roll-button" class="hidden">ROLL</button>
     
   </div> <!-- Close Bottom Container-->
   <div id="money-container">
