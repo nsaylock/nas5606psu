@@ -19,36 +19,40 @@
     
 
     <div class="table-left">
-      <div class="vert-pass-line"></div>
-      <div class="vert-dont-pass-bar"></div>
+      <div class="vert-pass-line">
+        <button id="vert-PL-button" class="vertical"></button>
+      </div>
+      <div class="vert-dont-pass-bar">
+        <button id="vert-DP-button" class="vertical-DP"></button>
+      </div>
     </div>
 
     <div class="table-right">
     <div class="main-top">
 
       <div class="bonus-container">
-      <div id="small-2">2</div>
-      <div id="small-3">3</div>
-      <div id="small-4">4</div>
-      <div id="small-5">5</div>
-      <div id="small-6">6</div>
-      <div class="bonus-box" id="first">All Small<br>30 to 1
+      <div id="small-2"></div>
+      <div id="small-3"></div>
+      <div id="small-4"></div>
+      <div id="small-5"></div>
+      <div id="small-6"></div>
+      <div class="bonus-box" id="first">
         <div id="small-bonus-chips"></div>
         <button id="small-button"></button>
       </div>
-      <div class="bonus-box" id="second">Make 'Em All<br>150 to 1
+      <div class="bonus-box" id="second">
         <div id="all-bonus-chips"></div>
         <button id="all-button"></button>
       </div>
-      <div class="bonus-box" id="third">All Tall<br>30 to 1
+      <div class="bonus-box" id="third">
         <div id="tall-bonus-chips"></div>
         <button id="tall-button"></button>
       </div> 
-      <div id="small-8">8</div>
-      <div id="small-9">9</div>
-      <div id="small-10">10</div>
-      <div id="small-11">11</div>
-      <div id="small-12">12</div>
+      <div id="small-8"></div>
+      <div id="small-9"></div>
+      <div id="small-10"></div>
+      <div id="small-11"></div>
+      <div id="small-12"></div>
     </div> <!-- Close bonus container-->
 
       <div class="dont-come-row">
@@ -197,7 +201,10 @@
         <div class="middle-field-container">
           <div class="dont-come-line">
               <div id="dont-come-chips-display"></div>
-              <button id="dont-come-line-button"></button>
+              <button id="DC-line-button"></button>
+              <button id="DC-line-button-2"></button>
+              <button id="DC-line-button-3"></button>
+
            </div>
 
 
@@ -224,15 +231,28 @@
 
 <div class="pass-line-container">
 
+        <div class="big-6-container">
+          <div id="big-6-chips"></div>
+          <button id="big-6-button"></button>
+        </div>
+        
+        <div class="big-8-container">
+          <div id="big-8-chips"></div>
+          <button id="big-8-button"></button>
+        </div>
+        
+        
+
+
           <div class="dont-pass">
             <div id="dont-pass-chips"></div>
             <div id="dont-pass-odds-chips"></div>
-            <button id="dont-pass-button"></button>
+            <button id="dont-pass-button" class="horizontal-DP"></button>
           </div>
 
         <div class="pass-line">
           <div id="pass-line-chips"></div>
-          <button id="pass-line-button"></button>
+          <button id="pass-line-button" class="horizontal-PL"></button>
         </div>
 
         <div class="pass-line-odds">
@@ -311,13 +331,13 @@
 
   <div id="bottom-container">
     <div class="bet-container">
-      <div class="bet-control-buttons">
+      <div id="bet-control-buttons">
         
         <div class="control-column">
           <button id="increment1">
             <img src="img/increase.png" class="arrow increase" >
           </button>
-          <div class="control-label">$1</div>
+          <div class="control-label">1</div>
           <button id="decrement1">
             <img src="img/decrease.png" class="arrow decrease">
           </button>
@@ -327,7 +347,7 @@
           <button id="increment5">
             <img src="img/increase.png" class="arrow increase" >
           </button>
-          <div class="control-label">$5</div>
+          <div class="control-label">5</div>
           <button id="decrement5">
             <img src="img/decrease.png" class="arrow decrease">
           </button>
@@ -337,7 +357,7 @@
           <button id="increment25">
             <img src="img/increase.png" class="arrow increase" >
           </button>
-          <div class="control-label">$25</div>
+          <div class="control-label">25</div>
           <button id="decrement25">
             <img src="img/decrease.png" class="arrow decrease">
           </button>
@@ -347,8 +367,28 @@
           <button id="increment100">
             <img src="img/increase.png" class="arrow increase" >
           </button>
-          <div class="control-label">$100</div>
+          <div class="control-label">100</div>
           <button id="decrement100">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div class="control-column">
+          <button id="increment500">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label">500</div>
+          <button id="decrement500">
+            <img src="img/decrease.png" class="arrow decrease">
+          </button>
+        </div>
+
+        <div id="high-roller" class="hidden">
+          <button id="increment5000">
+            <img src="img/increase.png" class="arrow increase" >
+          </button>
+          <div class="control-label" style="margin: 1px 0 3px 0;">5k</div>
+          <button id="decrement5000">
             <img src="img/decrease.png" class="arrow decrease">
           </button>
         </div>
@@ -381,13 +421,7 @@
     <div id="money-on-table">$0</div>
   </div>
 </div> <!--close money container-->
-<div id="message-box">
-  <div id="message-1"></div>
-  <div id="message-2"></div>
-  <div id="message-3"></div>
-  <div id="message-4"></div>
-  <div id="message-5"></div>
-</div>
+<div id="message-box"></div>
 <button id="show-money-button">
   <img src="img/double_arrow.png" id="double-arrow">
 </button>

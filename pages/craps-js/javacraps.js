@@ -16,6 +16,8 @@
 // Come roll will pay on come out roll but not the odds
 // dice roll animations glitches when a message pops up to move a bet behind the line
 // will let you place a bet that is more than your current bankroll if a bigger number is already staged
+// bankroll can get a decimal probabl from small bets $15 - $18
+
 
 // variables
 let stagedBet = 0;
@@ -29,7 +31,7 @@ let target = 0;
 let soundSelector = 0;
 let pullBackInProgress = false;
 let oneRollWinner = 0;
-const minBet = 25;
+const minBet = 15;
 let message = '';
 let newMessage = '';
 let moveBehindPassLine = false;
@@ -91,6 +93,10 @@ const increment25 = document.getElementById('increment25');
 const increment100 = document.getElementById('increment100');
 const decrement25 = document.getElementById('decrement25');
 const decrement100 = document.getElementById('decrement100');
+const increment500 = document.getElementById('increment500');
+const decrement500 = document.getElementById('decrement500');
+const increment5000 = document.getElementById('increment5000');
+const decrement5000 = document.getElementById('decrement5000');
 const rollButton = document.getElementById('roll-button');
 const pullBackButton = document.getElementById('pull-back-button');
 const clearBetButton = document.getElementById('clear-bet');
@@ -109,6 +115,27 @@ const allNumbersCircles = {
   12: document.getElementById('small-12')
 }
 
+let big = {
+  6: {
+    button: document.getElementById('big-6-button'),
+    amount: 0,
+    chips: {
+      location: document.getElementById('big-6-chips'),
+      chip: [],
+      leftSpacing: 15
+    }
+  },
+  8: {
+    button: document.getElementById('big-8-button'),
+    amount: 0,
+    chips: {
+      location: document.getElementById('big-8-chips'),
+      chip: [],
+      leftSpacing: 15
+    }
+  }
+}
+
 let bonus = {
   small: {
     button: document.getElementById('small-button'),
@@ -116,7 +143,7 @@ let bonus = {
     chips: {
       location: document.getElementById('small-bonus-chips'),
       chip: [],
-      leftSpacing: 0
+      leftSpacing: 45
     },
     hit: { 2: false, 3: false, 4: false, 5: false, 6: false },
     allHit: false,
@@ -128,7 +155,7 @@ let bonus = {
     chips: {
       location: document.getElementById('all-bonus-chips'),
       chip: [],
-      leftSpacing: 0
+      leftSpacing: 45
     },
     paid: false
   },
@@ -138,7 +165,7 @@ let bonus = {
     chips: {
       location: document.getElementById('tall-bonus-chips'),
       chip: [],
-      leftSpacing: 0
+      leftSpacing: 45
     },
     hit: { 8: false, 9: false, 10: false, 11: false, 12: false },
     allHit: false,
@@ -239,30 +266,31 @@ let horn = {
 
 let field = {
   button: document.getElementById('field-button'),
-  bet: 0,
+  amount: 0,
   chips: {
     location: document.getElementById('field-chips'),
     chip: [],
-    leftSpacing: 575
+    leftSpacing: 200
   }
 }
 
 let dontPassBar = {
+  vertButton: document.getElementById('vert-DP-button'),
   button: document.getElementById('dont-pass-button'),
   location: document.getElementById('dont-pass-chips'),
   amount: 0,
   chips: {
     location: document.getElementById('dont-pass-chips'),
     chip: [],
-    leftSpacing: 55
+    leftSpacing: 155
   },
   odds: {
     location: document.getElementById('dont-pass-odss-chips'),
     amount: 0,
     chips: {
-      location: document.getElementById('dont-pass-chips'),
+      location: document.getElementById('dont-pass-odds-chips'),
       chip: [],
-      leftSpacing: 90
+      leftSpacing: 190
     }
   }
 }
@@ -347,7 +375,7 @@ let come = {
     location: document.getElementById('come-4'),
     amount: 0,
     chip: [],
-    bottom: 42,
+    bottom: 25,
     odds: {
       location: document.getElementById('come-4-odds'),
       amount: 0,
@@ -359,7 +387,7 @@ let come = {
     location: document.getElementById('come-5'),
     amount: 0,
     chip: [],
-    bottom: 42,
+    bottom: 25,
     odds: {
       location: document.getElementById('come-5-odds'),
       amount: 0,
@@ -371,7 +399,7 @@ let come = {
     location: document.getElementById('come-6'),
     amount: 0,
     chip: [],
-    bottom: 42,
+    bottom: 25,
     odds: {
       location: document.getElementById('come-6-odds'),
       amount: 0,
@@ -383,7 +411,7 @@ let come = {
     location: document.getElementById('come-8'),
     amount: 0,
     chip: [],
-    bottom: 42,
+    bottom: 25,
     odds: {
       location: document.getElementById('come-8-odds'),
       amount: 0,
@@ -395,7 +423,7 @@ let come = {
     location: document.getElementById('come-9'),
     amount: 0,
     chip: [],
-    bottom: 42,
+    bottom: 25,
     odds: {
       location: document.getElementById('come-9-odds'),
       amount: 0,
@@ -407,7 +435,7 @@ let come = {
     location: document.getElementById('come-10'),
     amount: 0,
     chip: [],
-    bottom: 42,
+    bottom: 25,
     odds: {
       location: document.getElementById('come-10-odds'),
       amount: 0,
@@ -419,7 +447,9 @@ let come = {
 
 let dontCome = {
   line: {
-    button: document.getElementById('dont-come-line-button'),
+    button: document.getElementById('DC-line-button'),
+    button2: document.getElementById('DC-line-button-2'),
+    button3: document.getElementById('DC-line-button-3'),
     location: document.getElementById('dont-come-chips-display'),
     amount: 0,
     chip: [],
@@ -535,6 +565,7 @@ let bankrollStack = {
 };
 
 let passLine = {
+  vertButton: document.getElementById('vert-PL-button'),
   button: document.getElementById('pass-line-button'),
   amount: 0,
   chips: {
@@ -548,7 +579,7 @@ let passLine = {
     chips: {
       location: document.getElementById('pass-line-odds-chips'),
       chip: [],
-      leftSpacing: 300
+      leftSpacing: 310
     }
   }
 };
@@ -785,9 +816,17 @@ function update_bankroll_chips(amount) {
     }
   }
   reset_chip_structure();
+  check_roll_button();
+  
 }
 
-  
+function check_roll_button() {
+  if (passLine.amount != 0 || dontPassBar.amount != 0) {
+    rollButton.classList.remove('hidden');
+  } else {
+    rollButton.classList.add('hidden');
+  }
+}
 
 function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
 //chip structure
@@ -811,6 +850,7 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
         index = object.chip.length;
         object.chip[index] = document.createElement('img');
         thisChip = object.chip[index];
+
         if (orientation == 'side') {
           let rotation = Math.ceil(Math.random() * 6);
           thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip_${rotation}.png`;  
@@ -832,8 +872,8 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
             thisChip.style.marginLeft = `${chipCount *6}px`;
             object.location.style.left = `${object.leftSpacing - (totalChips * 3)}px`;
           } else {
-            object.location.style.left = `${object.leftSpacing - (totalChips*4)}px`;
-            thisChip.style.marginLeft = `${chipCount * 8}px`;
+            object.location.style.left = `${object.leftSpacing - (totalChips*5)}px`;
+            thisChip.style.marginLeft = `${chipCount *10}px`;
             
           }
         }
@@ -950,7 +990,11 @@ function update_bankroll() {
   bankroll -= stagedBet;
   if (stagedBet > bankroll) {
     stagedBet = bankroll;
-    betElement.textContent = '$' + stagedBet;
+    if (stagedBet == 0) {
+      betElement.textContent = '';
+    } else {
+      betElement.textContent = '$' + stagedBet;
+    }
     update_staged_bet_chips();
   }
   bankrollElement.textContent = '$' + bankroll;
@@ -1014,6 +1058,7 @@ function reset_stagedBet() {
     stagedBet = 0;
     betElement.textContent = '';
     betElement.style.fontSize = '30px';
+    pullBackButton.style.boxShadow = 'none';
     if (playSound == true) {
       play_decrement_sound();
     }
@@ -1029,15 +1074,19 @@ function update_moneyOnTable() {
   moneyOnTableElement.textContent = '$' + moneyOnTable;
 }
 
+const messageBoxDiv = document.getElementById('message-box');
+let counter = 0;
 function message_display(message) {
   //rollName = display_roll_message(sum);
-
   newMessage = sum + ' - ' + message;
-  document.getElementById('message-5').textContent = document.getElementById('message-4').textContent;
-  document.getElementById('message-4').textContent = document.getElementById('message-3').textContent;
-  document.getElementById('message-3').textContent = document.getElementById('message-2').textContent;
-  document.getElementById('message-2').textContent = document.getElementById('message-1').textContent;
-  document.getElementById('message-1').textContent = newMessage;
+  
+  const newDiv = document.createElement('div');
+  newDiv.textContent = newMessage;
+  messageBoxDiv.insertBefore(newDiv, messageBoxDiv.firstChild);
+  if (messageBoxDiv.childElementCount > 30) {
+    messageBoxDiv.removeChild(messageBoxDiv.lastChild);
+  }
+
 }
 
 function clear_table() {
@@ -1050,16 +1099,20 @@ function clear_table() {
   }
   update_moneyOnTable();
 
+  remove_chips_from_table(big[6].chips);
+  remove_chips_from_table(big[8].chips);
+  big[6].amount = 0;
+  big[8].amount = 0;
+
 
   remove_chips_from_table(passLine.chips);
   passLine.amount = 0;
-  rollButton.classList.add('hidden');
   remove_chips_from_table(passLine.odds.chips);
   passLine.odds.amount = 0;
 
   for (const key in placeBet) {
     placeBet[key].amount = 0;
-    //reset_place_bet_text(key);
+    remove_chips_from_table(placeBet[key].chips);
   }
   for (const key in hard) {
     remove_chips_from_table(hard[key].chips);
@@ -1078,6 +1131,10 @@ function clear_table() {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% DICE ROLL -- GAME ON/OFF %%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN SCORE FUNCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+let sevenCounter = 0;
+let highRoller = false;
+
 function roll_dice() {
   pullBackInProgress = false;
   pullBackButton.style.boxShadow = 'none';
@@ -1090,7 +1147,16 @@ function roll_dice() {
     dice1 = Math.floor(Math.random()*6) + 1;
     dice2 = Math.floor(Math.random()*6) + 1;
     sum = dice1 + dice2;
-    //alert(sum);
+    
+    // Cheese Mode
+    if (sum == 7) {
+      sevenCounter++;
+        sum = 6;
+        dice1 = 4;
+        dice2 = 2;
+        sevenCounter = 0;
+    }
+
 
     if (bonus.small.amount != 0 || bonus.all.amount != 0 || bonus.tall.amount != 0) {
       if (sum == 7) {
@@ -1135,6 +1201,21 @@ function roll_dice() {
   } else {
     mainArea.style.boxShadow = 'none';
   }
+
+  if (bankroll >= 5000) {
+    document.getElementById('high-roller').classList.remove('hidden');
+    document.getElementById('bet-control-buttons').style.gridTemplateColumns = 'repeat(6, 70px) 80px;';
+    document.getElementById('bet-control-buttons').style.left = '-30px';
+    highRoller = true;
+  } 
+
+  if (bankroll < 5000 && highRoller == true) {
+    document.getElementById('high-roller').classList.add('hidden');
+    document.getElementById('bet-control-buttons').style.gridTemplateColumns = 'grid-template-columns: repeat(5, 70px) 80px;';
+    document.getElementById('bet-control-buttons').style.left = '0px';
+  }
+
+
 }
 
 function delay(ms) {
@@ -1191,7 +1272,6 @@ function come_out_roll() {
       remove_chips_from_table(dontPassBar.chips);
       moneyOnTable -= dontPassBar.amount;
       dontPassBar.amount = 0;
-      rollButton.classList.add('hidden');
       update_moneyOnTable();
     } else if (sum == 2 || sum == 3) {
       message = 'Won $' + dontPassBar.amount + ' on the Don\'t Pass Line';
@@ -1216,7 +1296,6 @@ function come_out_roll() {
       remove_chips_from_table(passLine.chips);
       moneyOnTable -= passLine.amount;
       passLine.amount = 0;
-      rollButton.classList.add('hidden');
       update_moneyOnTable();
     } else if (sum == 7 || sum == 11) {
       message = 'Won $' + passLine.amount + ' on the Pass Line';
@@ -1236,7 +1315,7 @@ function come_out_roll() {
     }
   }
 
-  if (field.bet != 0) {
+  if (field.amount != 0) {
     score_field_bet();
   }
 }
@@ -1249,14 +1328,20 @@ Place Bet Behind the Pass Line for better odds?`)
     if (moveBehindPassLine == true) {
       if ((target == 5 || target == 9) && placeBet[target].amount % 2 != 0) {
         roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
-        if (roundUpBet == true) {
+        if (roundUpBet == true && bankroll != 0) {
           passLine.odds.amount = placeBet[target].amount + 1;
           bankroll -= 1; 
           // *** // Theres a case where this will make the bankroll go negative, consider handling
           update_bankroll();
           moneyOnTable += 1;
           update_moneyOnTable();
-        } else {
+        } else if (bankroll == 0) {
+          passLine.odds.amount = placeBet[target].amount - 1;
+          bankroll += 1;
+          update_bankroll();
+          moneyOnTable += 1;
+          update_moneyOnTable();
+        } {
           moveBehindPassLine = false;
         }
       }
@@ -1284,6 +1369,9 @@ function score_roll() {
     remove_on_marker();
   }
 
+  score_big_bets();
+
+
   // Place Bets
   for (const key in placeBet) {
     if (placeBet[key].amount !== 0 && placeBet[key].amount != undefined && key == sum) {
@@ -1304,7 +1392,7 @@ function score_roll() {
     }
   // One Roll Bets
   // Field Bet
-  if (field.bet != 0) {
+  if (field.amount != 0) {
     score_field_bet();
   }
 
@@ -1353,7 +1441,7 @@ function pass_line() { // adds bet to pass line
   if (stagedBet >= minBet) {
     add_chips_to_table(passLine.chips, stagedBet, 'face', 'table', 'not-rotated');
     passLine.amount = commit_bet(passLine.amount);
-    rollButton.classList.remove('hidden');
+    check_roll_button();
 
   } else {
     alert('The minimum bet is $' + minBet + '.');
@@ -1376,9 +1464,15 @@ function dont_pass_line() {
   if (stagedBet >= minBet) {
     add_chips_to_table(dontPassBar.chips, stagedBet, 'face', 'table', 'normal');
     dontPassBar.amount = commit_bet(dontPassBar.amount);
-    rollButton.classList.remove('hidden');
   } else {
     alert('The minimum bet is $' + minBet + '.');
+  }
+}
+
+function dont_pass_odds() {
+  if (stagedBet >= minBet) {
+    add_chips_to_table(dontPassBar.odds.chips, stagedBet, 'side', 'odds', 'rotated');
+    dontPassBar.odds.amount = commit_bet(dontPassBar.odds.amount);
   }
 }
 
@@ -1394,7 +1488,6 @@ function score_pass_line() { // After game is on
     if (dontPassBar.amount != 0) {
       remove_chips_from_table(dontPassBar.chips);
       dontPassBar.amount = lose_bet(dontPassBar.amount);
-      rollButton.classList.add('hidden');
       message = `Lost $${dontPassBar.amount} on the Don\'t Pass Bar`;
       message_display(message);
     }
@@ -1437,14 +1530,31 @@ function score_pass_line_odds(target) {
   passLine.odds.amount = 0;
 }
 
+function big_6_8(selector) {
+  if (big[selector].amount != 0) {
+    press_bet(big[selector], 'face', 'table', 'normal');
+  } else if (stagedBet >= minBet) {
+    add_chips_to_table(big[selector].chips, stagedBet, 'face', 'table', 'normal');
+    big[selector].amount = commit_bet(big[selector].amount);
+  }
+}
+
+function score_big_bets() {
+  for (const key in big) {
+    if (big[key].amount != 0 && sum == key) {
+      payout = big[key].amount;
+      bankroll += payout;
+      message_display(`Won $${payout} on the Big ${key}`);
+    }
+  }
+}
 
 // PLACE BETS
 function place_bet(selector) {
   if (stagedBet < minBet) {
     alert('The minimum bet is $' + minBet + '.');
   } else if (placeBet[selector].amount != 0) {
-    alert(`You already have a Place Bet on ${selector}. 
-Pull back bet to change.`);
+    press_bet(placeBet[selector], 'face', 'table', 'normal');
   } else if (passLine.odds.amount != 0 && target == selector) {
     // Do Nothing
   } else {
@@ -1467,8 +1577,7 @@ function hardways_bet(selector) {
     // Do Nothing
   } else {
     if (hard[selector].amount != 0) {
-      alert(`You already have a Hardways Bet on ${selector}. 
-      Pull back bet to change.`);
+      press_bet(hard[selector], 'face', 'table', 'normal');
     } else {
       add_chips_to_table(hard[selector].chips, stagedBet, 'face', 'table', 'normal');
       hard[selector].amount = commit_bet(hard[selector].amount);
@@ -1503,8 +1612,7 @@ function horn_bet(selector) {
     // Do nothing
   } else {
     if (horn[selector].amount != 0) {
-      alert(`You already have a Horn Bet on ${selector}. 
-      Pull back bet to change.`);
+      press_bet(horn[selector], 'face', 'table', 'normal');
   } else {
       add_chips_to_table(horn[selector].chips, stagedBet, 'face', 'table', 'not-rotated');
       horn[selector].amount = commit_bet(horn[selector].amount);
@@ -1513,18 +1621,20 @@ function horn_bet(selector) {
 }
 
 function score_horn_bets() {
-  for (const key in horn) {
-    if (key == sum && horn[key].amount != 0) {
+  if (sum == 2 || sum == 3 || sum == 11 || sum == 12) {
+    if (horn[sum].amount != 0) {
       payout = horn[sum].amount * horn[sum].multiplier;
       bankroll += payout;
       update_bankroll();
       message = `Won $${payout} on one-roll bet`;
       message_display(message);
-    } else {
+    }
+  }
+    for (const key in horn) {
       remove_chips_from_table(horn[key].chips);
       horn[key].amount = lose_bet(horn[key].amount);
     }
-  }
+    
 }
 
 
@@ -1532,28 +1642,38 @@ function score_horn_bets() {
 function field_bet() { // Place staged bet on Field
   if (stagedBet < minBet) {
     alert('The minimum bet is $' + minBet + '.');
-  } else if (field.bet != 0) {
-    alert(`You already have a Bet in the field. 
-Pull back bet to change.`);
+  } else if (field.amount != 0) {
+    press_bet(field, 'face', 'table', 'normal');
   } else {
     add_chips_to_table(field.chips, stagedBet, 'face', 'table', 'normal');
-    field.bet = commit_bet(field.bet);
+    field.amount = commit_bet(field.amount);
   }
+}
+
+function press_bet(object, chipOrientation, chipClass, oddsRotation) {
+  if (object.amount != stagedBet) {
+    remove_chips_from_table(object.chips);
+    bankroll += object.amount;
+    moneyOnTable -= object.amount;
+    add_chips_to_table(object.chips, stagedBet, chipOrientation, chipClass, oddsRotation);
+    object.amount = commit_bet(object.amount);
+  }
+  
 }
 
 function score_field_bet() {
 // Lose
   if (sum == 5 || sum == 6 || sum == 7 || sum == 8) {
-    message = 'Lost $' + field.bet + ' to the field.';
+    message = 'Lost $' + field.amount + ' to the field.';
     message_display(message);
     remove_chips_from_table(field.chips);
-    field.bet = lose_bet(field.bet);
+    field.amount = lose_bet(field.amount);
     // Win
   } else {
     if (sum == 2 || sum == 12) {
-      payout = field.bet * 2;
+      payout = field.amount * 2;
     } else {
-      payout = field.bet;
+      payout = field.amount;
     }
     bankroll += payout;
     update_bankroll();
@@ -1849,9 +1969,8 @@ function score_dont_come_bets() {
 // ((((((((((((((((((( BONUS BETS )))))))))))))))))))
 
 function check_bonus_bet(sum) {
-if (bonus.small.amount != 0) {
+if (bonus.small.amount != 0 || bonus.all.amount != 0) {
     allNumbersCircles[sum].style.backgroundColor = 'gold';
-    allNumbersCircles[sum].textContent = '';
     bonus.small.hit[sum] = true;
   for (const key in bonus.small.hit) {
     if (bonus.small.hit[key] == true) {
@@ -1866,9 +1985,8 @@ if (bonus.small.amount != 0) {
   }
 
   }
-  if (bonus.tall.amount != 0) {
+  if (bonus.tall.amount != 0 || bonus.all.amount != 0) {
       allNumbersCircles[sum].style.backgroundColor = 'gold';
-      allNumbersCircles[sum].textContent = '';
       bonus.tall.hit[sum] = true;
     for (const key in bonus.tall.hit) {
       if (bonus.tall.hit[key] == true) {
@@ -1918,6 +2036,7 @@ function score_bonus_bet() {
     remove_chips_from_table(bonus.all.chips);
     bonus.all.amount = lose_bet(bonus.all.amount);
     bonus.all.paid = true;
+    clear_bonus_bet();
   }
 }
 function clear_bonus_bet() {
@@ -1929,11 +2048,16 @@ function clear_bonus_bet() {
   bonus.tall.allHit = false;
   bonus.tall.paid = false;
   bonus.all.paid = false;
-
   for (const key in bonus.small.hit) {
     bonus.small.hit[key] = false;
     bonus.tall.hit[key + 6] = false;
   }
+  for (const key in allNumbersCircles) {
+    allNumbersCircles[Number(key)].style.backgroundColor = 'transparent';
+  }
+  remove_chips_from_table(bonus.small.chips);
+  remove_chips_from_table(bonus.all.chips);
+  remove_chips_from_table(bonus.tall.chips);
 }
 
 // ####################################################################################
@@ -1954,10 +2078,14 @@ increment1.addEventListener('click', function() {increment(1)});
 increment5.addEventListener('click', function() {increment(5)});
 increment25.addEventListener('click', function() {increment(25)});
 increment100.addEventListener('click', function() {increment(100)});
+increment500.addEventListener('click', function() {increment(500)});
+increment5000.addEventListener('click', function() {increment(5000)});
 decrement1.addEventListener('click', function() {decrement(1)});
 decrement5.addEventListener('click', function() {decrement(5)});
 decrement25.addEventListener('click', function() {decrement(25)});
 decrement100.addEventListener('click', function() {decrement(100)});
+decrement500.addEventListener('click', function() {decrement(500)});
+decrement5000.addEventListener('click', function() {decrement(5000)});
 let isCoolDown = false;
 
 rollButton.addEventListener('click', function() {
@@ -1970,7 +2098,11 @@ rollButton.addEventListener('click', function() {
 });
 
 pullBackButton.addEventListener('click', pull_back_in_progress);
-clearBetButton.addEventListener('click', reset_stagedBet);
+clearBetButton.addEventListener('click', function() {
+  playSound = false;
+
+  reset_stagedBet();
+});
 
 // -------------------------------- Table ---------------------------------
 
@@ -2085,13 +2217,26 @@ placeBet[10].button.addEventListener('click', (e) => {
 
 // Dont Come Line
 dontCome.line.button.addEventListener('click', (e) => {
+  dont_come_line_event();
+  prevClicked = dontCome.line.button;
+});
+dontCome.line.button2.addEventListener('click', (e) => {
+  dont_come_line_event();
+  prevClicked = dontCome.line.button2;
+});
+dontCome.line.button3.addEventListener('click', (e) => {
+  dont_come_line_event();
+  prevClicked = dontCome.line.button3;
+});
+
+
+function dont_come_line_event() {
   if (gameOn == false) {
     alert('You cannot bet on the Don\'t Come Line until a point has been established.');
   } else {
     dont_come_bet();
   }
-  prevClicked = line.button;
-});
+}
 
 dontCome[4].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
@@ -2264,9 +2409,9 @@ come.line.button.addEventListener('click', (e) => {
 
 // Field
 field.button.addEventListener('click', (e) => {
-  if (pullBackInProgress == true && field.bet != 0) {
+  if (pullBackInProgress == true && field.amount != 0) {
     remove_chips_from_table(field.chips);
-    field.bet = pull_back_bet(field.bet);
+    field.amount = pull_back_bet(field.amount);
   } else {
     field_bet();
   }
@@ -2274,6 +2419,15 @@ field.button.addEventListener('click', (e) => {
 });
 
 dontPassBar.button.addEventListener('click', (e) => {
+  dont_pass_bar_event();
+  prevClicked = dontPassBar.button;
+});
+dontPassBar.vertButton.addEventListener('click', (e) => {
+  dont_pass_bar_event();
+  prevClicked = dontPassBar.vertButton;
+});
+  
+function dont_pass_bar_event () {
   if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
     remove_chips_from_table(dontPassBar.chips);
     dontPassBar.amount = pull_back_bet(dontPassBar.amount);
@@ -2281,29 +2435,35 @@ dontPassBar.button.addEventListener('click', (e) => {
     alert('Cannont Pull Back While Game is On.');
     reset_stagedBet();
   } else if (dontPassBar.amount != 0) {
-  //Do nothing
+    dont_pass_odds();
   } else if (gameOn == false) {
     dont_pass_line();
   } // else game is on and click does nothing
-  prevClicked = dontPassBar.button;
-});
+}
 
-passLine.button.addEventListener('click', (e) => {
+passLine.button.addEventListener('click', function() {
+  pass_line_event();
+  prevClicked = passLine.button;
+});
+  
+passLine.vertButton.addEventListener('click', function () {
+  pass_line_event();
+  prevClicked = passLine.vertButton;
+});
+  
+function pass_line_event() {
   if (pullBackInProgress == true && gameOn == false) { // Could probably branch these in pullbackinprogress
     remove_chips_from_table(passLine.chips);
     passLine.amount = pull_back_bet(passLine.amount); // Sets value to 0
-    rollButton.classList.add('hidden');
   } else if (pullBackInProgress == true && gameOn == true) {
     alert('Cannont Pull Back Pass Line While Game is On.');
     reset_stagedBet();
   } else if (passLine.amount != 0) {
-  //Do nothing
+    press_bet(passLine, 'face', 'table', 'normal');
   } else if (gameOn == false) {
-    
     pass_line();
   } // else game is on and click does nothing
-  prevClicked = passLine.button;
-});
+}
 
 passLine.odds.button.addEventListener('click', (e) => {
   if (pullBackInProgress == true && passLine.odds.amount != 0) {
@@ -2406,6 +2566,17 @@ horn[12].button.addEventListener('click', (e) => {
   }
   prevClicked = horn[12].button;
 });
+
+big[6].button.addEventListener('click', function() {
+  big_6_8(6);
+  prevClicked = big[6].button;
+});
+
+big[8].button.addEventListener('click', function() {
+  big_6_8(8);
+  prevClicked = big[8].button;
+});
+
 // ^^^^^^^^^^^^^^^^^^^^^^^^^ END EVENT LISTENERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
