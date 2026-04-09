@@ -1044,7 +1044,7 @@ button {
 #bankroll-chips {
     /* container that holds the chip imgs in bankroll area*/
     height: 100%;
-    width: 100%;
+    width: 550px;
     display: flex;
     align-items: flex-end;
     z-index: 1;

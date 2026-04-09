@@ -46,11 +46,13 @@ let chipDisplay = 'blank';
 let payout = 0;
 let prevStagedBet = 0;
 let chipStructure = {
+  oneHundredK: 0,  fiftyK: 0,
   platinum: 0, brown: 0, gold: 0, purple: 0,
   black: 0, green: 0, red: 0, white: 0
 }
 
 let prevChipStructure = { 
+  oneHundredK: 0,  fiftyK: 0,
   platinum: 0, brown: 0, gold: 0, purple: 0,
   black: 5, green: 0, red: 0, white: 0
 }
@@ -543,6 +545,8 @@ const stagedBetChips = {
 const bankrollDiv = document.getElementById('bankroll-chips');
 
 let bankrollChips = {
+  oneHundredK: [],
+  fiftyK: [],
   platinum: [],
   brown: [],
   gold: [],
@@ -554,6 +558,8 @@ let bankrollChips = {
 }
 
 let bankrollStack = {
+  oneHundredK: 0,
+  fiftyK: 0,
   platinum: 0,
   brown: 0,
   gold: 0,
@@ -887,6 +893,8 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
 
 function reset_chip_structure() {
   chipStructure = {
+    oneHundredK: 0,
+    fiftyK: 0,
     platinum: 0,
     brown: 0,
     gold: 0,
@@ -906,6 +914,18 @@ function remove_chips_from_table(object) {
 
 function get_chip_structure(amount) {
   temp = amount;
+  if (temp >= 100000) {
+    oneHundredK = Math.floor(temp/100000);
+    temp = temp % 100000;
+  } else {
+    oneHundredK = 0;
+  }
+  if (temp >= 50000) {
+    fiftyK = Math.floor(temp/50000);
+    temp = temp % 50000;
+  } else {
+    fiftyK = 0;
+  }
   if (temp >= 15000) {
     platinum = Math.floor(temp/15000);
     temp = temp % 15000;
@@ -953,7 +973,7 @@ function get_chip_structure(amount) {
   } else {
     white = 0;
   }
-  return {platinum, brown, gold, purple, black, green, red, white};
+  return {oneHundredK, fiftyK, platinum, brown, gold, purple, black, green, red, white};
 }
 
 // ####################### USEFUL FUNCTIONS ################################
@@ -1083,7 +1103,7 @@ function message_display(message) {
   const newDiv = document.createElement('div');
   newDiv.textContent = newMessage;
   messageBoxDiv.insertBefore(newDiv, messageBoxDiv.firstChild);
-  if (messageBoxDiv.childElementCount > 30) {
+  if (messageBoxDiv.childElementCount > 40) {
     messageBoxDiv.removeChild(messageBoxDiv.lastChild);
   }
 
@@ -1151,10 +1171,12 @@ function roll_dice() {
     // Cheese Mode
     if (sum == 7) {
       sevenCounter++;
+      if (sevenCounter == 5) {
         sum = 6;
         dice1 = 4;
         dice2 = 2;
         sevenCounter = 0;
+      }
     }
 
 
@@ -2486,7 +2508,7 @@ passLine.odds.button.addEventListener('click', (e) => {
       pass_line_odds();
     }
   }
-  prevClicked = passLine.oddsButton;
+  prevClicked = passLine.odds.button;
 });
 
 // ---------------- HARDWAYS -------------------------- HARDWAYS----------------------
@@ -2578,6 +2600,5 @@ big[8].button.addEventListener('click', function() {
 });
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^ END EVENT LISTENERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 
 
