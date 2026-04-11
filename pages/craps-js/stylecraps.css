@@ -5,11 +5,11 @@ html, body {
 }
 
 * {
-    cursor: url('img/cursor_black_chip.png'), auto;
+    cursor: url('img/cursor_gold.png'), auto;
 }
 
 *:active {
-    cursor: url('img/cursor_black_chip_small.png'), auto;
+    cursor: url('img/cursor_gold_r2.png'), auto;
 }
 
 body {
