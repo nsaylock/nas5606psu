@@ -1152,10 +1152,75 @@ function clear_table() {
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% DICE ROLL -- GAME ON/OFF %%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN SCORE FUNCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+occurrences = {
+  value: { 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 },
+  percent: { 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 },
+  element: {
+    2: document.getElementById('stats-2'),
+    3: document.getElementById('stats-3'),
+    4: document.getElementById('stats-4'),
+    5: document.getElementById('stats-5'),
+    6: document.getElementById('stats-6'),
+    7: document.getElementById('stats-7'),
+    8: document.getElementById('stats-8'),
+    9: document.getElementById('stats-9'),
+    10: document.getElementById('stats-10'),
+    11: document.getElementById('stats-11'),
+    12: document.getElementById('stats-12')
+  }
+}
+
+function update_stats() {
+  occurrences.value[sum]++;
+  for (value in occurrences.value) {
+    percent = occurrences.value[value] / totalRolls * 100;
+    occurrences.percent[value] = Math.round(percent);
+    
+    if (percent == 0) {
+      // Skip
+    } else {
+      occurrences.element[value].textContent = `${occurrences.percent[value]}%`
+    }
+  }
+}
+
+function control_seven() {
+  if ((occurrences.percent[7] > 15 && gameOn == true) || hotRoll.active == true) {
+    do {
+      dice1 = Math.ceil(Math.random()*6);
+      dice2 = Math.ceil(Math.random()*6);
+      sum = dice1 + dice2;
+    } while (sum == 7)
+  }
+}
+
+
+const hotRollRange = 25;
+let hotRoll = {
+  activationNumber: Math.ceil(Math.random()*hotRollRange),
+  length: Math.ceil(Math.random()*20) + 10, // between 10 and 30
+  counter: 0,
+  active: false
+}
+
 let sevenCounter = 0;
 let highRoller = false;
+let totalRolls = 0;
 
 function roll_dice() {
+  totalRolls++;
+  
+  if (hotRoll.active == true) {
+    hotRoll.counter++;
+    if (hotRoll.counter == hotRoll.length) {
+      hotRoll.active = false;
+      sevenCounter = 0;
+      hotRoll.counter = 0;
+      hotRoll.activationNumber = Math.ceil(Math.random()*hotRollRange);
+      hotRoll.length = Math.ceil(Math.random()*20) + 10;
+    }
+  }
+  document.getElementById('total-rolls').textContent = totalRolls;
   pullBackInProgress = false;
   pullBackButton.style.boxShadow = 'none';
   if (passLine.amount == 0 && dontPassBar.amount == 0) {
@@ -1168,16 +1233,14 @@ function roll_dice() {
     dice2 = Math.floor(Math.random()*6) + 1;
     sum = dice1 + dice2;
     
-    // Cheese Mode
     if (sum == 7) {
       sevenCounter++;
-      if (sevenCounter == 5) {
-        sum = 6;
-        dice1 = 4;
-        dice2 = 2;
-        sevenCounter = 0;
+      if (sevenCounter == hotRoll.activationNumber) {
+        hotRoll.active = true;
       }
+      control_seven();
     }
+    update_stats();
 
 
     if (bonus.small.amount != 0 || bonus.all.amount != 0 || bonus.tall.amount != 0) {
@@ -1363,7 +1426,7 @@ Place Bet Behind the Pass Line for better odds?`)
           update_bankroll();
           moneyOnTable += 1;
           update_moneyOnTable();
-        } {
+        } else {
           moveBehindPassLine = false;
         }
       }
