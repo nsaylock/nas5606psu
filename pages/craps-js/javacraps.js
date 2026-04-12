@@ -42,6 +42,7 @@ let gameOn = false;
 let oneOrTwo;
 let chipDisplay = 'blank';
 
+
 // Table Bet Storage Variables
 let payout = 0;
 let prevStagedBet = 0;
@@ -59,6 +60,15 @@ let prevChipStructure = {
 
 // Animation Variable
 let soundDelay = 0;
+let playSound = true;
+
+const chipVessel = {
+  bottomContainer: document.getElementById('bottom-container'),
+  chip: []
+}
+
+let animationComplete = true;
+let playSoundAfterAnimation = false;
 
 // Numbers/Messages
 const betElement = document.getElementById('staged-bet');
@@ -121,6 +131,7 @@ let big = {
   6: {
     button: document.getElementById('big-6-button'),
     amount: 0,
+    multiplier: 1,
     chips: {
       location: document.getElementById('big-6-chips'),
       chip: [],
@@ -130,6 +141,7 @@ let big = {
   8: {
     button: document.getElementById('big-8-button'),
     amount: 0,
+    multiplier: 1,
     chips: {
       location: document.getElementById('big-8-chips'),
       chip: [],
@@ -142,6 +154,7 @@ let bonus = {
   small: {
     button: document.getElementById('small-button'),
     amount: 0,
+    multiplier: 30,
     chips: {
       location: document.getElementById('small-bonus-chips'),
       chip: [],
@@ -154,6 +167,7 @@ let bonus = {
   all: {
     button: document.getElementById('all-button'),
     amount: 0,
+    multiplier: 150,
     chips: {
       location: document.getElementById('all-bonus-chips'),
       chip: [],
@@ -164,6 +178,7 @@ let bonus = {
   tall: {
     button: document.getElementById('tall-button'),
     amount: 0,
+    multiplier: 30,
     chips: {
       location: document.getElementById('tall-bonus-chips'),
       chip: [],
@@ -184,10 +199,60 @@ const numberBoxElement = {
   ten: document.getElementById('number-box-10')
 }
 
+let sevenBet = {
+  button: document.getElementById('seven-bet-button'),
+  amount: 0,
+  multiplier: 4,
+  chips: {
+    location: document.getElementById('seven-bet-chips'),
+    chip: [],
+    leftSpacing: 100
+  }
+}
+
+sevenBet.button.addEventListener('click', () => {
+  if (pullBackInProgress == true) {
+    seven_bet('pullBack');
+  } else if (stagedBet == 0 || sevenBet.amount != 0) {
+    // Do Nothing
+  } else {
+    seven_bet('place');
+  }
+  prevClicked = sevenBet.button;
+});
+
+function seven_bet(action) {
+  switch (action) {
+    case 'place':
+      add_chips_to_table(sevenBet.chips, stagedBet, 'face', 'table', 'normal');
+      sevenBet.amount = commit_bet(sevenBet.amount);
+      break;
+    case 'score':
+      payout = win_bet(sevenBet);
+      message_display(`Won $${payout} on Any Seven Bet`);
+      bankroll += sevenBet.amount;
+      update_bankroll();
+      playSound = false;
+      lose_bet(sevenBet);
+      break;
+    case 'clear':
+      message_display(`Lost $${sevenBet.amount} on Any Seven Bet`);
+      lose_bet(sevenBet);
+      break;
+    case 'pullBack':
+      remove_chips_from_table(sevenBet.chips);
+      sevenBet.amount = pull_back_bet(sevenBet.amount);
+      break;
+  }
+    
+  
+}
+
 let hard = {
   4: {
     button: document.getElementById('hard-4-button'),
     amount: 0,
+    multiplier: 7,
     chips: {
       location: document.getElementById('hard-4-chips'),
       chip: [],
@@ -197,6 +262,7 @@ let hard = {
   6: {
     button: document.getElementById('hard-6-button'),
     amount: 0,
+    multiplier: 9,
     chips: {
       location: document.getElementById('hard-6-chips'),
       chip: [],
@@ -206,6 +272,7 @@ let hard = {
   8: {
     button: document.getElementById('hard-8-button'),
     amount: 0,
+    multiplier: 9,
     chips: {
       location: document.getElementById('hard-8-chips'),
       chip: [],
@@ -215,6 +282,7 @@ let hard = {
   10: {
     button: document.getElementById('hard-10-button'),
     amount: 0,
+    multiplier: 7,
     chips: {
       location: document.getElementById('hard-10-chips'),
       chip: [],
@@ -227,6 +295,7 @@ let horn = {
   2: {
     button: document.getElementById('horn-2-button'),
     amount: 0,
+    multiplier: 30,
     chips: {
       location: document.getElementById('horn-2-chips'),
       chip: [],
@@ -237,6 +306,7 @@ let horn = {
   3: {
     button: document.getElementById('horn-3-button'),
     amount: 0,
+    multiplier: 15,
     chips: {
       location: document.getElementById('horn-3-chips'),
       chip: [],
@@ -247,6 +317,7 @@ let horn = {
   11: {
     button: document.getElementById('horn-11-button'),
     amount: 0,
+    multiplier: 15,
     chips: {
       location: document.getElementById('horn-11-chips'),
       chip: [],
@@ -257,6 +328,7 @@ let horn = {
   12: {
     button: document.getElementById('horn-12-button'),
     amount: 0,
+    multiplier: 30,
     chips: {
       location: document.getElementById('horn-12-chips'),
       chip: [],
@@ -281,6 +353,7 @@ let dontPassBar = {
   button: document.getElementById('dont-pass-button'),
   location: document.getElementById('dont-pass-chips'),
   amount: 0,
+  multiplier: 1,
   chips: {
     location: document.getElementById('dont-pass-chips'),
     chip: [],
@@ -293,7 +366,13 @@ let dontPassBar = {
       location: document.getElementById('dont-pass-odds-chips'),
       chip: [],
       leftSpacing: 190
-    }
+    },
+    4: {multiplier: 0.5},
+    5: {multiplier: 2/3},
+    6: {multiplier: 5/6},
+    8: {multiplier: 5/6},
+    9: {multiplier: 2/3},
+    10: {multiplier: 0.5},
   }
 }
 
@@ -368,81 +447,122 @@ let placeBet = {
 let come = {
   line: {
     button: document.getElementById('come-line-button'),
-    location: document.getElementById('come-chips-display'),
     amount: 0,
-    chip: [],
-    leftSpacing: 262
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-chips-display'),
+      chip: [],
+      leftSpacing: 262
+    }
+    
   },
   4: {
-    location: document.getElementById('come-4'),
     amount: 0,
-    chip: [],
-    bottom: 25,
-    odds: {
-      location: document.getElementById('come-4-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-4'),
       chip: [],
-      leftSpacing: 70
+      bottom: 25,
+    },
+    odds: {
+      amount: 0,
+      multiplier: 2,
+      chips: {
+        location: document.getElementById('come-4-odds'),
+        chip: [],
+        leftSpacing: 70
+      }
     }
   },
   5: {
-    location: document.getElementById('come-5'),
     amount: 0,
-    chip: [],
-    bottom: 25,
-    odds: {
-      location: document.getElementById('come-5-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-5'),
       chip: [],
-      leftSpacing: 70
+      bottom: 25,
+    },
+    odds: {
+      amount: 0,
+      multiplier: 3/2,
+      chips: {
+        location: document.getElementById('come-5-odds'),
+        chip: [],
+        leftSpacing: 70
+      }
     }
   },
   6: {
-    location: document.getElementById('come-6'),
     amount: 0,
-    chip: [],
-    bottom: 25,
-    odds: {
-      location: document.getElementById('come-6-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-6'),
       chip: [],
-      leftSpacing: 70
+      bottom: 25,
+    },
+    odds: {
+      amount: 0,
+      multiplier: 6/5,
+      chips: {
+        location: document.getElementById('come-6-odds'),
+        chip: [],
+        leftSpacing: 70
+      }
     }
   },
   8: {
-    location: document.getElementById('come-8'),
     amount: 0,
-    chip: [],
-    bottom: 25,
-    odds: {
-      location: document.getElementById('come-8-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-8'),
       chip: [],
-      leftSpacing: 70
+      bottom: 25,
+    },
+    odds: {
+      amount: 0,
+      multiplier: 6/5,
+      chips: {
+        location: document.getElementById('come-8-odds'),
+        chip: [],
+        leftSpacing: 70
+      }
     }
   },
   9: {
-    location: document.getElementById('come-9'),
     amount: 0,
-    chip: [],
-    bottom: 25,
-    odds: {
-      location: document.getElementById('come-9-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-9'),
       chip: [],
-      leftSpacing: 70
+      bottom: 25,
+    },
+    odds: {
+      amount: 0,
+      multiplier: 3/2,
+      chips: {
+        location: document.getElementById('come-9-odds'),
+        chip: [],
+        leftSpacing: 70
+      }
     }
   },
   10: {
-    location: document.getElementById('come-10'),
     amount: 0,
-    chip: [],
-    bottom: 25,
-    odds: {
-      location: document.getElementById('come-10-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('come-10'),
       chip: [],
-      leftSpacing: 70
+      bottom: 25,
+    },
+    odds: {
+      amount: 0,
+      multiplier: 2,
+      chips: {
+        location: document.getElementById('come-10-odds'),
+        chip: [],
+        leftSpacing: 70
+      }
+      
     }
   }
 }
@@ -452,87 +572,126 @@ let dontCome = {
     button: document.getElementById('DC-line-button'),
     button2: document.getElementById('DC-line-button-2'),
     button3: document.getElementById('DC-line-button-3'),
-    location: document.getElementById('dont-come-chips-display'),
     amount: 0,
-    chip: [],
-    leftSpacing: 58
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dont-come-chips-display'),
+      chip: [],
+      leftSpacing: 58
+    },
   },
   4: {
     button: document.getElementById('dc-4-button'),
-    location: document.getElementById('dc-4'),
     amount: 0,
-    chip: [],
-    leftSpacing: 40,
-    odds: {
-      location: document.getElementById('dc-4-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dc-4'),
       chip: [],
-      leftSpacing: 80
+      leftSpacing: 40
+    },
+    odds: {
+      amount: 0,
+      multiplier: 0.5,
+      chips: {
+        location: document.getElementById('dc-4-odds'),
+        chip: [],
+        leftSpacing: 80
+      }
     }
   },
   5: {
     button: document.getElementById('dc-5-button'),
-    location: document.getElementById('dc-5'),
     amount: 0,
-    chip: [],
-    leftSpacing: 40,
-    odds: {
-      location: document.getElementById('dc-5-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dc-5'),
       chip: [],
-      leftSpacing: 80
+      leftSpacing: 40
+    },
+    odds: {
+      amount: 0,
+      multiplier: 2/3,
+      chips: {
+        location: document.getElementById('dc-5-odds'),
+        chip: [],
+        leftSpacing: 80
+      }
     }
   },
   6: {
     button: document.getElementById('dc-6-button'),
-    location: document.getElementById('dc-6'),
     amount: 0,
-    chip: [],
-    leftSpacing: 40,
-    odds: {
-      location: document.getElementById('dc-6-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dc-6'),
       chip: [],
-      leftSpacing: 80
+      leftSpacing: 40
+    },
+    odds: {
+      amount: 0,
+      multiplier: 5/6,
+      chips: {
+        location: document.getElementById('dc-6-odds'),
+        chip: [],
+        leftSpacing: 80
+      }
     }
   },
   8: {
     button: document.getElementById('dc-8-button'),
-    location: document.getElementById('dc-8'),
     amount: 0,
-    chip: [],
-    leftSpacing: 40,
-    odds: {
-      location: document.getElementById('dc-8-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dc-8'),
       chip: [],
-      leftSpacing: 80
+      leftSpacing: 40,  
+    },
+    odds: {
+      amount: 0,
+      multiplier: 5/6,
+      chips: {
+        location: document.getElementById('dc-8-odds'),
+        chip: [],
+        leftSpacing: 80
+      }
     }
   },
   9: {
     button: document.getElementById('dc-9-button'),
-    location: document.getElementById('dc-9'),
     amount: 0,
-    chip: [],
-    leftSpacing: 40,
-    odds: {
-      location: document.getElementById('dc-9-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dc-9'),
       chip: [],
-      leftSpacing: 80
+      leftSpacing: 40
+    },
+    odds: {
+      amount: 0,
+      multiplier: 2/3,
+      chips: {
+        location: document.getElementById('dc-9-odds'),
+        chip: [],
+        leftSpacing: 80
+      }
     }
   },
   10: {
     button: document.getElementById('dc-10-button'),
-    location: document.getElementById('dc-10'),
     amount: 0,
-    chip: [],
-    leftSpacing: 40,
-    odds: {
-      location: document.getElementById('dc-10-odds'),
-      amount: 0,
+    multiplier: 1,
+    chips: {
+      location: document.getElementById('dc-10'),
       chip: [],
-      leftSpacing: 80
+      leftSpacing: 40
+    },
+    odds: {
+      amount: 0,
+      multiplier: 0.5,
+      chips: {
+        location: document.getElementById('dc-10-odds'),
+        chip: [],
+        leftSpacing: 80
+      }
     }
   }
 }
@@ -574,6 +733,7 @@ let passLine = {
   vertButton: document.getElementById('vert-PL-button'),
   button: document.getElementById('pass-line-button'),
   amount: 0,
+  multiplier: 1,
   chips: {
     location: document.getElementById('pass-line-chips'),
     chip: [],
@@ -586,9 +746,33 @@ let passLine = {
       location: document.getElementById('pass-line-odds-chips'),
       chip: [],
       leftSpacing: 310
-    }
+    }, 
+    4: {multiplier: 2},
+    5: {multiplier: 3/2},
+    6: {multiplier: 6/5},
+    8: {multiplier: 6/5},
+    9: {multiplier: 3/2},
+    10: {multiplier: 2}
   }
 };
+
+occurrences = {
+  value: { 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 },
+  percent: { 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 },
+  element: {
+    2: document.getElementById('stats-2'),
+    3: document.getElementById('stats-3'),
+    4: document.getElementById('stats-4'),
+    5: document.getElementById('stats-5'),
+    6: document.getElementById('stats-6'),
+    7: document.getElementById('stats-7'),
+    8: document.getElementById('stats-8'),
+    9: document.getElementById('stats-9'),
+    10: document.getElementById('stats-10'),
+    11: document.getElementById('stats-11'),
+    12: document.getElementById('stats-12')
+  }
+}
 
 let firstLoad = true;
 
@@ -601,6 +785,8 @@ if (firstLoad == true) {
   firstLoad = false;
 });
 }
+
+
 
 // $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
 
@@ -636,7 +822,6 @@ function play_decrement_sound() {
   }
   
 }
-let playSound = true;
 function play_increment_sound() {
   pullBackInProgress = false;
   pullBackButton.style.boxShadow = 'none';
@@ -693,13 +878,7 @@ function update_staged_bet_chips() {
   }
 }
 
-const chipVessel = {
-  bottomContainer: document.getElementById('bottom-container'),
-  chip: []
-}
 
-let animationComplete = true;
-let playSoundAfterAnimation = false;
 
 function move_chips_animation(area) {
   let exitAnimationFunction = false;
@@ -1021,14 +1200,13 @@ function update_bankroll() {
   update_bankroll_chips(bankroll);
 }
 
-function commit_bet(betToPlace) {
-  betToPlace = stagedBet;
-  moneyOnTable += betToPlace;
-  update_moneyOnTable();
+function commit_bet(bet) {
+  bet = stagedBet;
+  update_moneyOnTable('add', bet);
   update_bankroll();
   playSound = true;
   play_increment_sound();
-  return betToPlace;
+  return bet;
 }
 
 function change_bet(betToCommit) {
@@ -1054,21 +1232,12 @@ function pull_back_in_progress() {
 
 function pull_back_bet(amount) {
   bankroll += amount;
-  moneyOnTable -= amount;
-  update_moneyOnTable();
-  update_bankroll();
+  update_moneyOnTable('remove', amount);
   stagedBet = 0;
-  update_staged_bet_chips();
   if (amount != 0) {
     play_decrement_sound();
   }
-  amount = 0;
-  return amount;
-}
-
-function lose_bet(amount) {
-  moneyOnTable -= amount;
-  update_moneyOnTable();
+  update_bankroll();
   amount = 0;
   return amount;
 }
@@ -1090,7 +1259,12 @@ function reset_stagedBet() {
   
 }
 
-function update_moneyOnTable() {
+function update_moneyOnTable(action, amount) {
+  if (action == 'add') {
+    moneyOnTable += amount;
+  } else {
+    moneyOnTable -= amount;
+  }
   moneyOnTableElement.textContent = '$' + moneyOnTable;
 }
 
@@ -1109,6 +1283,8 @@ function message_display(message) {
 
 }
 
+
+
 function clear_table() {
   message = 'All bets cleared';
   message_display(message);
@@ -1117,7 +1293,7 @@ function clear_table() {
   } else {
     moneyOnTable = 0;
   }
-  update_moneyOnTable();
+  moneyOnTableElement.textContent = `$${moneyOnTable}`;
 
   remove_chips_from_table(big[6].chips);
   remove_chips_from_table(big[8].chips);
@@ -1138,37 +1314,12 @@ function clear_table() {
     remove_chips_from_table(hard[key].chips);
     hard[key].amount = 0;
   }
-
-  
-  /*
-  for (const key in comeBetOdds) {
-    comeBetOdds[key] = 0;
-    remove_chips_from_table(comeBetOddsChips[key]);
-    
-  }
-    */
 }
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% DICE ROLL -- GAME ON/OFF %%%%%%%%%%%%%%%%%%%%%%%%%%
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN SCORE FUNCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-occurrences = {
-  value: { 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 },
-  percent: { 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0 },
-  element: {
-    2: document.getElementById('stats-2'),
-    3: document.getElementById('stats-3'),
-    4: document.getElementById('stats-4'),
-    5: document.getElementById('stats-5'),
-    6: document.getElementById('stats-6'),
-    7: document.getElementById('stats-7'),
-    8: document.getElementById('stats-8'),
-    9: document.getElementById('stats-9'),
-    10: document.getElementById('stats-10'),
-    11: document.getElementById('stats-11'),
-    12: document.getElementById('stats-12')
-  }
-}
+
 
 function update_stats() {
   occurrences.value[sum]++;
@@ -1275,6 +1426,12 @@ function roll_dice() {
     score_horn_bets();
     score_come_bets();
     score_dont_come_bets();
+    
+    if (sevenBet.amount != 0) {
+      if (sum == 7) seven_bet('score');
+      else seven_bet('clear');
+    }
+
     if (gameOn == false) {
       come_out_roll();
     } else {
@@ -1349,20 +1506,20 @@ function display_roll_message(sum) {
   return rollName;
 }
 
+
+
+
 function come_out_roll() {
   if (dontPassBar.amount != 0) {
     if (sum == 7 || sum == 11) {
       message = `Lost $${dontPassBar.amount} on the Don\'t Pass Line`;
       message_display(message);
-      remove_chips_from_table(dontPassBar.chips);
-      moneyOnTable -= dontPassBar.amount;
-      dontPassBar.amount = 0;
-      update_moneyOnTable();
+      lose_bet(dontPassBar);
     } else if (sum == 2 || sum == 3) {
-      message = 'Won $' + dontPassBar.amount + ' on the Don\'t Pass Line';
+      payout = win_bet(dontPassBar);
+      message = 'Won $' + payout + ' on the Don\'t Pass Line';
       message_display(message);
-      bankroll += dontPassBar.amount;
-      update_bankroll();
+
     } else if (sum == 12) {
       message = 'Push on the Don\'t Pass Line';
       message_display(message);
@@ -1378,15 +1535,11 @@ function come_out_roll() {
     if (sum == 2 || sum == 3 || sum == 12) {
       message = 'Lost $' + passLine.amount + ' on the Pass Line';
       message_display(message);
-      remove_chips_from_table(passLine.chips);
-      moneyOnTable -= passLine.amount;
-      passLine.amount = 0;
-      update_moneyOnTable();
+      lose_bet(passLine);
     } else if (sum == 7 || sum == 11) {
-      message = 'Won $' + passLine.amount + ' on the Pass Line';
+      payout = win_bet(passLine);
+      message = 'Won $' + payout + ' on the Pass Line';
       message_display(message);
-      bankroll += passLine.amount;
-      update_bankroll();
     } else {
       target = sum; // Target assigned
       gameOn = true;
@@ -1418,14 +1571,12 @@ Place Bet Behind the Pass Line for better odds?`)
           bankroll -= 1; 
           // *** // Theres a case where this will make the bankroll go negative, consider handling
           update_bankroll();
-          moneyOnTable += 1;
-          update_moneyOnTable();
+          update_moneyOnTable('add', 1);
         } else if (bankroll == 0) {
           passLine.odds.amount = placeBet[target].amount - 1;
           bankroll += 1;
           update_bankroll();
-          moneyOnTable += 1;
-          update_moneyOnTable();
+          update_moneyOnTable('add', 1);
         } else {
           moveBehindPassLine = false;
         }
@@ -1445,6 +1596,8 @@ Place Bet Behind the Pass Line for better odds?`)
   }, 1200);
 }
 
+
+
 function score_roll() {
   // Score bets on come line first in case of 7 out
   if (sum == 7) {
@@ -1454,7 +1607,7 @@ function score_roll() {
     remove_on_marker();
   }
 
-  score_big_bets();
+  big_6_8('score', 'both');
 
 
   // Place Bets
@@ -1469,8 +1622,7 @@ function score_roll() {
       if (hard[sum].amount != 0 && dice1 != dice2) {
         message = `${sum} not hard. Lose your $${hard[sum].amount} bet.`;
         message_display(message);
-        remove_chips_from_table(hard[sum].chips);
-        hard[sum].amount = lose_bet(hard[sum].amount);
+        lose_bet(hard[sum]);
       } else if (hard[sum].amount !== 0 && dice1 == dice2) {
         score_hardways_bets(sum);
       }
@@ -1561,78 +1713,75 @@ function dont_pass_odds() {
   }
 }
 
+
+
+function odds_winner(object) {
+  payout = object.odds.amount * object.odds[target].multiplier;
+  bankroll += payout;
+  update_bankroll();
+  remove_chips_from_table(object.odds.chips);
+  update_moneyOnTable('remove', object.odds.amount);
+  object.odds.amount = 0;
+  return payout;
+}
+
 function score_pass_line() { // After game is on
   if (sum == 7) {
     if (dontPassBar.amount != 0) {
-      bankroll += dontPassBar.amount;
-      update_bankroll();
-      message = `Won $${dontPassBar.amount} on the Don\'t Pass Bar`;
+      payout = win_bet(dontPassBar);
+      message = `Won $${payout} on the Don\'t Pass Bar`;
       message_display(message);
       }
+    if (dontPassBar.odds.amount != 0) {
+      payout = odds_winner(dontPassBar);
+      message_display(`Won $${payout} on Don\'t Pass Odds. Odds Returned`);
+    }
   } else {
     if (dontPassBar.amount != 0) {
-      remove_chips_from_table(dontPassBar.chips);
-      dontPassBar.amount = lose_bet(dontPassBar.amount);
       message = `Lost $${dontPassBar.amount} on the Don\'t Pass Bar`;
       message_display(message);
+      lose_bet(dontPassBar);
+    }
+    if (dontPassBar.odds.amount != 0) {
+      message_display(`Lost $${dontPassBar.odds.amount} on Don\'t Pass Odds`);
+      lose_bet(dontPassBar.odds);
     }
     if (passLine.amount != 0) {
-      bankroll += passLine.amount;
-      update_bankroll();
-      message = `Won $${passLine.amount} on the Pass Line`;
+      payout = win_bet(passLine);
+      message = `Won $${payout} on the Pass Line`;
       message_display(message);
       if (passLine.odds.amount != 0) {
-      score_pass_line_odds(target);
+        payout = odds_winner(passLine);
+        message = `Won $${payout} on Pass Line Odds`;
+        message_display(message);
       }
     }
   }
 }
 
-////// COULD HAVE DONT PASS BAR ODDS pays inverse true odds
-
-function score_pass_line_odds(target) {
-  switch (target) {
-    case 4:
-    case 10:
-      payout = passLine.odds.amount * 2;
+function big_6_8(action, selector) {
+  switch (action) {
+    case 'place':
+      if (big[selector].amount != 0) {
+        press_bet(big[selector], 'face', 'table', 'normal');
+      } else if (stagedBet >= minBet) {
+        add_chips_to_table(big[selector].chips, stagedBet, 'face', 'table', 'normal');
+        big[selector].amount = commit_bet(big[selector].amount);
+      }
       break;
-    case 5:
-    case 9:
-      payout = passLine.odds.amount * 3 / 2;
+    case 'score':
+      for (const key in big) {
+        if (big[key].amount != 0 && sum == key) {
+          payout = win_bet(big[key]);
+          message_display(`Won $${payout} on the Big ${key}`);
+        }
+      }
       break;
-    case 6:
-    case 8:
-      payout = passLine.odds.amount * 6 / 5;
-      break;
-  }
-  bankroll += payout;
-  bankroll += passLine.odds.amount;
-  update_bankroll();
-  moneyOnTable -= passLine.odds.amount;
-  update_moneyOnTable();
-  message = `Won $${payout} on Pass Line Odds`;
-  message_display(message);
-  passLine.odds.amount = 0;
-}
-
-function big_6_8(selector) {
-  if (big[selector].amount != 0) {
-    press_bet(big[selector], 'face', 'table', 'normal');
-  } else if (stagedBet >= minBet) {
-    add_chips_to_table(big[selector].chips, stagedBet, 'face', 'table', 'normal');
-    big[selector].amount = commit_bet(big[selector].amount);
   }
 }
 
-function score_big_bets() {
-  for (const key in big) {
-    if (big[key].amount != 0 && sum == key) {
-      payout = big[key].amount;
-      bankroll += payout;
-      message_display(`Won $${payout} on the Big ${key}`);
-    }
-  }
-}
+
+
 
 // PLACE BETS
 function place_bet(selector) {
@@ -1648,12 +1797,12 @@ function place_bet(selector) {
   }
 }
 
+
+
+
 function score_place_bets(sum) {
-  payout = placeBet[sum].amount * placeBet[sum].multiplier;
-  bankroll += payout;
-  update_bankroll();
-  message = `Won $${payout} on place bet`;
-  message_display(message);
+  payout = win_bet(placeBet[sum]);
+  message_display(`Won $${payout} on place bet`);
 }
 
 // HARDWAYS BETS
@@ -1670,25 +1819,12 @@ function hardways_bet(selector) {
   }
 }
 
+
+
+
 function score_hardways_bets(sum) {
-  switch (sum) {
-    case 4:
-      payout = hard[4].amount*7;
-      break;
-    case 6:
-      payout = hard[6].amount*9;
-      break;
-    case 8:
-      payout = hard[8].amount*9;
-      break;
-    case 10:
-      payout = hard[10].amount*7;
-      break;
-  }
-  bankroll += payout;
-  update_bankroll();
-  message = `Won $${payout} on Hardways`;
-  message_display(message);
+  payout = win_bet(hard[sum]);
+  message_display(`Won $${payout} on Hardways`);
 }
 
 // ONE ROLL BETS
@@ -1705,21 +1841,29 @@ function horn_bet(selector) {
   }
 }
 
+
+function lose_bet(object) {
+  remove_chips_from_table(object.chips);
+  update_moneyOnTable('remove', object.amount);
+  object.amount = 0;
+
+}
+
+function win_bet(object) {
+  payout = object.amount * object.multiplier;
+  bankroll += payout;
+  update_bankroll();
+  return payout;
+}
+
 function score_horn_bets() {
   if (sum == 2 || sum == 3 || sum == 11 || sum == 12) {
     if (horn[sum].amount != 0) {
-      payout = horn[sum].amount * horn[sum].multiplier;
-      bankroll += payout;
-      update_bankroll();
-      message = `Won $${payout} on one-roll bet`;
-      message_display(message);
+      payout = win_bet(horn[sum]);
+      message_display(`Won $${payout} on one-roll bet`);
     }
   }
-    for (const key in horn) {
-      remove_chips_from_table(horn[key].chips);
-      horn[key].amount = lose_bet(horn[key].amount);
-    }
-    
+  for (const key in horn) lose_bet(horn[key]);
 }
 
 
@@ -1739,7 +1883,7 @@ function press_bet(object, chipOrientation, chipClass, oddsRotation) {
   if (object.amount != stagedBet) {
     remove_chips_from_table(object.chips);
     bankroll += object.amount;
-    moneyOnTable -= object.amount;
+    update_moneyOnTable('remove', object.amount);
     add_chips_to_table(object.chips, stagedBet, chipOrientation, chipClass, oddsRotation);
     object.amount = commit_bet(object.amount);
   }
@@ -1749,11 +1893,8 @@ function press_bet(object, chipOrientation, chipClass, oddsRotation) {
 function score_field_bet() {
 // Lose
   if (sum == 5 || sum == 6 || sum == 7 || sum == 8) {
-    message = 'Lost $' + field.amount + ' to the field.';
-    message_display(message);
-    remove_chips_from_table(field.chips);
-    field.amount = lose_bet(field.amount);
-    // Win
+    message_display('Lost $' + field.amount + ' to the field.');
+    lose_bet(field);
   } else {
     if (sum == 2 || sum == 12) {
       payout = field.amount * 2;
@@ -1762,8 +1903,7 @@ function score_field_bet() {
     }
     bankroll += payout;
     update_bankroll();
-    message = 'Won $' + payout + ' in the field.';
-    message_display(message);
+    message_display('Won $' + payout + ' in the field.');
   }
 
 }
@@ -1777,9 +1917,7 @@ function come_bet() { // Place the Staged Bet on the Come Line
     alert(`You already have a Bet on the Come Line.
 Pull back bet to change.`);
   } else {
-    add_chips_to_table(come.line, stagedBet, 'face', 'table', 'not-rotated');
-
-    // try global version
+    add_chips_to_table(come.line.chips, stagedBet, 'face', 'table', 'not-rotated');
     come.line.amount = commit_bet(come.line.amount);
   }
 }
@@ -1815,11 +1953,10 @@ Bet must be divisible by 5`);
           break;
       }
       if (goodToPlace == true) {
-        add_chips_to_table(come[selection].odds, stagedBet, 'side', 'odds', 'rotated');
+        add_chips_to_table(come[selection].odds.chips, stagedBet, 'side', 'odds', 'rotated');
         come[selection].odds.amount = stagedBet;
         update_bankroll();
-        moneyOnTable += stagedBet;
-        update_moneyOnTable();
+        update_moneyOnTable('add', stagedBet);
         goodToPlace = false;
       }
     }
@@ -1829,22 +1966,15 @@ Bet must be divisible by 5`);
 
 function on_the_come_line() { // Score Bets on Come Line or Move if Point
   if (sum == 2 || sum == 3 || sum == 12) {
-    message = 'Lost $' + come.line.amount + ' on the Come Line';
-    message_display(message);
-    remove_chips_from_table(come.line);
-    come.line.amount = lose_bet(come.line.amount);
-  } else if (sum == 11) {
-    message = 'Won $' + come.line.amount + ' on the Come Line';
-    message_display(message);
-    bankroll += come.line.amount;
-    update_bankroll();
-  } else if (sum == 7) {
-      bankroll += come.line.amount;
-      update_bankroll();
-      remove_chips_from_table(come.line);
-      message = `Won $${come.line.amount} on the Come Line`;
-      message_display(message);
-      come.line.amount = lose_bet(come.line.amount);
+    message_display('Lost $' + come.line.amount + ' on the Come Line');
+    lose_bet(come.line);
+  } else if (sum == 11 || sum == 7) {
+    payout = win_bet(come.line);
+    message_display('Won $' + payout + ' on the Come Line');
+    if (sum == 7) {
+      remove_chips_from_table(come.line.chips);
+      come.line.amount = 0;
+    }
   } else {
     move_come_bet();
   }
@@ -1852,11 +1982,9 @@ function on_the_come_line() { // Score Bets on Come Line or Move if Point
 
 function move_come_bet() { // Move the Come Line to Come Bet area
   come[sum].amount = come.line.amount;
-  
-  add_chips_to_table(come[sum], come.line.amount, 'face', 'table', 'normal');
-  message = `$${come.line.amount} Come Bet moved`;
-  message_display(message);
-  remove_chips_from_table(come.line);
+  add_chips_to_table(come[sum].chips, come.line.amount, 'face', 'table', 'normal');
+  message_display(`$${come.line.amount} Come Bet moved`);
+  remove_chips_from_table(come.line.chips);
   come.line.amount = 0;
 }
 
@@ -1867,40 +1995,32 @@ function score_come_bets() { // Score Come Bets
     // Clear Come Bets
     for (const key in come) {
       if (String(key) != 'line') {
-        come[key].amount = 0;
-        remove_chips_from_table(come[key]);
+        if (come[key].amount != 0) {
+          message_display(`Lost $${come[key].amount} on the Come ${key}`);
+          lose_bet(come[key]);
+        }
         if (come[key].odds.amount != 0) {
           if (gameOn == false) {
             bankroll += come[key].odds.amount;
             message_display(come[key].odds.amount + ' returned');
           }
-          come[key].odds.amount = 0;
-          remove_chips_from_table(come[key].odds);
+          message_display(`Lost $${come[key].odds.amount} on Come ${key} Odds`);
+          lose_bet(come[key].odds);
         }
       }
     }
   } else if (come[sum].amount != 0) {
-    payout = come[sum].amount;
-    bankroll += payout * 2;
+    payout = win_bet(come[sum]);
+    bankroll += payout; // Add again for returning the initial bet
     update_bankroll();
-    message = `Won $${payout} on the Come Bet`;
-    message_display(message);
-    come[sum].amount = lose_bet(come[sum].amount);
-    remove_chips_from_table(come[sum]);
+    message_display(`Won $${payout} on the ${sum} Come Bet`);
+    lose_bet(come[sum]);
     if (come[sum].odds.amount != 0) {
-      remove_chips_from_table(come[sum].odds);
-      if (sum == 4 || sum == 10) {
-        payout = come[sum].odds.amount * 2;
-      } else if (sum == 5 || sum == 9) {
-        payout = come[sum].odds.amount * 3 / 2;
-      } else {
-        payout = come[sum].odds.amount * 6 / 5;
-      }
-      bankroll += (payout + come[sum].odds.amount);
+      payout = win_bet(come[sum].odds);
+      bankroll += come[sum].odds.amount;
       update_bankroll();
-      message = `Won $${payout} on the Come Bet Odds`;
-      message_display(message);
-      come[sum].odds.amount = lose_bet(come[sum].odds.amount);
+      message_display(`Won $${payout} on the Come Bet Odds`);
+      lose_bet(come[sum].odds);
     }
   }
 }
@@ -1912,7 +2032,7 @@ function dont_come_bet() {
     alert(`You already have a Bet on the Don\'t Come Line.
 Pull back bet to change.`);
   } else {
-    add_chips_to_table(dontCome.line, stagedBet, 'face', 'table', 'not-rotated');
+    add_chips_to_table(dontCome.line.chips, stagedBet, 'face', 'table', 'not-rotated');
     dontCome.line.amount = commit_bet(dontCome.line.amount);
   }
 }
@@ -1954,7 +2074,7 @@ Bet must be divisible by 2`);
         }
       }
       if (goodToPlace == true) {
-        add_chips_to_table(dontCome[selection].odds, stagedBet, 'side', 'odds', 'rotated');
+        add_chips_to_table(dontCome[selection].odds.chips, stagedBet, 'side', 'odds', 'rotated');
         dontCome[selection].odds.amount = commit_bet(dontCome[selection].odds.amount);
         goodToPlace = false;
       }
@@ -1965,20 +2085,18 @@ Bet must be divisible by 2`);
 function on_the_dont_come_line() { // Score Bets on Come Line or Move if Point
   if (sum == 7 || sum == 11) {
     message = 'Lost $' + dontCome.line.amount + ' on the Don\'t Come Line';
-    remove_chips_from_table(dontCome.line);
-    dontCome.line.amount = 0;
+    lose_bet(dontCome.line);
   } else if (sum == 2 || sum == 3) {
-    message = 'Won $' + dontCome.line.amount + ' on the Don\'t Come Line';
-    bankroll += dontCome.line.amount;
-    update_bankroll();
+    payout = win_bet(dontCome.line);
+    message = 'Won $' + payout + ' on the Don\'t Come Line';
   } else if (sum == 12) {
     message = 'Push on the Don\'t Come Line'
   } else {
     message = `$${dontCome.line.amount} Don\'t Come Bet moved`;
     dontCome[sum].amount = dontCome.line.amount;
-    add_chips_to_table(dontCome[sum], dontCome.line.amount, 'face', 'table', 'normal');
+    add_chips_to_table(dontCome[sum].chips, dontCome.line.amount, 'face', 'table', 'normal');
     //if (moveDCBet == true) {
-    remove_chips_from_table(dontCome.line);
+    remove_chips_from_table(dontCome.line.chips);
     dontCome.line.amount = 0;
     //}
   }
@@ -2000,55 +2118,36 @@ function score_dont_come_bets() {
         if (dontCome[key].amount != 0) {
         // Win 1:1 and get initial bet back
           payoutSubTotal += (dontCome[key].amount * 2);
-          dontCome[key].amount = lose_bet(dontCome[key].amount);
-          remove_chips_from_table(dontCome[key]);
+          lose_bet(dontCome[key]);
         }
         if (dontCome[key].odds.amount != 0 && gameOn == true) {
-          number = Number(key)
-          switch (number) {
-            case 4:
-            case 10:
-              payout = dontCome[number].odds.amount / 2;
-              break;
-            case 5:
-            case 9:
-              payout = dontCome[number].odds.amount * 2 / 3;
-              break;
-            case 6:
-            case 8:
-              payout = dontCome[number].odds.amount * 5 / 6;
-              break;
-          }
+          payout = win_bet(dontCome[key].odds);
           payoutSubTotal += (payout + dontCome[key].odds.amount);
-          remove_chips_from_table(dontCome[key].odds);
-          dontCome[key].odds.amount = lose_bet(dontCome[key].odds.amount);
+          lose_bet(dontCome[key].odds);
         }
       }
     }
-    payout = payoutSubTotal;
-    if (payout != 0) {
-      bankroll += payout;
+    if (payoutSubTotal != 0) {
+      bankroll += payoutSubTotal;
       update_bankroll();
-      message = `Won $${payout} on the Don\'t Come Bets`;
+      message = `Won $${payoutSubTotal} on the Don\'t Come Bets`;
     }
-  } else {
-    let lose = 0;
-    lose = dontCome[sum].amount;
-    if (lose != 0) {
-      dontCome[sum].amount = lose_bet(dontCome[sum].amount);
-      if (gameOn == true) {
-        lose += dontCome[sum].odds.amount;
-      } else {
-        bankroll +- dontCome[sum].odds.amount;
-        message_dispaly(`$${dontCome[sum].odds.amount} dc odds returned`)
+  } else { // Sum = 4, 5, 6, 8, 9, or 10
+    if (dontCome[sum].amount != 0) {
+      message_display(`Lost $${dontCome[sum].amount} on DC ${sum}`);
+      lose_bet(dontCome[sum]);
+      if (dontCome[sum].odds.amount != 0) {
+        if (gameOn == true) {
+          message_display(`Lost $${dontCome[sum].odds.amount} on DC ${sum} odds`);
+          lose_bet(dontCome[sum].odds);
+        } else {
+          bankroll += dontCome[sum].odds.amount;
+          message_display(`$${dontCome[sum].odds.amount} DC ${sum} odds returned`);
+          lose_bet(dontCome[sum].odds);
+        }
       }
-      dontCome[sum].odds.amount = lose_bet(dontCome[sum].odds.amount);
-      message = `Lost $${lose} on the Don\'t Come Bet`;
-      remove_chips_from_table(dontCome[sum]);
-      remove_chips_from_table(dontCome[sum].odds);
     }
   }
-  if (message != '') {message_display(message);}
 }
 
 // ((((((((((((((((((( BONUS BETS )))))))))))))))))))
@@ -2089,45 +2188,42 @@ if (bonus.small.amount != 0 || bonus.all.amount != 0) {
 
 function score_bonus_bet() {
   if (bonus.small.allHit == true && bonus.small.paid == false) {
-  payout = bonus.small.amount * 30;
-  bankroll += (payout + bonus.small.amount);
+  payout = win_bet(bonus.small);
+  bankroll += bonus.small.amount;
   update_bankroll();
   for (i = 0; i < 4; i++) {
   message_display('All Small Bonus Bet Hit !');
   }
   message_display(`Won $${payout}`);
-  remove_chips_from_table(bonus.small.chips);
-  bonus.small.amount = lose_bet(bonus.small.amount);
+  lose_bet(bonus.small);
   bonus.small.paid = true;
   }
   if (bonus.tall.allHit == true && bonus.tall.paid == false) {
-    payout = bonus.tall.amount * 30;
-    bankroll += (payout + bonus.tall.amount);
+    payout = win_bet(bonus.tall);
+    bankroll += bonus.tall.amount;
     update_bankroll();
     for (i = 0; i < 4; i++) {
     message_display('All Tall Bonus Bet Hit !');
     }
     message_display(`Won $${payout}`);
-    remove_chips_from_table(bonus.tall.chips);
-    bonus.tall.amount = lose_bet(bonus.tall.amount);
+    lose_bet(bonus.tall);
     bonus.tall.paid = true;
   }
   if (bonus.tall.allHit == true && bonus.small.allHit == true && bonus.all.paid == false) {
-    payout = bonus.all.amount * 150;
-    bankroll += (payout + bonus.all.amount);
+    payout = win_bet(bonus.all);
+    bankroll += bonus.all.amount;
     update_bankroll();
     message_display('Make \'Em All Bonus Bet Hit!');
     message_display(`Won $${payout}`);
-    remove_chips_from_table(bonus.all.chips);
-    bonus.all.amount = lose_bet(bonus.all.amount);
+    lose_bet(bonus.all);
     bonus.all.paid = true;
     clear_bonus_bet();
   }
 }
 function clear_bonus_bet() {
-  bonus.small.amount = 0;
-  bonus.all.amount = 0;
-  bonus.tall.amount = 0;
+  lose_bet(bonus.small);
+  lose_bet(bonus.all);
+  lose_bet(bonus.tall);
   bonus.small.allHit = false;
   bonus.small.paid = false;
   bonus.tall.allHit = false;
@@ -2140,9 +2236,6 @@ function clear_bonus_bet() {
   for (const key in allNumbersCircles) {
     allNumbersCircles[Number(key)].style.backgroundColor = 'transparent';
   }
-  remove_chips_from_table(bonus.small.chips);
-  remove_chips_from_table(bonus.all.chips);
-  remove_chips_from_table(bonus.tall.chips);
 }
 
 // ####################################################################################
@@ -2327,7 +2420,7 @@ dontCome[4].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(dontCome[4].odds);
+    remove_chips_from_table(dontCome[4].odds.chips);
     dontCome[4].odds.amount = pull_back_bet(dontCome[4].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2340,7 +2433,7 @@ dontCome[5].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(dontCome[5].odds);
+    remove_chips_from_table(dontCome[5].odds.chips);
     dontCome[5].odds.amount = pull_back_bet(dontCome[5].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2353,7 +2446,7 @@ dontCome[6].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(dontCome[6].odds);
+    remove_chips_from_table(dontCome[6].odds.chips);
     dontCome[6].odds.amount = pull_back_bet(dontCome[6].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2366,7 +2459,7 @@ dontCome[8].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(dontCome[8].odds);
+    remove_chips_from_table(dontCome[8].odds.chips);
     dontCome[8].odds.amount = pull_back_bet(dontCome[8].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2379,7 +2472,7 @@ dontCome[9].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(dontCome[9].odds);
+    remove_chips_from_table(dontCome[9].odds.chips);
     dontCome[9].odds.amount = pull_back_bet(dontCome[9].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2392,7 +2485,7 @@ dontCome[10].button.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(dontCome[10].odds);
+    remove_chips_from_table(dontCome[10].odds.chips);
     dontCome[10].odds.amount = pull_back_bet(dontCome[10].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2409,7 +2502,7 @@ numberBoxElement.four.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(come[4].odds);
+    remove_chips_from_table(come[4].odds.chips);
     come[4].odds.amount = pull_back_bet(come[4].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2422,7 +2515,7 @@ numberBoxElement.five.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(come[5].odds);
+    remove_chips_from_table(come[5].odds.chips);
     come[5].odds.amount = pull_back_bet(come[5].odds.amount);
   } if (stagedBet == 0) {
   // Do nothing
@@ -2435,7 +2528,7 @@ numberBoxElement.six.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(come[6].odds);
+    remove_chips_from_table(come[6].odds.chips);
     come[6].odds.amount = pull_back_bet(come[6].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2448,7 +2541,7 @@ numberBoxElement.eight.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(come[8].odds);
+    remove_chips_from_table(come[8].odds.chips);
     come[8].odds.amount = pull_back_bet(come[8].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2461,7 +2554,7 @@ numberBoxElement.nine.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(come[9].odds);
+    remove_chips_from_table(come[9].odds.chips);
     come[9].odds.amount = pull_back_bet(come[9].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2474,7 +2567,7 @@ numberBoxElement.ten.addEventListener('click', (e) => {
   if (stagedBet < minBet && pullBackInProgress != true) {
     alert('Minimum Bet is $' + minBet);
   } else if (pullBackInProgress == true) {
-    remove_chips_from_table(come[10].odds);
+    remove_chips_from_table(come[10].odds.chips);
     come[10].odds.amount = pull_back_bet(come[10].odds.amount);
   } else if (stagedBet == 0) {
   // Do nothing
@@ -2653,12 +2746,12 @@ horn[12].button.addEventListener('click', (e) => {
 });
 
 big[6].button.addEventListener('click', function() {
-  big_6_8(6);
+  big_6_8('place', 6);
   prevClicked = big[6].button;
 });
 
 big[8].button.addEventListener('click', function() {
-  big_6_8(8);
+  big_6_8('place', 8);
   prevClicked = big[8].button;
 });
 

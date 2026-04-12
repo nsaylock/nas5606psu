@@ -5,11 +5,11 @@ html, body {
 }
 
 * {
-    cursor: url('img/cursor_gold.png'), auto;
+    cursor: url('img/cursor_blue.png'), auto;
 }
 
 *:active {
-    cursor: url('img/cursor_gold_r2.png'), auto;
+    cursor: url('img/cursor_blue_r.png'), auto;
 }
 
 body {
@@ -216,7 +216,7 @@ body::before {
 .main-bottom-right {
     height: 450px;
     width: 340px;
-    margin: 13px 0 0 10px;
+    margin: 0px 0 0 10px;
 }
 
 .side-bets-grid {
@@ -867,15 +867,24 @@ button {
     margin-top: 15px;
 }
 
-#seven-bet {
-    /*
-    outline: 2px solid white;
-    color: white;
-    vertical-align: middle;
-    text-shadow: 2px 2px 0px black;
-    */
+.seven-bet-container {
+    position: relative;
+    margin-top: 12px;
     height: 50px;
+    width: 340px;
+
+}
+
+#seven-bet-chips {
+    position: absolute;
+    margin-top: -5px;
+}
+
+#seven-bet-button {
+    position: absolute;
+    height: 100%;
     width: 100%;
+    border-radius: 20px;
 }
 
 .side-bet-container {
