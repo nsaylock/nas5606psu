@@ -244,8 +244,54 @@ function seven_bet(action) {
       sevenBet.amount = pull_back_bet(sevenBet.amount);
       break;
   }
-    
-  
+}
+
+let anyCraps = {
+  button: document.getElementById('any-craps-button'),
+  amount: 0,
+  multiplier: 7,
+  chips: {
+    location: document.getElementById('any-craps-chips'),
+    chip: [],
+    leftSpacing: 120
+  }
+}
+
+anyCraps.button.addEventListener('click', (e) => {
+  if (pullBackInProgress == true) {
+    any_craps('pullBack');
+  } else if (stagedBet == 0 || anyCraps.amount != 0) {
+    // Do Nothing
+  } else {
+    any_craps('place');
+  }
+  prevClicked = anyCraps.button;
+});
+
+function any_craps(action) {
+  switch (action) {
+    case 'place':
+      add_chips_to_table(anyCraps.chips, stagedBet, 'face', 'table', 'normal');
+      anyCraps.amount = commit_bet(anyCraps.amount);
+      break;
+    case 'score':
+      if (sum == 2 || sum == 3 || sum == 11 || sum == 12) {
+        payout = win_bet(anyCraps);
+        message_display(`Won $${payout} on Any Craps Bet`);
+        bankroll += anyCraps.amount;
+        update_bankroll();
+        playSound = false;
+        lose_bet(anyCraps);
+      } else any_craps('clear');
+      break;
+    case 'clear':
+      message_display(`Lost $${anyCraps.amount} on Any Craps Bet`);
+      lose_bet(anyCraps);
+      break;
+    case 'pullBack':
+      remove_chips_from_table(anyCraps.chips);
+      anyCraps.amount = pull_back_bet(anyCraps.amount);
+  }
 }
 
 let hard = {
@@ -1426,6 +1472,7 @@ function roll_dice() {
     score_horn_bets();
     score_come_bets();
     score_dont_come_bets();
+    any_craps('score');
     
     if (sevenBet.amount != 0) {
       if (sum == 7) seven_bet('score');

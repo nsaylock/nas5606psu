@@ -927,13 +927,16 @@ button {
     align-items: center;
 }
 
-#any-craps {
-    /*
-    outline: 2px solid white;
-    color: white;
-    text-shadow: 2px 2px 0px black;
-    */
+.any-craps-container {
+    position: relative;
     height: 50px;
+    width: 340px;
+    margin-top: 8px;
+}
+
+#any-craps-chips, #any-craps-button {
+    position: absolute;
+    height: 100%;
     width: 100%;
 }
 
