@@ -306,8 +306,8 @@ button {
     position: absolute;
     height: 100px;
     width: 100px;
-    top:-15px;
-    left: -120px;
+    top: 88px;
+    left: 558px;
     z-index: 20;
 }
 
@@ -804,6 +804,27 @@ button {
     left: 250px;    
 }
 
+.win-chip-stack {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+}
+
+/*
+@keyframes passLine-to-bankroll {
+    0%, 25% { transform: translate(0,0); }
+    100% { transform: translate(85px, 210px); }
+}
+
+.winChips-to-bankroll {
+    animation: passLine-to-bankroll;
+    animation-duration: 1s;
+}
+*/
+
 #pass-line-button {
     position: absolute;
 }
@@ -1081,6 +1102,12 @@ button {
     width: 60px;
 }
 
+.win-chip-img {
+    position: absolute;
+    height: 35px;
+    width: 70px;
+}
+
 #chips-animation-bankroll-location {
     height: 150px;
     width: 110px;
@@ -1262,6 +1289,7 @@ button {
     width: 300px;
     padding: 8px;
     line-height: 20px;    
+    z-index: 1000;
 }
 
 .stat-container {

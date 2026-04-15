@@ -46,11 +46,7 @@ let chipDisplay = 'blank';
 // Table Bet Storage Variables
 let payout = 0;
 let prevStagedBet = 0;
-let chipStructure = {
-  oneHundredK: 0,  fiftyK: 0,
-  platinum: 0, brown: 0, gold: 0, purple: 0,
-  black: 0, green: 0, red: 0, white: 0
-}
+
 
 let prevChipStructure = { 
   oneHundredK: 0,  fiftyK: 0,
@@ -61,11 +57,11 @@ let prevChipStructure = {
 // Animation Variable
 let soundDelay = 0;
 let playSound = true;
+let chainDelay = 1000;
+let winStack = {location: [], moveX: [], moveY: [], xOffset: []};
+let WSindex = 0;
 
-const chipVessel = {
-  bottomContainer: document.getElementById('bottom-container'),
-  chip: []
-}
+//const chipVessel = []
 
 let animationComplete = true;
 let playSoundAfterAnimation = false;
@@ -136,7 +132,8 @@ let big = {
       location: document.getElementById('big-6-chips'),
       chip: [],
       leftSpacing: 15
-    }
+    },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
   },
   8: {
     button: document.getElementById('big-8-button'),
@@ -146,7 +143,8 @@ let big = {
       location: document.getElementById('big-8-chips'),
       chip: [],
       leftSpacing: 15
-    }
+    },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
   }
 }
 
@@ -160,6 +158,7 @@ let bonus = {
       chip: [],
       leftSpacing: 45
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     hit: { 2: false, 3: false, 4: false, 5: false, 6: false },
     allHit: false,
     paid: false
@@ -173,6 +172,7 @@ let bonus = {
       chip: [],
       leftSpacing: 45
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     paid: false
   },
   tall: {
@@ -184,6 +184,7 @@ let bonus = {
       chip: [],
       leftSpacing: 45
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     hit: { 8: false, 9: false, 10: false, 11: false, 12: false },
     allHit: false,
     paid: false
@@ -207,7 +208,8 @@ let sevenBet = {
     location: document.getElementById('seven-bet-chips'),
     chip: [],
     leftSpacing: 100
-  }
+  },
+  winChips: { moveX: 120, moveY: 200, chip: [] }
 }
 
 sevenBet.button.addEventListener('click', () => {
@@ -254,7 +256,8 @@ let anyCraps = {
     location: document.getElementById('any-craps-chips'),
     chip: [],
     leftSpacing: 120
-  }
+  },
+  winChips: { moveX: 120, moveY: 200, chip: [] }
 }
 
 anyCraps.button.addEventListener('click', (e) => {
@@ -275,14 +278,16 @@ function any_craps(action) {
       anyCraps.amount = commit_bet(anyCraps.amount);
       break;
     case 'score':
-      if (sum == 2 || sum == 3 || sum == 11 || sum == 12) {
-        payout = win_bet(anyCraps);
-        message_display(`Won $${payout} on Any Craps Bet`);
-        bankroll += anyCraps.amount;
-        update_bankroll();
-        playSound = false;
-        lose_bet(anyCraps);
-      } else any_craps('clear');
+      if (anyCraps.amount != 0) {
+        if (sum == 2 || sum == 3 || sum == 11 || sum == 12) {
+          payout = win_bet(anyCraps);
+          message_display(`Won $${payout} on Any Craps Bet`);
+          bankroll += anyCraps.amount;
+          update_bankroll();
+          playSound = false;
+          lose_bet(anyCraps);
+        } else any_craps('clear');
+      }
       break;
     case 'clear':
       message_display(`Lost $${anyCraps.amount} on Any Craps Bet`);
@@ -304,6 +309,7 @@ let hard = {
       chip: [],
       leftSpacing: 60
       },
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   6: {
     button: document.getElementById('hard-6-button'),
@@ -314,6 +320,7 @@ let hard = {
       chip: [],
       leftSpacing: 60
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   8: {
     button: document.getElementById('hard-8-button'),
@@ -324,6 +331,7 @@ let hard = {
       chip: [],
       leftSpacing: 60
       },
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   10: {
     button: document.getElementById('hard-10-button'),
@@ -333,7 +341,8 @@ let hard = {
       location: document.getElementById('hard-10-chips'),
       chip: [],
       leftSpacing: 60
-      }
+    },
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   }
 }
 
@@ -346,8 +355,8 @@ let horn = {
       location: document.getElementById('horn-2-chips'),
       chip: [],
       leftSpacing: 60
-      },
-    multiplier: 30
+    },
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   3: {
     button: document.getElementById('horn-3-button'),
@@ -358,7 +367,7 @@ let horn = {
       chip: [],
       leftSpacing: 60
     },
-    multiplier: 15
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   11: {
     button: document.getElementById('horn-11-button'),
@@ -369,7 +378,7 @@ let horn = {
       chip: [],
       leftSpacing: 60
       },
-    multiplier: 15
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   12: {
     button: document.getElementById('horn-12-button'),
@@ -380,18 +389,20 @@ let horn = {
       chip: [],
       leftSpacing: 60
     },
-    multiplier: 30
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   }
 }
 
 let field = {
   button: document.getElementById('field-button'),
   amount: 0,
+  multiplier: 1,
   chips: {
     location: document.getElementById('field-chips'),
     chip: [],
     leftSpacing: 200
-  }
+  },
+  winChips: { chip: [], moveX: -50, moveY: 350 }
 }
 
 let dontPassBar = {
@@ -405,6 +416,7 @@ let dontPassBar = {
     chip: [],
     leftSpacing: 155
   },
+  winChips: { moveX: 120, moveY: 200, chip: [] },
   odds: {
     location: document.getElementById('dont-pass-odss-chips'),
     amount: 0,
@@ -413,6 +425,7 @@ let dontPassBar = {
       chip: [],
       leftSpacing: 190
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     4: {multiplier: 0.5},
     5: {multiplier: 2/3},
     6: {multiplier: 5/6},
@@ -435,7 +448,8 @@ let placeBet = {
         location: document.getElementById('place-4-chips'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: 250, moveY: 580, chip: [] }
     },
     5: {
       button: document.getElementById('place-5-button'),
@@ -445,7 +459,8 @@ let placeBet = {
         location: document.getElementById('place-5-chips'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: 100, moveY: 560, chip: [] }
     },
     6: {
       button: document.getElementById('place-6-button'),
@@ -455,7 +470,8 @@ let placeBet = {
         location: document.getElementById('place-6-chips'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -75, moveY: 560, chip: [] }
     },
     8: {
       button: document.getElementById('place-8-button'),
@@ -465,7 +481,8 @@ let placeBet = {
         location: document.getElementById('place-8-chips'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -280, moveY: 560, chip: [] }
     },
     9: {
       button: document.getElementById('place-9-button'),
@@ -475,7 +492,8 @@ let placeBet = {
         location: document.getElementById('place-9-chips'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -500, moveY: 560, chip: [] }
     },
     10: {
       button: document.getElementById('place-10-button'),
@@ -485,7 +503,8 @@ let placeBet = {
         location: document.getElementById('place-10-chips'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -620, moveY: 560, chip: [] }
     }
 };
 
@@ -499,8 +518,8 @@ let come = {
       location: document.getElementById('come-chips-display'),
       chip: [],
       leftSpacing: 262
-    }
-    
+    },
+    winChips: { moveX: 60, moveY: 60, chip: [] }
   },
   4: {
     amount: 0,
@@ -510,6 +529,7 @@ let come = {
       chip: [],
       bottom: 25,
     },
+    winChips: { moveX: 260, moveY: 600, chip: [] },
     odds: {
       amount: 0,
       multiplier: 2,
@@ -517,7 +537,8 @@ let come = {
         location: document.getElementById('come-4-odds'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: 260, moveY: 600, chip: [] }
     }
   },
   5: {
@@ -528,6 +549,7 @@ let come = {
       chip: [],
       bottom: 25,
     },
+    winChips: { moveX: 100, moveY: 600, chip: [] },
     odds: {
       amount: 0,
       multiplier: 3/2,
@@ -535,7 +557,8 @@ let come = {
         location: document.getElementById('come-5-odds'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: 100, moveY: 600, chip: [] }
     }
   },
   6: {
@@ -546,6 +569,7 @@ let come = {
       chip: [],
       bottom: 25,
     },
+    winChips: { moveX: -60, moveY: 600, chip: [] },
     odds: {
       amount: 0,
       multiplier: 6/5,
@@ -553,7 +577,8 @@ let come = {
         location: document.getElementById('come-6-odds'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -60, moveY: 600, chip: [] }
     }
   },
   8: {
@@ -564,6 +589,7 @@ let come = {
       chip: [],
       bottom: 25,
     },
+    winChips: { moveX: -280, moveY: 600, chip: [] },
     odds: {
       amount: 0,
       multiplier: 6/5,
@@ -571,7 +597,8 @@ let come = {
         location: document.getElementById('come-8-odds'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -280, moveY: 600, chip: [] }
     }
   },
   9: {
@@ -582,6 +609,7 @@ let come = {
       chip: [],
       bottom: 25,
     },
+    winChips: { moveX: -500, moveY: 600, chip: [] },
     odds: {
       amount: 0,
       multiplier: 3/2,
@@ -589,7 +617,8 @@ let come = {
         location: document.getElementById('come-9-odds'),
         chip: [],
         leftSpacing: 70
-      }
+      },
+      winChips: { moveX: -500, moveY: 600, chip: [] }
     }
   },
   10: {
@@ -600,6 +629,7 @@ let come = {
       chip: [],
       bottom: 25,
     },
+    winChips: { moveX: -620, moveY: 600, chip: [] },
     odds: {
       amount: 0,
       multiplier: 2,
@@ -607,8 +637,8 @@ let come = {
         location: document.getElementById('come-10-odds'),
         chip: [],
         leftSpacing: 70
-      }
-      
+      },
+      winChips: { moveX: -500, moveY: 600, chip: [] }
     }
   }
 }
@@ -625,6 +655,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 58
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] }
   },
   4: {
     button: document.getElementById('dc-4-button'),
@@ -635,6 +666,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 40
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     odds: {
       amount: 0,
       multiplier: 0.5,
@@ -642,7 +674,8 @@ let dontCome = {
         location: document.getElementById('dc-4-odds'),
         chip: [],
         leftSpacing: 80
-      }
+      },
+      winChips: { moveX: 120, moveY: 200, chip: [] }
     }
   },
   5: {
@@ -654,6 +687,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 40
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     odds: {
       amount: 0,
       multiplier: 2/3,
@@ -661,7 +695,8 @@ let dontCome = {
         location: document.getElementById('dc-5-odds'),
         chip: [],
         leftSpacing: 80
-      }
+      },
+      winChips: { moveX: 120, moveY: 200, chip: [] }
     }
   },
   6: {
@@ -673,6 +708,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 40
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     odds: {
       amount: 0,
       multiplier: 5/6,
@@ -680,7 +716,8 @@ let dontCome = {
         location: document.getElementById('dc-6-odds'),
         chip: [],
         leftSpacing: 80
-      }
+      },
+      winChips: { moveX: 120, moveY: 200, chip: [] },
     }
   },
   8: {
@@ -692,6 +729,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 40,  
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     odds: {
       amount: 0,
       multiplier: 5/6,
@@ -699,7 +737,8 @@ let dontCome = {
         location: document.getElementById('dc-8-odds'),
         chip: [],
         leftSpacing: 80
-      }
+      },
+      winChips: { moveX: 120, moveY: 200, chip: [] }
     }
   },
   9: {
@@ -711,6 +750,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 40
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     odds: {
       amount: 0,
       multiplier: 2/3,
@@ -718,7 +758,8 @@ let dontCome = {
         location: document.getElementById('dc-9-odds'),
         chip: [],
         leftSpacing: 80
-      }
+      },
+      winChips: { moveX: 120, moveY: 200, chip: [] }
     }
   },
   10: {
@@ -730,6 +771,7 @@ let dontCome = {
       chip: [],
       leftSpacing: 40
     },
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     odds: {
       amount: 0,
       multiplier: 0.5,
@@ -737,7 +779,8 @@ let dontCome = {
         location: document.getElementById('dc-10-odds'),
         chip: [],
         leftSpacing: 80
-      }
+      },
+      winChips: { moveX: 120, moveY: 200, chip: [] }
     }
   }
 }
@@ -776,6 +819,7 @@ let bankrollStack = {
 };
 
 let passLine = {
+  winChips: { moveX: 120, moveY: 200, chip: [] },
   vertButton: document.getElementById('vert-PL-button'),
   button: document.getElementById('pass-line-button'),
   amount: 0,
@@ -793,6 +837,7 @@ let passLine = {
       chip: [],
       leftSpacing: 310
     }, 
+    winChips: { moveX: 120, moveY: 200, chip: [] },
     4: {multiplier: 2},
     5: {multiplier: 3/2},
     6: {multiplier: 6/5},
@@ -832,6 +877,8 @@ if (firstLoad == true) {
 });
 }
 
+let xMargin = 8;
+let yMargin = 6;
 
 
 // $$$$$$$$$$$$$$$$$$$$$ BET STAGING AREA AND BUTTON $$$$$$$$$$$$$$$$$$$$$$$
@@ -896,7 +943,7 @@ function update_staged_bet_chips() {
       stagedBetChips.chip[img].remove();
     }
     //stagedBetChips.chip = []
-    chipStructure = get_chip_structure(stagedBet); // of the stagedBet
+    let chipStructure = get_chip_structure(stagedBet); // of the stagedBet
     for (const color in chipStructure) {
       if (chipStructure[color] != 0) {
         for (i = 0; i < chipStructure[color]; i++) {
@@ -915,84 +962,11 @@ function update_staged_bet_chips() {
         }
       }
     }
-    reset_chip_structure();
     update_bankroll_chips(bankroll-stagedBet);
     prevStagedBet = stagedBet;
     playSound = true;
   } else {
     playSound = false;
-  }
-}
-
-
-
-function move_chips_animation(area) {
-  let exitAnimationFunction = false;
-  //if (animationComplete == false) {
-  //  exitAnimationFunction = true;
-  //}
-  switch (area) {
-    case 'staged-bet':
-      amount = stagedBet - prevStagedBet;
-      chipOrientation = 'side';
-      if (amount > 0) {
-        origin = 'bottomContainer';
-        startingLocation = 'chips-animation-bankroll-location';
-        endingLocation = 'staged-bet';
-        animation = 'move-chips-bankroll-to-staged-bet';
-        duration = 250;
-        break;
-        
-      } else if (amount < 0) {
-        startingLocation = 'move-chips-staged-bet-location';
-        endingLocation = 'move-chips-bankroll-location';
-        break;
-      } else {
-        exitAnimationFunction = true;
-        break;
-      }
-  }
-
-  if (exitAnimationFunction == false) {
-    //animationComplete = false;
-    let index = 0;
-    let chipCount = 0;
-    chipVessel.chip = []
-    chipStructure = get_chip_structure(amount); //amount to move
-
-    newDiv = document.createElement('div');
-    newDiv.id = startingLocation;
-    chipVessel[origin].appendChild(newDiv);
-    // loading the boat
-    for (const color in chipStructure) {
-      if (chipStructure[color] != 0) {
-        for (i = 0; i < chipStructure[color]; i++) {
-          index = chipVessel.chip.length;
-          chipVessel.chip[index] = document.createElement('img');
-          thisChip = chipVessel.chip[index];
-          thisChip.src = `img/chips/${chipOrientation}/${chipDisplay}/${color}_chip.png`;
-          thisChip.classList.add(`${chipOrientation}-chip-img`);
-          thisChip.style.marginBottom = `${chipCount * 9}px`;
-          newDiv.appendChild(thisChip);
-          chipCount += 1;
-        }
-      }
-    }
-    newDiv.classList.add(animation);
-    setTimeout(() => {
-      newDiv.remove();
-      update_animation_end_location(endingLocation);
-    }, duration);
-
-    reset_chip_structure();
-  }
-}
-
-function update_animation_end_location(location) {
-  switch (location) {
-    case 'staged-bet':
-      animated_update_staged_bet_chips();
-      break;
   }
 }
 
@@ -1016,7 +990,7 @@ function load_bankroll_chips() {
 
 function update_bankroll_chips(amount) {
   //object is bankrollChips {stack[], plat[], brown[], gold[], purple[], etc}
-  chipStructure = get_chip_structure(amount);
+  let chipStructure = get_chip_structure(amount);
 
   // ----------- generate whole new bankroll each timee -------------
   for (const divs in bankrollStack) {
@@ -1046,7 +1020,6 @@ function update_bankroll_chips(amount) {
         
     }
   }
-  reset_chip_structure();
   check_roll_button();
   
 }
@@ -1067,7 +1040,6 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
   let index = 0;
   let chipCount = 0;
   let totalChips = 0;
-  let firstChip = true;
   object.chip = [];
   chipStructure = get_chip_structure(bet); // of the stagedBet
   
@@ -1104,7 +1076,7 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
             object.location.style.left = `${object.leftSpacing - (totalChips * 3)}px`;
           } else {
             object.location.style.left = `${object.leftSpacing - (totalChips*5)}px`;
-            thisChip.style.marginLeft = `${chipCount *10}px`;
+            thisChip.style.marginLeft = `${chipCount * xMargin}px`;
             
           }
         }
@@ -1113,22 +1085,6 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
       }
     }
   }
-  reset_chip_structure();
-}
-
-function reset_chip_structure() {
-  chipStructure = {
-    oneHundredK: 0,
-    fiftyK: 0,
-    platinum: 0,
-    brown: 0,
-    gold: 0,
-    purple: 0,
-    black: 0,
-    green: 0,
-    red: 0,
-    white: 0
-  };
 }
 
 function remove_chips_from_table(object) {
@@ -1315,6 +1271,30 @@ function update_moneyOnTable(action, amount) {
 }
 
 const messageBoxDiv = document.getElementById('message-box');
+let offsetX = 0, offsetY = 0;
+let isDragging = false;
+
+messageBoxDiv.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  offsetX = e.clientX - messageBoxDiv.offsetLeft;
+  offsetY = e.clientY - messageBoxDiv.offsetTop;
+  messageBoxDiv.style.backgroundColor = 'black';
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    messageBoxDiv.style.left = `${e.clientX - offsetX}px`;
+    messageBoxDiv.style.top = `${e.clientY - offsetY}px`;
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+  messageBoxDiv.style.backgroundColor = 'rgb(0,0,0,0.7)';
+})
+
+
+
 let counter = 0;
 function message_display(message) {
   //rollName = display_roll_message(sum);
@@ -1403,10 +1383,12 @@ let hotRoll = {
 let sevenCounter = 0;
 let highRoller = false;
 let totalRolls = 0;
+let first = true;
 
 function roll_dice() {
   totalRolls++;
-  
+  chainDelay = 1200;
+  WSindex = 0;
   if (hotRoll.active == true) {
     hotRoll.counter++;
     if (hotRoll.counter == hotRoll.length) {
@@ -1429,7 +1411,19 @@ function roll_dice() {
     dice1 = Math.floor(Math.random()*6) + 1;
     dice2 = Math.floor(Math.random()*6) + 1;
     sum = dice1 + dice2;
-    
+    //placebet =
+
+    sum = 9;
+
+    /* COME TESTING
+    if (first == true) {
+      sum = 9;
+      first = false;
+    } else {
+      sum = 7;
+    }
+      */
+
     if (sum == 7) {
       sevenCounter++;
       if (sevenCounter == hotRoll.activationNumber) {
@@ -1469,21 +1463,8 @@ function roll_dice() {
     soundSelector = Math.floor(Math.random()*3)+1;
     diceRollSound = new Audio(`sounds/Dice_Roll_${soundSelector}.mp3`);
     diceRollSound.play();
-    score_horn_bets();
-    score_come_bets();
-    score_dont_come_bets();
-    any_craps('score');
-    
-    if (sevenBet.amount != 0) {
-      if (sum == 7) seven_bet('score');
-      else seven_bet('clear');
-    }
 
-    if (gameOn == false) {
-      come_out_roll();
-    } else {
-      score_roll();
-    }
+    score_roll();
   }
   if (gameOn == true) {
     mainArea.style.boxShadow = '0 0 50px 5px goldenrod';
@@ -1521,8 +1502,8 @@ async function diceThrowAnimation() {
   dice.two.classList.toggle('dice-grow');
 }
 
-function display_on_marker() {
-  const onIMG = document.getElementById(`on-${target}`);
+function display_on_marker(number) {
+  const onIMG = document.getElementById(`on-${number}`);
   onIMG.classList.toggle('hidden');
   onIMG.style.zIndex = '20';
   offPuckElement.classList.toggle('hidden');
@@ -1575,7 +1556,6 @@ function come_out_roll() {
       gameOn = true;
       message = 'Point established';
       message_display(message);
-      display_on_marker();
     }
   }
   if (passLine.amount != 0) {
@@ -1592,7 +1572,6 @@ function come_out_roll() {
       gameOn = true;
       message = 'Point Established';
       message_display(message);
-      display_on_marker();
 
       if (placeBet[target].amount != 0) {
         move_behind_pass_line();
@@ -1600,119 +1579,141 @@ function come_out_roll() {
     }
   }
 
-  if (field.amount != 0) {
-    score_field_bet();
-  }
 }
 
 function move_behind_pass_line() {
-  setTimeout (() => { 
-    moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target].amount} 
+  moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target].amount} 
 Place Bet Behind the Pass Line for better odds?`)
 
-    if (moveBehindPassLine == true) {
-      if ((target == 5 || target == 9) && placeBet[target].amount % 2 != 0) {
-        roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
-        if (roundUpBet == true && bankroll != 0) {
-          passLine.odds.amount = placeBet[target].amount + 1;
-          bankroll -= 1; 
-          // *** // Theres a case where this will make the bankroll go negative, consider handling
-          update_bankroll();
-          update_moneyOnTable('add', 1);
-        } else if (bankroll == 0) {
-          passLine.odds.amount = placeBet[target].amount - 1;
-          bankroll += 1;
-          update_bankroll();
-          update_moneyOnTable('add', 1);
-        } else {
-          moveBehindPassLine = false;
-        }
+  if (moveBehindPassLine == true) {
+    if ((target == 5 || target == 9) && placeBet[target].amount % 2 != 0) {
+      roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
+      if (roundUpBet == true && bankroll != 0) {
+        passLine.odds.amount = placeBet[target].amount + 1;
+        bankroll -= 1; 
+        // *** // Theres a case where this will make the bankroll go negative, consider handling
+        update_bankroll();
+        update_moneyOnTable('add', 1);
+      } else if (bankroll == 0) {
+        passLine.odds.amount = placeBet[target].amount - 1;
+        bankroll += 1;
+        update_bankroll();
+        update_moneyOnTable('add', 1);
+      } else {
+        moveBehindPassLine = false;
       }
     }
-    if (moveBehindPassLine == true) {
-      if (passLine.odds.amount == 0) {
-        passLine.odds.amount = placeBet[target].amount;
-      }
-      add_chips_to_table(passLine.odds.chips, passLine.odds.amount, 'face', 'table', 'normal');
-      placeBet[target].amount = 0;
-      remove_chips_from_table(placeBet[target].chips);
-    } else {
-      message = 'Player not moving Place Bet';
-      message_display(message);
+  }
+  if (moveBehindPassLine == true) {
+    if (passLine.odds.amount == 0) {
+      passLine.odds.amount = placeBet[target].amount;
     }
-  }, 1200);
+    add_chips_to_table(passLine.odds.chips, passLine.odds.amount, 'face', 'table', 'normal');
+    placeBet[target].amount = 0;
+    remove_chips_from_table(placeBet[target].chips);
+  } else {
+    message = 'Player not moving Place Bet';
+    message_display(message);
+  }
 }
 
 
+function check_for_on_marker() {
+  if (sum == 4 || sum == 5 || sum == 6 || sum==8 || sum == 9 || sum == 10) {
+    display_on_marker(sum);
+  } else return;
+}
 
-function score_roll() {
-  // Score bets on come line first in case of 7 out
-  if (sum == 7) {
-    clear_table();
-    score_pass_line();
-    gameOn = false;
-    remove_on_marker();
-  }
-
-  big_6_8('score', 'both');
-
-
-  // Place Bets
-  for (const key in placeBet) {
-    if (placeBet[key].amount !== 0 && placeBet[key].amount != undefined && key == sum) {
-      score_place_bets(sum);
-      break;
-    }
-  }
-  // Hard ways bets
-    if (sum == 4 || sum == 6 || sum == 8 || sum == 10) {
-      if (hard[sum].amount != 0 && dice1 != dice2) {
-        message = `${sum} not hard. Lose your $${hard[sum].amount} bet.`;
-        message_display(message);
-        lose_bet(hard[sum]);
-      } else if (hard[sum].amount !== 0 && dice1 == dice2) {
-        score_hardways_bets(sum);
-      }
-    }
-  // One Roll Bets
-  // Field Bet
-  if (field.amount != 0) {
-    score_field_bet();
-  }
-
-  // Come Line
-  // Score the come bets that have been moved first so they don't get moved and
-  // scored on the same roll
-
-  // Come Bet Still working when game goes off - wins when number hit - loses on 7
-  // Come Bet odds go off when game is off
-  // Initial bet returned to the player when win
-
-    
-
-
-
-  if (come.line.amount != 0) {
-    on_the_come_line();
-  }
-
-  // Dont Come Bets
-
-
-  if (dontCome.line.amount != 0) {
-    on_the_dont_come_line();
-  }
-
-
+async function score_roll() {
   if (sum == target) {
-    gameOn = false;
-    score_pass_line();
     message = 'Player hit the target. Game goes off';
     message_display(message);
     remove_on_marker();
-    target = 0;
-    remove_chips_from_table(passLine.odds.chips);
   }
+
+  if (gameOn == false) {
+    check_for_on_marker();
+  }
+  // Score bets on come line first in case of 7 out
+  
+
+  if (field.amount != 0) {
+    await delay(chainDelay);
+    score_field_bet();
+  }
+
+  if (horn[2].amount != 0 || horn[3].amount != 0 || 
+    horn[11].amount != 0 || horn[12].amount != 0 ) {
+      await delay(chainDelay);
+      score_horn_bets();
+    }
+  
+  
+  score_come_bets();
+  score_dont_come_bets();
+  any_craps('score');
+  big_6_8('score', 'both');
+
+  if (sevenBet.amount != 0) {
+    if (sum == 7) seven_bet('score');
+    else seven_bet('clear');
+  }
+
+  
+  if (gameOn == true) {
+    if (sum == 7) {
+      clear_table();
+      score_pass_line();
+      gameOn = false;
+      remove_on_marker();
+    }
+
+    // Place Bets
+    for (const key in placeBet) {
+      if (placeBet[key].amount !== 0 && placeBet[key].amount != undefined && key == sum) {
+        await delay(chainDelay);
+        score_place_bets(sum);
+        alert('shouldnt be hitting')
+        break;
+      }
+    }
+    // Hard ways bets
+      if (sum == 4 || sum == 6 || sum == 8 || sum == 10) {
+        if (hard[sum].amount != 0 && dice1 != dice2) {
+          message = `${sum} not hard. Lose your $${hard[sum].amount} bet.`;
+          message_display(message);
+          lose_bet(hard[sum]);
+        } else if (hard[sum].amount !== 0 && dice1 == dice2) {
+          score_hardways_bets(sum);
+        }
+      }
+
+    if (come.line.amount != 0) {
+      on_the_come_line();
+    }
+
+    if (dontCome.line.amount != 0) {
+      on_the_dont_come_line();
+    }
+
+    if (sum == target) {
+      gameOn = false;
+      await delay(chainDelay);
+      score_pass_line();
+      
+      target = 0;
+      remove_chips_from_table(passLine.odds.chips);
+    }
+  } else {
+    if (chainDelay == 1200) await delay(chainDelay);
+    come_out_roll();
+  }
+  if (winStack.location.length > 0) {
+    await delay(chainDelay);
+    let moveIndex = 0;
+    win_animation_move_chips(moveIndex);
+  }
+
 }
 
 
@@ -1760,8 +1761,6 @@ function dont_pass_odds() {
   }
 }
 
-
-
 function odds_winner(object) {
   payout = object.odds.amount * object.odds[target].multiplier;
   bankroll += payout;
@@ -1772,38 +1771,173 @@ function odds_winner(object) {
   return payout;
 }
 
+
+
 function score_pass_line() { // After game is on
-  if (sum == 7) {
+  if (sum == 7) { // Win on the Don't Pass Bar
     if (dontPassBar.amount != 0) {
       payout = win_bet(dontPassBar);
       message = `Won $${payout} on the Don\'t Pass Bar`;
       message_display(message);
       }
-    if (dontPassBar.odds.amount != 0) {
+    if (dontPassBar.odds.amount != 0) { // Win on Don't Pass Odds
       payout = odds_winner(dontPassBar);
       message_display(`Won $${payout} on Don\'t Pass Odds. Odds Returned`);
     }
   } else {
-    if (dontPassBar.amount != 0) {
+    if (dontPassBar.amount != 0) { // Lose on the Don't Pass Bar
       message = `Lost $${dontPassBar.amount} on the Don\'t Pass Bar`;
       message_display(message);
       lose_bet(dontPassBar);
     }
-    if (dontPassBar.odds.amount != 0) {
+    if (dontPassBar.odds.amount != 0) { // Lose on Don't Pass Odds
       message_display(`Lost $${dontPassBar.odds.amount} on Don\'t Pass Odds`);
       lose_bet(dontPassBar.odds);
     }
-    if (passLine.amount != 0) {
+    if (passLine.amount != 0) { // Win on the Pass Line
       payout = win_bet(passLine);
       message = `Won $${payout} on the Pass Line`;
       message_display(message);
-      if (passLine.odds.amount != 0) {
+      if (passLine.odds.amount != 0) { // Win on Pass Line Odds
         payout = odds_winner(passLine);
         message = `Won $${payout} on Pass Line Odds`;
         message_display(message);
       }
     }
   }
+}
+
+function lose_bet(object) {
+  lose_animation(object);
+  remove_chips_from_table(object.chips);
+  update_moneyOnTable('remove', object.amount);
+  object.amount = 0;
+}
+
+function lose_animation(object) {
+  object.chips.location.animate([
+    { transform: 'translate(0, 0)'},
+    { transform: 'translate(0, -1000px)'}
+  ], 
+  { duration: 800}
+  );
+}
+
+
+function win_bet(object) {
+  payout = object.amount * object.multiplier;
+  // Get the number of chips that will be in the win stack to know how
+  // far to offset the drop
+  let winStructure = get_chip_structure(payout);
+  let winLength = 0;
+  for (const color in winStructure) {
+    winLength += winStructure[color];
+  }
+  let dropTime = 300;
+  
+  winStack.moveX[WSindex] = object.winChips.moveX;
+  winStack.moveY[WSindex] = object.winChips.moveY;
+  chainDelay = winLength * dropTime;
+
+  win_animation_drop_chips(object, winStructure, winLength, dropTime);
+  bankroll += payout; 
+  return payout;
+}
+
+async function win_animation_drop_chips(object, winStructure, winLength, dropTime) {
+  let index = 0;
+  let chipCount = 0;
+  object.winChips.chip = [];
+
+  // Create the vessel that will spawn chips and fall down onto stack next to table bet
+  chipVessel = document.createElement('div');
+  chipVessel.classList.add('win-chip-stack');
+  object.chips.location.appendChild(chipVessel);
+
+  // Create the stack that will hold all the chips when they are done falling down
+  // This is what will move over to the bankroll area
+  winStack.location[WSindex] = document.createElement('div');
+  winStack.location[WSindex].classList.add('win-chip-stack');
+  object.chips.location.appendChild(winStack.location[WSindex]);
+
+  // Get the length of the original bet to space the stack so it doesn't overlap
+  let betStructure = get_chip_structure(object.amount);
+  let betLength = 0;
+  for (const color in betStructure) {
+    betLength += betStructure[color];
+  }
+
+  let xOffset = betLength * xMargin;
+  winStack.xOffset[WSindex] = xOffset;
+  let yOffset = winLength * yMargin;
+  winStack.location[WSindex].style.transform = `translateX(${xOffset}px)`;
+
+  for (const color in winStructure) {
+    if (winStructure[color] != 0) {
+      for (i = 0; i < winStructure[color]; i++) {
+        let rotation = Math.ceil(Math.random() * 6);
+
+        let thisChip = document.createElement('img');
+        
+        thisChip.src = `img/chips/side/blank/${color}_chip_${rotation}.png`;  
+        thisChip.classList.add('win-chip-img');
+        chipVessel.style.zIndex = index+5;
+
+        chipVessel.appendChild(thisChip);
+        chipVessel.animate([
+          { transform: `translate(${xOffset}px, -${(yOffset + 100) + chipCount*yMargin}px)` },
+          { transform: `translate(${xOffset}px, -${chipCount * yMargin}px)` }
+        ], {
+          duration: dropTime
+        });
+
+        await delay(dropTime - 20);
+        thisChip.style.marginBottom = `${chipCount * yMargin}px`;
+        winStack.location[WSindex].appendChild(thisChip);
+        //chipVessel.removeChild(chipVessel.firstChild);
+
+        chipCount++;
+      }
+    }
+  }
+  WSindex++;
+}
+async function win_animation_move_chips(moveIndex) {
+  // Move Win Stack from location next to table bet to the bankroll
+  let start = null;
+  let pause = 200;
+  let yDistance = winStack.moveY[moveIndex];
+  let speed = Math.log(yDistance);
+  //alert(p)
+  time = Math.round(100*speed);
+  chainDelay = time; // Global
+
+  let xOffset = winStack.xOffset[moveIndex];
+  let remaining = time - pause;
+
+  function step(timestamp) {
+    if (start == undefined) start = timestamp;
+    const elapsed = timestamp - start;
+    if (elapsed > pause && elapsed < time) {
+      x = (elapsed-pause)*winStack.moveX[moveIndex]/remaining;
+      y = (elapsed-pause)*winStack.moveY[moveIndex]/remaining;
+      winStack.location[moveIndex].style.transform = `translate(${x + xOffset}px, ${y}px)`;
+      requestAnimationFrame(step);
+    } else requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+  await delay(time);
+  winStack.location[moveIndex].remove();
+  update_bankroll();
+  if (moveIndex < winStack.location.length) {
+    moveIndex++;
+    win_animation_move_chips(moveIndex);
+  } else reset_win_stack();
+}
+
+
+function reset_win_stack() {
+  winStack = {location: [], moveX: [], moveY: [], xOffset: []};
 }
 
 function big_6_8(action, selector) {
@@ -1843,8 +1977,6 @@ function place_bet(selector) {
     placeBet[selector].amount = commit_bet(placeBet[selector].amount);
   }
 }
-
-
 
 
 function score_place_bets(sum) {
@@ -1889,19 +2021,7 @@ function horn_bet(selector) {
 }
 
 
-function lose_bet(object) {
-  remove_chips_from_table(object.chips);
-  update_moneyOnTable('remove', object.amount);
-  object.amount = 0;
 
-}
-
-function win_bet(object) {
-  payout = object.amount * object.multiplier;
-  bankroll += payout;
-  update_bankroll();
-  return payout;
-}
 
 function score_horn_bets() {
   if (sum == 2 || sum == 3 || sum == 11 || sum == 12) {
@@ -1942,14 +2062,13 @@ function score_field_bet() {
   if (sum == 5 || sum == 6 || sum == 7 || sum == 8) {
     message_display('Lost $' + field.amount + ' to the field.');
     lose_bet(field);
-  } else {
+  } else { // Win
     if (sum == 2 || sum == 12) {
-      payout = field.amount * 2;
+      field.multiplier = 2;
     } else {
-      payout = field.amount;
+      field.multiplier = 1;
     }
-    bankroll += payout;
-    update_bankroll();
+    payout = win_bet(field);
     message_display('Won $' + payout + ' in the field.');
   }
 
@@ -2374,7 +2493,9 @@ placeBet[4].button.addEventListener('click', (e) => {
     remove_chips_from_table(placeBet[4].chips);
     placeBet[4].amount = pull_back_bet(placeBet[4].amount);
   } else {
-    place_bet(4);
+    if (stagedBet % 5 != 0) {
+      alert('4 pays out 9:5. Bet must be divisible by 5');
+    } else place_bet(4);
   }
   prevClicked = placeBet[4].button;
 });
@@ -2423,7 +2544,7 @@ placeBet[9].button.addEventListener('click', (e) => {
     placeBet[9].amount = pull_back_bet(placeBet[9].amount);
   } else {
     if (stagedBet % 5 != 0) {
-      alert('9 pays out 7:5. Bet must be divisible by 5')
+      alert('9 pays out 7:5. Bet must be divisible by 5');
     } else {
       place_bet(9);
     }
@@ -2435,7 +2556,9 @@ placeBet[10].button.addEventListener('click', (e) => {
     remove_chips_from_table(placeBet[10].chips);
     placeBet[10].amount = pull_back_bet(placeBet[10].amount);
   } else {
-    place_bet(10);
+    if (stagedBet % 5 != 0) {
+      alert('10 pays out 9:5. Bet must be divisible by 5');
+    } else place_bet(10);
   }
   prevClicked = placeBet[10].button;
 });
