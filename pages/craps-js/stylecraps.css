@@ -975,7 +975,16 @@ button {
     margin-top: -5px;
 }
 
-
+.mouse-location-container {
+    position: absolute;
+    height: 160px;
+    width: 280px;
+    padding: 20px;
+    background-color: rgb(0,0,0,0.7);
+    display: grid;
+    grid-template-columns: 75px 75px 75px 75px;
+    grid-template-rows: 60px 60px 60px;
+}
 
 #staged-bet-container {
     position: absolute;
@@ -997,8 +1006,7 @@ button {
 #staged-bet-chips {
     display: flex;
     align-items: flex-end;
-    position: fixed;
-    transform: translate(-50%, -50%);
+    position: absolute;
     transition: 0.05s linear;
     z-index: 1000;
 }

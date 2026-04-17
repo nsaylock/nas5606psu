@@ -875,6 +875,7 @@ if (firstLoad == true) {
   document.body.style.backgroundImage = "url('"+location+"')";
   load_bankroll_chips();
   firstLoad = false;
+  get_staged_chip_offset();
 });
 }
 
@@ -1160,32 +1161,48 @@ function get_chip_structure(amount) {
 
 // ####################### USEFUL FUNCTIONS ################################
 
-// Detect touch device
-function isTouchDevice() {
-  try {
-    document.createEvent("TouchEvent");
-    return true;
-  } catch (e) {
-    return false;
-  }
+const mouseXLocation = document.getElementById('mouse-x');
+const mouseYLocation = document.getElementById('mouse-y');
+const chipsX = document.getElementById('chips-x');
+const chipsY = document.getElementById('chips-y');
+const differenceX = document.getElementById('difference-x');
+const differenceY = document.getElementById('difference-y');
+
+window.addEventListener('mousemove', (e) => {
+
+
+    // Get coordinates for mouse or touch
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    mouseXLocation.textContent = e.clientX;
+    mouseYLocation.textContent = e.clientY;
+
+    const rect = stagedBetChips.location.getBoundingClientRect();
+    leftValue = Math.round(rect.left);
+    topValue = Math.round(rect.top);
+    chipsX.textContent = leftValue;
+    chipsY.textContent = topValue;
+    differenceX.textContent = leftValue - mouseX;
+    differenceY.textContent = topValue - mouseY;
+
+
+  // Set position, subtracting 50px to center the div (adjust based on div size)
+  stagedBetChips.location.style.transform = `translate(${mouseX-zoom}px, ${mouseY+20}px)`;
+  //alert(zoom)
+});
+
+let zoom;
+
+function get_staged_chip_offset() {
+  let ow = window.outerWidth;
+  
+  zoom = (ow - 1430)*110/213;
 }
 
-const move = (e) => {
-  try {
-    // Get coordinates for mouse or touch
-    var x = !isTouchDevice() ? e.pageX : e.touches.pageX;
-    var y = !isTouchDevice() ? e.pageY : e.touches.pageY;
-  } catch (e) {}
+window.visualViewport.addEventListener('resize', (e) => {
+  get_staged_chip_offset();
   
-  // Set position, subtracting 50px to center the div (adjust based on div size)
-  stagedBetChips.location.style.left = (x+15) + "px";
-  stagedBetChips.location.style.top = (y+50) + "px";
-};
-
-// Add event listeners for mouse and touch
-document.addEventListener("mousemove", (e) => move(e));
-document.addEventListener("touchmove", (e) => move(e));
-
+});
 
 
 function update_bankroll() {
@@ -1420,9 +1437,8 @@ function roll_dice() {
     dice1 = Math.floor(Math.random()*6) + 1;
     dice2 = Math.floor(Math.random()*6) + 1;
     sum = dice1 + dice2;
-
-
     sum = 9;
+
     /* COME TESTING
     if (first == true) {
       sum = 9;
