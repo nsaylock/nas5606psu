@@ -253,7 +253,7 @@ body::before {
     position: absolute;
     height: 100%;
     width: 100%;
-    top: -10px;
+    top: 0px;
     z-index: 0;
 }
 
@@ -369,6 +369,12 @@ button {
     height: 100%;
     width: 100%;
     z-index: 0;
+}
+
+
+
+.test {
+    transform: translate(1003px, -322px);
 }
 
 #come-4, #come-5, #come-6,
@@ -815,17 +821,25 @@ button {
     z-index: 1;
 }
 
-/*
-@keyframes passLine-to-bankroll {
-    0%, 25% { transform: translate(0,0); }
-    100% { transform: translate(85px, 210px); }
+.win-come {
+    position: absolute;
+    bottom: 0px;
+    left: 90px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
 }
 
-.winChips-to-bankroll {
-    animation: passLine-to-bankroll;
-    animation-duration: 1s;
+.win-one-roll {
+    position: absolute;
+    bottom: 30px;
+    left: 65px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
 }
-*/
+
+
 
 #pass-line-button {
     position: absolute;
