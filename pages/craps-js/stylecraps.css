@@ -405,6 +405,9 @@ button {
 }
 
 .rotate-odds-bet {
+    position: absolute;
+    left: 30px;
+    bottom: 10px;
     transform: rotate(80deg);
 }
 
@@ -825,6 +828,14 @@ button {
     position: absolute;
     bottom: 0px;
     left: 90px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+}
+
+.win-come-odds {
+    position: absolute;
+    left: 80px;
     display: flex;
     align-items: flex-end;
     z-index: 1;
