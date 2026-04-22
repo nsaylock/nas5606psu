@@ -1317,11 +1317,11 @@ button {
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
     position: absolute;
-    top: 00px;
-    left: 1400px;
+    top: 950px;
+    left: 0px;
     border-radius: 10px;
-    height: 900px;
-    width: 300px;
+    height: 300px;
+    width: 380px;
     padding: 8px;
     line-height: 20px;    
     z-index: 1000;
