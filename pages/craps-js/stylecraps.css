@@ -237,17 +237,13 @@ body::before {
 }
 
 .dont-come-bet-container {
-    /*
-    border-style: solid;
-    border-color: white;
-    border-width: 0 0 0px 4px;
-    */
+    
     position: relative;
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: flex-start;
-    z-index: 0;
+    z-index: 2;
 }
 #dc-4, #dc-5, #dc-6, #dc-8, #dc-9, #dc-10 {
     position: absolute;
@@ -404,13 +400,19 @@ button {
     z-index: 100;
 }
 
-.rotate-odds-bet {
+.come-odds {
     position: absolute;
     left: 30px;
     bottom: 10px;
     transform: rotate(80deg);
 }
 
+.dc-odds {
+    position: absolute;
+    left: 30px;
+    top: 15px;
+    transform: rotate(80deg);
+}
 
 .place-boxes {
     /*
@@ -452,41 +454,8 @@ button {
     width: 862px;
 }
 
-/* table borders
-
-.dont-come-row, .number-pb-container,
-.middle-field-container, 
-.pass-line-container, .main-bottom-right {
-    border-style: solid;
-    border-color: white;
-    border-width: 4px 6px 3px 0px;
-}
-
-.dont-come-bet-container, .come-bet-container,
-.place-boxes, .dont-come-line, .come-line, #field,
-.pass-line, .dont-pass {
-    border-style: solid;
-    border-color: white;
-    border-width: 0 0 4px 4px;
-}
-#field { border-width: 0 0 0 4px;}
-.dont-come-row { border-width: 4px 6px 0px 0px; }
-.middle-field-container { border-width: 0 4px 4px 0px; }
-
-.main-bottom-right {
-    border-width: 4px 6px 4px 4px;
-}
-
-*/
 .dont-come-line {
     position: relative;
-    /*
-    color:rgb(170, 109, 29);
-    text-shadow: 2px 2px 0px black;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 30px;
-    */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -563,6 +532,9 @@ button {
     */
 
 #come-chips-display {
+    height: 50px;
+    width: 120px;
+    background-color: red;
     position: absolute;
     left: 262px;
     top: 23px;
@@ -1115,7 +1087,7 @@ button {
     width: 550px;
     display: flex;
     align-items: flex-end;
-    z-index: 1;
+    z-index: 20;
     
 }
 
