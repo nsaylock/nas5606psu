@@ -402,8 +402,8 @@ button {
 
 .come-odds {
     position: absolute;
-    left: 30px;
-    bottom: 10px;
+    left: 55px;
+    top: 0px;
     transform: rotate(80deg);
 }
 
@@ -415,11 +415,6 @@ button {
 }
 
 .place-boxes {
-    /*
-    border-style: solid;
-    border-color: white;
-    border-width: 1px 0 3px 4px;
-    */
     position: relative;
     display: flex;
     height: 96%;
@@ -429,7 +424,9 @@ button {
 #place-4-chips, #place-5-chips, #place-6-chips,
 #place-8-chips, #place-9-chips, #place-10-chips {
     position: absolute;
-    top: 5px;
+    display: flex;
+    align-items: flex-end;
+    top: 65px;
     left: 55px;
     z-index: 1;
 }
@@ -532,12 +529,11 @@ button {
     */
 
 #come-chips-display {
-    height: 50px;
-    width: 120px;
-    background-color: red;
     position: absolute;
+    display: flex;
+    align-items: flex-end;
     left: 262px;
-    top: 23px;
+    top: 85px;
     z-index: 1;
 }
 
@@ -852,8 +848,10 @@ button {
 
 #pass-line-odds-chips {
     position: absolute;
-    left: 350px;
-    top: 5px;
+    display: flex;
+    align-items: flex-end;
+    left: 310px;
+    top: 65px;
 }
 #pass-line-odds-button {
     position: absolute;
@@ -1088,7 +1086,20 @@ button {
     display: flex;
     align-items: flex-end;
     z-index: 20;
-    
+}
+
+#bankroll-collection-target {
+    position: absolute;
+    top: 170px;
+    left: 30px;
+}
+
+#round-up {
+    position: absolute;
+    display: flex;
+    align-items: flex-end;
+    top: 100px;
+    left: 100px;
 }
 
 .chip-stack {
