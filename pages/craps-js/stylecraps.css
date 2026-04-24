@@ -801,6 +801,15 @@ button {
     z-index: 1;
 }
 
+.win-line {
+    position: absolute;
+    bottom: 0px;
+    left: 65px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+}
+
 .win-come-odds {
     position: absolute;
     left: 80px;
@@ -1089,8 +1098,13 @@ button {
 }
 
 #bankroll-collection-target {
+    /*
+    height: 5px;
+    width: 5px;
+    background-color: red;
+    */
     position: absolute;
-    top: 170px;
+    top: 140px;
     left: 30px;
 }
 

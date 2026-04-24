@@ -438,6 +438,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-4-chips'),
         chip: [],
+        rotation: [],
         leftSpacing: 70
       }
     },
@@ -449,6 +450,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-5-chips'),
         chip: [],
+        rotation: [],
         leftSpacing: 70
       }
     },
@@ -460,6 +462,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-6-chips'),
         chip: [],
+        rotation: [],
         leftSpacing: 70
       }
     },
@@ -471,6 +474,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-8-chips'),
         chip: [],
+        rotation: [],
         leftSpacing: 70
       }
     },
@@ -482,6 +486,7 @@ let placeBet = {
       chips : {
         location: document.getElementById('place-9-chips'),
         chip: [],
+        rotation: [],
         leftSpacing: 70
       }
     },
@@ -493,6 +498,7 @@ let placeBet = {
       chips: {
         location: document.getElementById('place-10-chips'),
         chip: [],
+        rotation: [],
         leftSpacing: 70
       }
     }
@@ -509,6 +515,7 @@ let come = {
     chips: {
       location: document.getElementById('come-chips-display'),
       chip: [],
+      rotation: [],
       leftSpacing: 262
     }
   },
@@ -646,6 +653,7 @@ let dontCome = {
     chips: {
       location: document.getElementById('dont-come-chips-display'),
       chip: [],
+      rotation: [],
       leftSpacing: 58
     },
   },
@@ -664,7 +672,7 @@ let dontCome = {
       multiplier: 0.5,
       chips: {
         class: 'dc-odds',
-        location: document.getElementById('dc-4'),
+        location: document.getElementById('dc-4-odds'),
         chip: [],
         leftSpacing: 80
       },
@@ -685,7 +693,7 @@ let dontCome = {
       multiplier: 2/3,
       chips: {
         class: 'dc-odds',
-        location: document.getElementById('dc-5'),
+        location: document.getElementById('dc-5-odds'),
         chip: [],
         leftSpacing: 80
       },
@@ -706,7 +714,7 @@ let dontCome = {
       multiplier: 5/6,
       chips: {
         class: 'dc-odds',
-        location: document.getElementById('dc-6'),
+        location: document.getElementById('dc-6-odds'),
         chip: [],
         leftSpacing: 80
       },
@@ -727,7 +735,7 @@ let dontCome = {
       multiplier: 5/6,
       chips: {
         class: 'dc-odds',
-        location: document.getElementById('dc-8'),
+        location: document.getElementById('dc-8-odds'),
         chip: [],
         leftSpacing: 80
       },
@@ -748,7 +756,7 @@ let dontCome = {
       multiplier: 2/3,
       chips: {
         class: 'dc-odds',
-        location: document.getElementById('dc-9'),
+        location: document.getElementById('dc-9-odds'),
         chip: [],
         leftSpacing: 80
       },
@@ -769,7 +777,7 @@ let dontCome = {
       multiplier: 0.5,
       chips: {
         class: 'dc-odds',
-        location: document.getElementById('dc-10'),
+        location: document.getElementById('dc-10-odds'),
         chip: [],
         leftSpacing: 80
       },
@@ -779,35 +787,37 @@ let dontCome = {
 
 const stagedBetChips = {
   location: document.getElementById('staged-bet-chips'),
-  chip: []
+  chip: [],
+  rotation: [],
+  prevLength: 0
 }
 
 const bankrollDiv = document.getElementById('bankroll-chips');
 
 let bankrollChips = {
-  oneHundredK: [],
-  fiftyK: [],
-  platinum: [],
-  brown: [],
-  gold: [],
-  purple: [],
-  black: [],
-  green: [],
-  red: [],
-  white: []
+  oneHundredK: {chip: [], rotation: []},
+  fiftyK: {chip: [], rotation: []},
+  platinum: {chip: [], rotation: []},
+  brown: {chip: [], rotation: []},
+  gold: {chip: [], rotation: []},
+  purple: {chip: [], rotation: []},
+  black: {chip: [], rotation: []},
+  green: {chip: [], rotation: []},
+  red: {chip: [], rotation: []},
+  white: {chip: [], rotation: []},
 }
 
 let bankrollStack = {
-  oneHundredK: 0,
-  fiftyK: 0,
-  platinum: 0,
-  brown: 0,
-  gold: 0,
-  purple: 0,
-  black: 0,
-  green: 0,
-  red: 0,
-  white: 0
+  oneHundredK: {div: 0, prevLength: 0},
+  fiftyK: {div: 0, prevLength: 0},
+  platinum: {div: 0, prevLength: 0},
+  brown: {div: 0, prevLength: 0},
+  gold: {div: 0, prevLength: 0},
+  purple: {div: 0, prevLength: 0},
+  black: {div: 0, prevLength: 0},
+  green: {div: 0, prevLength: 0},
+  red: {div: 0, prevLength: 0},
+  white: {div: 0, prevLength: 0}
 }
 
 
@@ -931,28 +941,50 @@ function play_increment_sound() {
 
 function update_staged_bet_chips() {
   if (stagedBet != prevStagedBet) {
+    let thisLength = 0;
     let index = 0;
     let chipCount = 0;
+    let rotation;
     for (const img in stagedBetChips.chip) {
       stagedBetChips.chip[img].remove();
     }
     //stagedBetChips.chip = []
     let chipStructure = get_chip_structure(stagedBet); // of the stagedBet
+
+    for (const color in chipStructure) {
+      if (chipStructure[color] != 0) {
+        thisLength += chipStructure[color];
+      }
+    }
+    //alert(thisLength);
+
+    difference = thisLength - stagedBetChips.prevLength;
+    if (difference >= 0) keep = stagedBetChips.prevLength;
+    if (difference < 0) keep = stagedBetChips.prevLength - Math.abs(difference);
+
     for (const color in chipStructure) {
       if (chipStructure[color] != 0) {
         for (i = 0; i < chipStructure[color]; i++) {
           index = stagedBetChips.chip.length;
+          
           stagedBetChips.chip[index] = document.createElement('img');
           thisChip = stagedBetChips.chip[index];
 
 
-          let rotation = Math.ceil(Math.random() * 6);
+        if (i < keep) {
+          rotation = stagedBetChips.rotation[i];
+        } else {
+          rotation = Math.ceil(Math.random() * 6);
+          stagedBetChips.rotation[i] = rotation;
+        }
+
 
           thisChip.src = `img/chips/side/${chipDisplay}/${color}_chip_${rotation}.png`;
           thisChip.classList.add('side-chip-img');
           thisChip.style.marginBottom = `${chipCount * 6}px`;
           stagedBetChips.location.appendChild(thisChip);
           chipCount += 1;
+          stagedBetChips.prevLength = chipCount;
         }
       }
     }
@@ -974,18 +1006,20 @@ function load_bankroll_chips() {
   for (i = 0; i < 5; i++) {
     bankrollChips.black[i] = document.createElement('img');
     let rotation = Math.ceil(Math.random() * 6);
+    bankrollChips.black.rotation[i] = rotation;
     bankrollChips.black[i].src = `img/chips/side/blank/black_chip_${rotation}.png`;
     bankrollChips.black[i].classList.add('bankroll-chip-img');
     bankrollChips.black[i].style.marginBottom = `${i*5}px`;
     bankrollStack.black.appendChild(bankrollChips.black[i]);
   }
-
+  bankrollStack.black.prevLength = 5;
 }
 
-function update_bankroll_chips(amount) {
-  //object is bankrollChips {stack[], plat[], brown[], gold[], purple[], etc}
-  let chipStructure = get_chip_structure(amount);
 
+function update_bankroll_chips(amount) {
+  let chipStructure = get_chip_structure(amount);
+  let rotation;
+  let keep;
   // ----------- generate whole new bankroll each timee -------------
   for (const divs in bankrollStack) {
     if (bankrollDiv.firstChild) {
@@ -995,25 +1029,36 @@ function update_bankroll_chips(amount) {
   for (const color in chipStructure) {
     if (chipStructure[color] != 0) {
       
-      bankrollStack[color] = document.createElement('div');
-      thisStack = bankrollStack[color];
+      bankrollStack[color].div = document.createElement('div');
+      thisStack = bankrollStack[color].div;
       thisStack.classList.add('chip-stack');
       bankrollDiv.appendChild(thisStack);
       
+      difference = chipStructure[color] - bankrollStack[color].prevLength;
+      
+      if (difference >= 0) keep = bankrollStack[color].prevLength;
+      if (difference < 0) keep = bankrollStack[color].prevLength + difference;
       for (i = 0; i < chipStructure[color]; i++) {
-        bankrollChips[color][i] = document.createElement('img');
-        thisChip = bankrollChips[color][i];
+        bankrollChips[color].chip[i] = document.createElement('img');
+        thisChip = bankrollChips[color].chip[i];
 
-        let rotation = Math.ceil(Math.random() * 6);
+        if (i < keep) {
+          rotation = bankrollChips[color].rotation[i];
+        } else {
+          rotation = Math.ceil(Math.random() * 6);
+          bankrollChips[color].rotation[i] = rotation;
+        }
 
         thisChip.src = `img/chips/side/blank/${color}_chip_${rotation}.png`;
         thisChip.classList.add('bankroll-chip-img');
         thisChip.style.marginBottom = `${i*5.4}px`;
         thisStack.appendChild(thisChip);
+        prevLength = i + 1;
       }
-        
+      bankrollStack[color].prevLength = prevLength;
     }
   }
+
   check_roll_button();
   
 }
@@ -1026,7 +1071,7 @@ function check_roll_button() {
   }
 }
 
-function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
+function add_chips_to_table(object, bet, orientation, imgClass, rotation) {
 //chip structure
 // object.location is the div element where the chips are going
 // object.chip is an array where each chip img will get stored
@@ -1049,12 +1094,18 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
         thisChip = object.chip[index];
 
         if (orientation == 'side') {
-          let rotation = Math.ceil(Math.random() * 6);
-          thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip_${rotation}.png`;  
+          let rotate = Math.ceil(Math.random() * 6);
+          thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip_${rotate}.png`;  
         } else {
           thisChip.src = `img/chips/${orientation}/${chipDisplay}/${color}_chip.png`;
-          rotation = Math.ceil(Math.random() * 60);
-          thisChip.style.transform = `rotate(${rotation}deg)`;
+
+          if (Array.isArray(rotation)) {
+            rotate = rotation[index];
+          } else {
+            rotate = Math.ceil(Math.random() * 60);
+            if (object.rotation != undefined) object.rotation[index] = rotate;
+          }
+          thisChip.style.transform = `rotate(${rotate}deg)`;
         }
         
         thisChip.classList.add(`${imgClass}-chip-img`);
@@ -1063,7 +1114,7 @@ function add_chips_to_table(object, bet, orientation, imgClass, oddsRotation) {
           thisChip.style.marginBottom = `${chipCount *8}px`;
           object.location.style.bottom = `${object.bottom - (chipCount-1) *4}px`;
         } else {
-          if (oddsRotation == 'rotated') {
+          if (rotation == 'odds-rotation') {
             if (object.class == 'dc-odds') thisChip.classList.add('dc-odds');
             else thisChip.classList.add(`come-odds`);
             thisChip.style.marginLeft = `${chipCount *6}px`;
@@ -1315,7 +1366,7 @@ function message_display(message) {
   const newDiv = document.createElement('div');
   newDiv.textContent = newMessage;
   messageBoxDiv.insertBefore(newDiv, messageBoxDiv.firstChild);
-  if (messageBoxDiv.childElementCount > 40) {
+  if (messageBoxDiv.childElementCount > 12) {
     messageBoxDiv.removeChild(messageBoxDiv.lastChild);
   }
 
@@ -1421,15 +1472,13 @@ function roll_dice() {
     dice1 = Math.floor(Math.random()*6) + 1;
     dice2 = Math.floor(Math.random()*6) + 1;
 
-    if (totalRolls == 1) dice1 = 2, dice2 = 3;
-    if (totalRolls == 2) dice1 = 2, dice2 = 2;
-    if (totalRolls == 3) dice1 = 2, dice2 = 2;
+    //if (totalRolls == 1) dice1 = 2, dice2 = 2;
+    //if (totalRolls == 2) dice1 = 2, dice2 = 2;
+    //if (totalRolls == 3) dice1 = 2, dice2 = 2;
     //if (totalRolls == 4) dice1 = 4, dice2 = 4;
     //if (totalRolls == 5) dice1 = 4, dice2 = 5;
     //if (totalRolls == 6) dice1 = 5, dice2 = 5;
     //if (totalRolls > 2) dice1 = 3, dice2 = 4;
-    
-
     sum = dice1 + dice2;
 
     if (sum == 7) {
@@ -1599,6 +1648,7 @@ let roundUp = {
   chips: {
     location: document.getElementById('round-up'),
     chip: [],
+    rotation: [],
     leftSpacing: 100
   }
 
@@ -1786,7 +1836,7 @@ function reset_animation_variables() {
 // PASS LINE AND DONT PASS BAR
 function pass_line() { // adds bet to pass line
   if (stagedBet >= minBet) {
-    add_chips_to_table(passLine.chips, stagedBet, 'face', 'table', 'not-rotated');
+    add_chips_to_table(passLine.chips, stagedBet, 'face', 'table', 'normal');
     passLine.amount = commit_bet(passLine.amount);
     check_roll_button();
 
@@ -1819,7 +1869,7 @@ function dont_pass_line() {
 
 function dont_pass_odds() {
   if (stagedBet >= minBet) {
-    add_chips_to_table(dontPassBar.odds.chips, stagedBet, 'side', 'odds', 'rotated');
+    add_chips_to_table(dontPassBar.odds.chips, stagedBet, 'side', 'odds', 'odds-rotation');
     dontPassBar.odds.amount = commit_bet(dontPassBar.odds.amount);
   }
 }
@@ -2077,6 +2127,8 @@ async function win_animation_move_chips(z) {
   await delay(time - 10); // Might be causing glitch issues
   win[z].div.remove();
 
+  bankroll += win[z].payout;
+  update_bankroll();
 
   if (win[z].action == 'return') {
     return_chips_to_bankroll(win[z].object, time, z);
@@ -2090,8 +2142,7 @@ async function win_animation_move_chips(z) {
 
   // Gonna give issues when combined payout on come and dont come hits
 
-  bankroll += win[z].payout;
-  update_bankroll();
+  
 
   if (z < win.length-1) {
     z++;
@@ -2103,8 +2154,7 @@ async function win_animation_move_chips(z) {
 
 async function return_chips_to_bankroll(object, time, z) {
   let chipsToReturn = object.chips.location.getBoundingClientRect();
-  let distanceX = bankrollCollectionTargetRect.left - chipsToReturn.left;
-  let x = distanceX + win[z].xOffset*3 + 60;
+  let x = bankrollCollectionTargetRect.left - chipsToReturn.left;
   let y = bankrollCollectionTargetRect.top - chipsToReturn.top;
   object.chips.location.animate([
     { transform: 'translate(0, 0)'},
@@ -2135,6 +2185,8 @@ function get_win_stack_class(name) {
   if (name == 'come') stackClass = 'win-come';
   else if (name == 'come-odds') stackClass = 'win-come-odds';
   else if (name == 'one-roll') stackClass = 'win-one-roll';
+  else if (name == 'come-line' || name == 'dont-come-line' || 
+    name == 'pass-line-odds' || name == 'place-bet') stackClass = 'win-line';
   else stackClass = 'win-chip-stack';
   return stackClass;
 }
@@ -2174,7 +2226,7 @@ function place_bet(selector) {
   } else if (passLine.odds.amount != 0 && target == selector) {
     // Do Nothing
   } else {
-    add_chips_to_table(placeBet[selector].chips, stagedBet, 'face', 'table', 'not-rotated');
+    add_chips_to_table(placeBet[selector].chips, stagedBet, 'face', 'table', 'normal');
     placeBet[selector].amount = commit_bet(placeBet[selector].amount);
   }
 }
@@ -2217,7 +2269,7 @@ function horn_bet(selector) {
     if (horn[selector].amount != 0) {
       press_bet(horn[selector], 'face', 'table', 'normal');
   } else {
-      add_chips_to_table(horn[selector].chips, stagedBet, 'face', 'table', 'not-rotated');
+      add_chips_to_table(horn[selector].chips, stagedBet, 'face', 'table', 'normal');
       horn[selector].amount = commit_bet(horn[selector].amount);
     }
   }
@@ -2295,7 +2347,7 @@ function come_bet() { // Place the Staged Bet on the Come Line
     alert(`You already have a Bet on the Come Line.
 Pull back bet to change.`);
   } else {
-    add_chips_to_table(come.line.chips, stagedBet, 'face', 'table', 'not-rotated');
+    add_chips_to_table(come.line.chips, stagedBet, 'face', 'table', 'normal');
     come.line.amount = commit_bet(come.line.amount);
   }
 }
@@ -2331,7 +2383,7 @@ Bet must be divisible by 5`);
           break;
       }
       if (goodToPlace == true) {
-        add_chips_to_table(come[selection].odds.chips, stagedBet, 'side', 'odds', 'rotated');
+        add_chips_to_table(come[selection].odds.chips, stagedBet, 'side', 'odds', 'odds-rotation');
         come[selection].odds.amount = stagedBet;
         update_bankroll();
         update_moneyOnTable('add', stagedBet);
@@ -2381,11 +2433,11 @@ function load_move_chips_array(object, name) {
   let distanceX = endingLocationRect.left - startingLocationRect.left;
   let distanceY = endingLocationRect.bottom - startingLocationRect.bottom;
 
-  if (name == 'come') time = 700;
-  else if (name == 'place-bet') time = 1000;
+  if (name == 'come') time = 600;
+  else if (name == 'place-bet') time = 600;
   else if (name == 'dc') {
     time = Math.log(Math.abs(distanceX))*100;
-  } else if (name == 'round-up') time = 500;
+  } else if (name == 'round-up') time = 400;
 
   totalMoveChipsTime += time;
 
@@ -2434,6 +2486,10 @@ async function move_chips(i) {
       amount = roundUp.amount;
       endObject = passLine.odds;
       add_chips_to_table(roundUp.chips, roundUp.amount, 'face', 'table', 'normal');
+      roundUpRotate = chips.rotation;
+      chips.rotation = [];
+      chips.rotation.push(placeBet[target].rotation);
+      chips.rotation.push(roundUpRotate);
       break;
   }
 
@@ -2454,7 +2510,7 @@ async function move_chips(i) {
 
   endObject.amount += amount;
 
-  add_chips_to_table(endObject.chips, endObject.amount, 'face', 'table', 'normal');
+  add_chips_to_table(endObject.chips, endObject.amount, 'face', 'table', chips.rotation);
   if (name == 'round-up') {
     remove_chips_from_table(roundUp.chips);
   }
@@ -2530,7 +2586,7 @@ function dont_come_bet() {
     alert(`You already have a Bet on the Don\'t Come Line.
 Pull back bet to change.`);
   } else {
-    add_chips_to_table(dontCome.line.chips, stagedBet, 'face', 'table', 'not-rotated');
+    add_chips_to_table(dontCome.line.chips, stagedBet, 'face', 'table', 'normal');
     dontCome.line.amount = commit_bet(dontCome.line.amount);
   }
 }
@@ -2572,7 +2628,7 @@ Bet must be divisible by 2`);
         }
       }
       if (goodToPlace == true) {
-        add_chips_to_table(dontCome[selection].odds.chips, stagedBet, 'side', 'odds', 'rotated');
+        add_chips_to_table(dontCome[selection].odds.chips, stagedBet, 'side', 'odds', 'odds-rotation');
         dontCome[selection].odds.amount = commit_bet(dontCome[selection].odds.amount);
         goodToPlace = false;
       }
