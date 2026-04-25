@@ -246,10 +246,11 @@ body::before {
     z-index: 2;
 }
 #dc-4, #dc-5, #dc-6, #dc-8, #dc-9, #dc-10 {
+    display: flex;
+    align-items: flex-end;
     position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0px;
+    top: 60px;
+    left: 35px;
     z-index: 0;
 }
 
@@ -402,15 +403,15 @@ button {
 
 .come-odds {
     position: absolute;
-    left: 55px;
+    left: 65px;
     top: 0px;
     transform: rotate(80deg);
 }
 
 .dc-odds {
     position: absolute;
-    left: 30px;
-    top: 15px;
+    left: 0px;
+    top: 10px;
     transform: rotate(80deg);
 }
 
@@ -452,6 +453,7 @@ button {
 }
 
 .dont-come-line {
+    
     position: relative;
     display: flex;
     align-items: center;
@@ -492,8 +494,11 @@ button {
     margin-top: 20px;
 }
 #dont-come-chips-display {
+    
+    display: flex;
+    align-items: flex-end;
     position: absolute;
-    top: 70px;
+    top: 120px;
     left: 60px;
 }
 
@@ -810,6 +815,15 @@ button {
     z-index: 1;
 }
 
+.win-dc {
+    position: absolute;
+    bottom: 0px;
+    left: 90px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+}
+
 .win-come-odds {
     position: absolute;
     left: 80px;
@@ -1098,13 +1112,13 @@ button {
 }
 
 #bankroll-collection-target {
-    /*
+    
     height: 5px;
     width: 5px;
     background-color: red;
-    */
+    
     position: absolute;
-    top: 140px;
+    top: 150px;
     left: 30px;
 }
 
