@@ -1655,27 +1655,19 @@ let roundUp = {
 }
 
 function move_behind_pass_line() {
-  moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target].amount} 
-Place Bet Behind the Pass Line for better odds?`)
-
-  if (moveBehindPassLine == true) {
-    if ((target == 5 || target == 9) && placeBet[target].amount % 2 != 0) {
-      roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
-      if (roundUpBet == true && bankroll != 0) {
-        bankroll -= 1; 
-        // *** // Theres a case where this will make the bankroll go negative, consider handling
-        
-        update_bankroll();
-        update_moneyOnTable('add', 1);
-      } else if (bankroll == 0) {
-        passLine.odds.amount = placeBet[target].amount - 1;
-        bankroll += 1;
-        update_bankroll();
-        update_moneyOnTable('add', 1);
-      } else {
-        moveBehindPassLine = false;
-
-      }
+  if (roundUpBet == true) {
+    if (roundUpBet == true && bankroll != 0) {
+      bankroll -= 1; 
+      // *** // Theres a case where this will make the bankroll go negative, consider handling
+      update_bankroll();
+      update_moneyOnTable('add', 1);
+    } else if (bankroll == 0) {
+      passLine.odds.amount = placeBet[target].amount - 1;
+      bankroll += 1;
+      update_bankroll();
+      update_moneyOnTable('add', 1);
+    } else {
+      moveBehindPassLine = false;
     }
   }
 
@@ -1797,9 +1789,20 @@ async function score_roll() {
   }
 
   if (askToMovePlaceBet == true) {
-    move_behind_pass_line();
+    moveBehindPassLine = confirm(`Would you like to move your $${placeBet[target].amount} 
+Place Bet Behind the Pass Line for better odds?`);
+    if (moveBehindPassLine == true) {
+      if ((target == 5 || target == 9) && placeBet[target].amount % 2 != 0) {
+        roundUpBet = confirm(`You need to round up your bet. Ok to confirm. Otherwise bet stays as is`);
+      }
+      move_behind_pass_line();
+      await delay(100);
+    }
+    moveBehindPassLine = false;
     askToMovePlaceBet = false;
+    roundUpBet = false;
   }
+  
 
   if (moveChipsArr.length > 0) {
     move_chips(0);
@@ -1998,6 +2001,7 @@ function master_timing_function(object, payout, action) {
 
   let startingLocation = object.chips.location;
   let startingLocationRect = startingLocation.getBoundingClientRect();
+  let bankrollCollectionTargetRect = bankrollCollectionTarget.getBoundingClientRect();
   let distanceY = bankrollCollectionTargetRect.top - startingLocationRect.top;
 
   // Animation Speed Control
@@ -2056,6 +2060,19 @@ async function win_animation_drop_chips(z) {
   let yOffset = win[z].winLength * yMargin;
   win[z].div.style.transform = `translateX(${xOffset}px)`;
   
+  winText = document.createElement('div');
+  winText.classList.add('win-text');
+  winText.style.transform = `translate(${xOffset+50}px, -${yOffset+50}px)`;
+  winText.textContent = '+$' + win[z].payout;
+  win[z].object.chips.location.appendChild(winText);
+  winText.animate([
+    {transform: `translate(${xOffset+50}px, -${yOffset+50}px)`},
+    { transform: `translate(${xOffset+50}px, -${yOffset+100}px)`}
+  ], {duration: 750}
+);
+  setTimeout(() => {
+    winText.remove();
+  }, 750);
 
   for (const color in win[z].winStructure) {
     if (win[z].winStructure[color] != 0) {
@@ -2099,7 +2116,7 @@ async function win_animation_drop_chips(z) {
 }
 
 const bankrollCollectionTarget = document.getElementById('bankroll-collection-target');
-const bankrollCollectionTargetRect = bankrollCollectionTarget.getBoundingClientRect();
+
 
 
 async function win_animation_move_chips(z) {
@@ -2107,6 +2124,7 @@ async function win_animation_move_chips(z) {
   let time = win[z].time;
   let xOffset2 = win[z].xOffset;
   let startingLocation = win[z].div.getBoundingClientRect();
+  let bankrollCollectionTargetRect = bankrollCollectionTarget.getBoundingClientRect();
   let distanceX = bankrollCollectionTargetRect.left - startingLocation.left;
   let distanceY = bankrollCollectionTargetRect.top - startingLocation.top;
 
@@ -2154,6 +2172,7 @@ async function win_animation_move_chips(z) {
 
 async function return_chips_to_bankroll(object, time, z) {
   let chipsToReturn = object.chips.location.getBoundingClientRect();
+  let bankrollCollectionTargetRect = bankrollCollectionTarget.getBoundingClientRect();
   let x = bankrollCollectionTargetRect.left - chipsToReturn.left;
   let y = bankrollCollectionTargetRect.top - chipsToReturn.top;
   object.chips.location.animate([
@@ -2441,18 +2460,13 @@ function load_move_chips_array(object, name) {
   } else if (name == 'round-up') time = 400;
 
   totalMoveChipsTime += time;
-
-
   moveChipsArr[moveChipsIndex] = {
     name: name,
     finalX: distanceX,
     finalY: distanceY,
     time: time
   }
- 
-
   moveChipsIndex++;
-
 }
 
 
@@ -2509,14 +2523,15 @@ async function move_chips(i) {
 
   await delay(time + 20);
 
-  endObject.amount += amount;
-
-  add_chips_to_table(endObject.chips, endObject.amount, 'face', 'table', chips.rotation);
-  if (name == 'round-up') {
-    remove_chips_from_table(roundUp.chips);
-  }
-  message_display(`$${amount} ${name} moved`);
+  
   remove_chips_from_table(chips);
+
+  if (name == 'round-up') {
+    remove_chips_from_table(endObject.chips);
+  }
+  endObject.amount += amount;
+  add_chips_to_table(endObject.chips, endObject.amount, 'face', 'table', chips.rotation);
+  message_display(`$${amount} ${name} moved`);
   chips.location.style.transform = 'translate(0,0)';
   //alert('return chip display to original position')
   amount = 0;

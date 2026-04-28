@@ -55,10 +55,8 @@ a {
     border-color: none;
     border-style: none;
     border-width: none;
-    transition: border-width 1s ease, border-color 1s ease, border-style 1s ease, 
-                transform 0.2s ease;
-
 }
+
 a:hover {
     border-width: 0 0 1px 0;
     border-style: solid;

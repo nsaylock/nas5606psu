@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="stylehome.css">
+</head>
+<body>
+
+<div class="main">
+  <div id="programming">Programming</div>
+  <div id="programming-hover"></div>
+
+  <div id="career-border"></div>
+  <div id="career">Career</div>
+  <div id="career-hover"></div>
+  
+  <div id="music-border"></div>
+  <div id="music">Music</div>
+  <div id="music-hover"></div>
+
+  <div class="test-div">T E S T</div>
+
+  
+</div>
+
+
+
+
+</body>
+<script>
+  const programming = document.getElementById('programming');
+  const programmingHoverDiv = document.getElementById('programming-hover');
+  const career = document.getElementById('career');
+  const careerBorder = document.getElementById('career-border');
+  const careerHoverDiv = document.getElementById('career-hover');
+
+
+  const music = document.getElementById('music');
+  const musicBorder = document.getElementById('music-border');
+
+  let time = 10000
+  let recoverTime = 0;
+  let recoverSpeed = 3;
+  let programAnimationId;
+  let p = 0;
+  let xLeave = 0;
+  let yLeave = 0;
+  let careerAnimationId;
+  let h;
+  let w;
+  let complete;
+  let mouseLeft;
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  document.addEventListener('mouseleave', (e) => {
+    let_recover();
+  });
+
+ 
+  programmingHoverDiv.addEventListener('mouseenter', (e) => {
+    let_recover();
+    start_animation('programming');
+  });
+
+  careerHoverDiv.addEventListener('mouseenter', (e) => {
+      let_recover();
+      start_animation('career');
+    });
+
+  
+
+  async function start_animation(animation) {
+    h = window.visualViewport.height;
+    w = window.visualViewport.width;
+    await delay(wait);
+    switch (animation) {
+      case 'programming':
+        pOffset = p;
+        program_animation('grow', time);
+        cancelAnimationFrame(careerAnimationId);
+        break;
+      case 'career':
+        xOffset = xLeave;
+        yOffset = yLeave;
+        career.style.zIndex = 5;
+        careerBorder.style.zIndex = 5;
+        careerHoverDiv.style.zIndex = 50;
+        career_animation('grow', time, w, h);
+        cancelAnimationFrame(programAnimationId);
+    }
+    
+  }
+
+  let wait = 0;
+
+  async function let_recover() {
+    if (mouseLeft == 'career') {
+      wait = complete;
+      xOffset = xLeave;
+      yOffset = yLeave;
+      career_animation('recover', complete, w, h);
+    } else if (mouseLeft == 'programming') {
+      wait = recoverTime;
+      pOffset = p;
+      program_animation('recover', recoverTime);
+    }
+    await delay(wait);
+  }
+
+  programmingHoverDiv.addEventListener('mouseleave', function() {mouseLeft = 'programming'});
+  careerHoverDiv.addEventListener('mouseleave', (e) => {mouseLeft = 'career'});
+  
+  function program_animation(action, duration) {
+    cancelAnimationFrame(programAnimationId);
+    if (action == 'grow') multiplier = 1;
+    else multiplier = 1;
+    let start = null;
+    function step(timestamp) {
+      if (start == undefined) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < duration) {
+        if (action == 'grow') {
+          x = elapsed/duration*100*multiplier + pOffset;
+        } else {
+          x = pOffset - elapsed/duration*pOffset*multiplier;
+        }
+      }
+      career.style.clipPath = `polygon(0% 0%, 0% ${100 - x}%, ${100 - x}% 0%)`;
+      careerBorder.style.transform = `scale(1.1) translate(-${x/2.2}%, -${x/2.2}%)`;
+      music.style.clipPath = `polygon(100% ${x}%, ${x}% 100%, 100% 100%)`;
+      musicBorder.style.transform = `scale(1.1) translate(${x/2.2}%, ${x/2.2}%)`;
+      programAnimationId = requestAnimationFrame(step);
+      p = x;
+      recoverTime = x/100*duration;
+
+    }
+    requestAnimationFrame(step);
+  }
+
+  function career_animation(action, duration, w, h) {
+    cancelAnimationFrame(careerAnimationId);
+
+    if (action == 'grow') multiplier = 1;
+    if (action == 'recover') {
+      multiplier = -1;
+    }
+    let start = null;
+    function step(timestamp) {
+      if (start == undefined) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed <= duration) {
+          percent = elapsed/duration;
+          if (action == 'grow') {
+            x2 = percent*multiplier*w*1.3;
+            y = percent*multiplier*h*1.3;
+            xLeave = xOffset + x2;
+            yLeave = yOffset + y;
+          } else {
+            x2 = percent*xOffset * multiplier;
+            y = percent*yOffset * multiplier;
+            xLeave = xOffset + x2;
+            yLeave = yOffset + y;
+          }
+          
+      }
+      career.style.height = `${h*0.8 + y + yOffset}px`;
+      career.style.width = `${w*0.6 + x2 + xOffset}px`;
+      careerBorder.style.height = `${h*0.8 + y + yOffset}px`;
+      careerBorder.style.width = `${w*0.6 + x2 + xOffset}px`;
+      careerAnimationId = requestAnimationFrame(step);
+      complete = yLeave/(h*0.8 + y + yOffset)*duration;
+    }
+    requestAnimationFrame(step);
+  }
+
+</script>
+</html>

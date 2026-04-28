@@ -1,0 +1,85 @@
+html {
+  width: 100dvw;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  max-width: 100%;
+  margin: 0;
+}
+
+.main {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+#programming {
+  background-color: rgb(116, 36, 36);
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+#programming-hover {
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  clip-path: polygon(evenodd, 61% 0%, 100% 0%, 100% 18.8%, 39% 100%, 0 100%, 0 81.2%);
+  z-index: 120;
+}
+
+#career, #career-border, #career-hover {
+  background-color: rgb(34, 34, 107);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 80vh;
+  width: 60vw;
+  clip-path: polygon(0% 0%, 0% 100%, 100% 0%);
+}
+
+#career-border {
+  background-color: black;
+  top: 8px;
+  left: 8px;
+  transform: scale(1.1);
+}
+
+.test-div {
+  position: absolute;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  height: 100px;
+  width: 100px;
+  border: 2px solid white;
+  box-shadow: 10px 10px 0 black;
+}
+
+#music, #music-hover, #music-border {
+  background-color: rgb(37, 80, 37);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 80vh;
+  width: 60vw;
+  clip-path: polygon(100% 0%, 0% 100%, 100% 100%);
+}
+
+#music-border {
+  background-color: black;
+  bottom: 8px;
+  right: 8px;
+  transform: scale(1.1);
+}
+
+#career-hover, #music-hover {
+  background-color: rgba(255, 255, 255, 0.253);
+}
