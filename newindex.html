@@ -10,17 +10,22 @@
 
 <div class="main">
   <div id="programming">Programming</div>
-  <div id="programming-hover"></div>
+  <div id="programming-overlay"></div>
+  <button id="programming-button"></button>
+  <article id="programming-text">Computer<br>Programming</article>
 
   <div id="career-border"></div>
-  <div id="career">Career</div>
-  <div id="career-hover"></div>
+  <div id="career"></div>
+  <div id="career-overlay"></div>
+  <button id="career-button"></button>
+  <article id="career-text">Employment</article>
   
   <div id="music-border"></div>
   <div id="music">Music</div>
-  <div id="music-hover"></div>
+  <div id="music-overlay"></div>
+  <button id="music-button"></button>
+  <article id="music-text">Music<br>Production</article>
 
-  <div class="test-div">T E S T</div>
 
   
 </div>
@@ -31,151 +36,274 @@
 </body>
 <script>
   const programming = document.getElementById('programming');
-  const programmingHoverDiv = document.getElementById('programming-hover');
+  const programmingOverlay = document.getElementById('programming-overlay');
+  const programmingButton = document.getElementById('programming-button');
+  const programmingText = document.getElementById('programming-text');
+
   const career = document.getElementById('career');
   const careerBorder = document.getElementById('career-border');
-  const careerHoverDiv = document.getElementById('career-hover');
+  const careerButton = document.getElementById('career-button');
+  const careerOverlay = document.getElementById('career-overlay');
+  const careerText = document.getElementById('career-text');
 
 
   const music = document.getElementById('music');
+  const musicOverlay = document.getElementById('music-overlay');
   const musicBorder = document.getElementById('music-border');
+  const musicButton = document.getElementById('music-button');
+  const musicText = document.getElementById('music-text');
 
   let time = 10000
   let recoverTime = 0;
   let recoverSpeed = 3;
-  let programAnimationId;
+  let animationId;
   let p = 0;
+  let xPosition = 0;
   let xLeave = 0;
   let yLeave = 0;
   let careerAnimationId;
-  let h;
-  let w;
   let complete;
   let mouseLeft;
+  const m = 1.4;
+  let carPos = 0;
+  let carTemp = 0;
+  let musPos = 0;
+  let musTemp = 0;
 
-  function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  document.addEventListener('mouseleave', (e) => {
-    let_recover();
-  });
 
  
-  programmingHoverDiv.addEventListener('mouseenter', (e) => {
-    let_recover();
-    start_animation('programming');
+  programmingButton.addEventListener('mouseenter', (e) => {
+    brighten('programming');
+    animate_text('programming');
+    animation('both', 'left', time);
   });
 
-  careerHoverDiv.addEventListener('mouseenter', (e) => {
-      let_recover();
-      start_animation('career');
+  careerButton.addEventListener('mouseenter', (e) => {
+    brighten('career');
+    animation('career', 'right', time);
     });
 
+  musicButton.addEventListener('mouseenter', (e) => {
+    brighten('music');
+    animation('music', 'right', time);
+    });
   
 
-  async function start_animation(animation) {
-    h = window.visualViewport.height;
-    w = window.visualViewport.width;
-    await delay(wait);
-    switch (animation) {
-      case 'programming':
-        pOffset = p;
-        program_animation('grow', time);
-        cancelAnimationFrame(careerAnimationId);
-        break;
-      case 'career':
-        xOffset = xLeave;
-        yOffset = yLeave;
-        career.style.zIndex = 5;
-        careerBorder.style.zIndex = 5;
-        careerHoverDiv.style.zIndex = 50;
-        career_animation('grow', time, w, h);
-        cancelAnimationFrame(programAnimationId);
-    }
-    
-  }
+    // Mouse Leave
 
-  let wait = 0;
+  programmingButton.addEventListener('mouseleave', function() {
+    darken('programming');
+    mouseLeft = 'programming';
+    carPos = carTemp;
+    musPos = musTemp;
+    cancelAnimationFrame(animationId);
+    cancelAnimationFrame(bgStepId);
+    programming.style.backgroundSize = '75%';
+    programming.style.backgroundPosition = '0% 0%';
+  });
 
-  async function let_recover() {
-    if (mouseLeft == 'career') {
-      wait = complete;
-      xOffset = xLeave;
-      yOffset = yLeave;
-      career_animation('recover', complete, w, h);
-    } else if (mouseLeft == 'programming') {
-      wait = recoverTime;
-      pOffset = p;
-      program_animation('recover', recoverTime);
-    }
-    await delay(wait);
-  }
+  careerButton.addEventListener('mouseleave', (e) => {
+    darken('career');
+    mouseLeft = 'career';
+    carPos = carTemp;
+    cancelAnimationFrame(animationId);
+    cancelAnimationFrame(bgStepId);
+    career.style.backgroundSize = '75%';
+    career.style.backgroundPosition = '0% 0%';
+  });
 
-  programmingHoverDiv.addEventListener('mouseleave', function() {mouseLeft = 'programming'});
-  careerHoverDiv.addEventListener('mouseleave', (e) => {mouseLeft = 'career'});
-  
-  function program_animation(action, duration) {
-    cancelAnimationFrame(programAnimationId);
-    if (action == 'grow') multiplier = 1;
-    else multiplier = 1;
+
+  musicButton.addEventListener('mouseleave', (e) => {
+    darken('music');
+    mouseLeft = 'music';
+    musPos = musTemp;
+    cancelAnimationFrame(animationId);
+    cancelAnimationFrame(bgStepId);
+    music.style.backgroundSize = '75%';
+    music.style.backgroundPosition = '0% 0%';
+  });
+
+  function animation(div, action, duration) {
     let start = null;
+    let xCar = 0;
+    let xMus = 0;
     function step(timestamp) {
       if (start == undefined) start = timestamp;
       const elapsed = timestamp - start;
       if (elapsed < duration) {
-        if (action == 'grow') {
-          x = elapsed/duration*100*multiplier + pOffset;
-        } else {
-          x = pOffset - elapsed/duration*pOffset*multiplier;
+      
+      if (div == 'career' || div == 'both'){
+        if (action == 'right') {
+          xCar = (elapsed/duration*100)**1.2 + carPos;
+        } else if (action == 'left' && xCar > -60) {
+          xCar = carPos - (elapsed/duration*100)**1.2;
         }
-      }
-      career.style.clipPath = `polygon(0% 0%, 0% ${100 - x}%, ${100 - x}% 0%)`;
-      careerBorder.style.transform = `scale(1.1) translate(-${x/2.2}%, -${x/2.2}%)`;
-      music.style.clipPath = `polygon(100% ${x}%, ${x}% 100%, 100% 100%)`;
-      musicBorder.style.transform = `scale(1.1) translate(${x/2.2}%, ${x/2.2}%)`;
-      programAnimationId = requestAnimationFrame(step);
-      p = x;
-      recoverTime = x/100*duration;
 
+        career.style.clipPath = `polygon(0% 0%, 0% ${80 + xCar*m}%, ${60 + xCar}% 0%)`;
+        careerOverlay.style.clipPath = `polygon(0% 0%, 0% ${80 + xCar*m}%, ${60 + xCar}% 0%)`;
+        careerBorder.style.clipPath = `polygon(0% 0%, 0% ${80 + xCar*m/1.02}%, ${60 + xCar/1.02}% 0%)`;
+        carTemp = xCar;
+      }
+
+      if (div == 'music' || div == 'both'){
+        if (action == 'right' ) {
+          xMus = (elapsed/duration*100)**1.2 + musPos;
+        } else if (action == 'left' && xMus > -60) {
+          xMus = musPos - (elapsed/duration*100)**1.2;
+        }
+        music.style.clipPath = `polygon(100% ${20 + xMus*(-m)}%, ${40 + xMus*(-1)}% 100%, 100% 100%)`;
+        musicOverlay.style.clipPath = `polygon(100% ${20 + xMus*(-m)}%, ${40 + xMus*(-1)}% 100%, 100% 100%)`;
+        musicBorder.style.clipPath = `polygon(100% ${20 + xMus*(-m + 0.02)}%, ${40 + xMus*(-0.98)}% 100%, 100% 100%)`;
+        musTemp = xMus;
+      }
+      animationId = requestAnimationFrame(step);
+      }
     }
     requestAnimationFrame(step);
   }
 
-  function career_animation(action, duration, w, h) {
-    cancelAnimationFrame(careerAnimationId);
+  const colorTime = 750;
+  const bgImgTime = 5000;
+  let bgStepId;
 
-    if (action == 'grow') multiplier = 1;
-    if (action == 'recover') {
-      multiplier = -1;
+  function change_zIndex(div){
+    if (div == 'career') {
+      career.style.zIndex = 5;
+      careerBorder.style.zIndex = 5;
+      careerOverlay.style.zIndex = 10;
+      careerText.style.zIndex = 10;
+      music.style.zIndex = 0;
+      musicBorder.style.zIndex = 0;
+      musicOverlay.style.zIndex = 0;
+      musicText.style.zIndex = 2;
+    } else if (div == 'music') {
+      music.style.zIndex = 5;
+      musicBorder.style.zIndex = 5;
+      musicOverlay.style.zIndex = 10;
+      musicText.style.zIndex = 10;
+      career.style.zIndex = 0;
+      careerBorder.style.zIndex = 0;
+      careerOverlay.style.zIndex = 0;
+      careerText.style.zIndex = 2;
     }
+  }
+
+
+  let textStepId;
+  function animate_text(div) {
     let start = null;
-    function step(timestamp) {
+    let y;
+    function textStep(timestamp) {
+      if (start == undefined) start = timestamp;
+      const timeElapsed = timestamp - start;
+      if (timeElapsed <= 500) {
+        y = (500 - timeElapsed)/500;
+        if (timeElapsed > 480) y = 0;
+        if (div == 'programming') {
+          careerText.style.color = `rgba(255, 255, 255, ${y})`;
+          careerText.style.textShadow = `4px 4px 5px rgba(0, 0, 0, ${y})`;
+          musicText.style.color = `rgba(255, 255, 255, ${y})`;
+          musicText.style.textShadow = `4px 4px 5px rgba(0, 0, 0, ${y})`;
+        }
+        textStepId = requestAnimationFrame(textStep);
+      }
+    }
+    requestAnimationFrame(textStep);
+  }
+
+  function animate_bg_img(div) {
+    let start = null;
+    let x;
+    function bgStep(timestamp) {
       if (start == undefined) start = timestamp;
       const elapsed = timestamp - start;
-      if (elapsed <= duration) {
-          percent = elapsed/duration;
-          if (action == 'grow') {
-            x2 = percent*multiplier*w*1.3;
-            y = percent*multiplier*h*1.3;
-            xLeave = xOffset + x2;
-            yLeave = yOffset + y;
-          } else {
-            x2 = percent*xOffset * multiplier;
-            y = percent*yOffset * multiplier;
-            xLeave = xOffset + x2;
-            yLeave = yOffset + y;
-          }
-          
+
+      if (elapsed < time*2) {
+        x = elapsed/time/2*20;
+
+        if (div == 'career') {
+          career.style.backgroundSize = `${75 + x}%`;
+          career.style.backgroundPosition = `${x}% -${x}%`;
+        } else if (div == 'programming') {
+          programming.style.backgroundSize = `${75 + x}%`;
+          programming.style.backgroundPosition = `-${x}% ${x*4}%`;
+        } else if (div == 'music') {
+          music.style.backgroundSize = `${75 + x}%`;
+          music.style.backgroundPosition = `-${x*6}% -${x*4}%`;
+        }
+        
+
+        bgStepId = requestAnimationFrame(bgStep);
       }
-      career.style.height = `${h*0.8 + y + yOffset}px`;
-      career.style.width = `${w*0.6 + x2 + xOffset}px`;
-      careerBorder.style.height = `${h*0.8 + y + yOffset}px`;
-      careerBorder.style.width = `${w*0.6 + x2 + xOffset}px`;
-      careerAnimationId = requestAnimationFrame(step);
-      complete = yLeave/(h*0.8 + y + yOffset)*duration;
     }
-    requestAnimationFrame(step);
+    requestAnimationFrame(bgStep);
+  }
+
+  function brighten(div) {
+    change_zIndex(div);
+    animate_bg_img(div);
+    switch (div) {
+      case 'career':
+        careerOverlay.animate([
+          { backgroundColor: 'rgba(0,0,0,0.5)'},
+          { backgroundColor: 'rgba(0,0,0,0)'}
+        ], {
+          duration: colorTime,
+          fill: 'forwards'
+        });
+        
+        break;
+      case 'programming':
+        programmingOverlay.animate([
+          { backgroundColor: 'rgba(0,0,0,0.5)'},
+          { backgroundColor: 'rgba(0,0,0,0)'}
+        ], {
+          duration: colorTime,
+          fill: 'forwards'
+        });
+        break;
+      case 'music':
+        musicOverlay.animate([
+          { backgroundColor: 'rgba(0,0,0,0.5)'},
+          { backgroundColor: 'rgba(0,0,0,0)'}
+        ], {
+          duration: colorTime,
+          fill: 'forwards'
+        });
+        break;
+    }
+  }
+
+  function darken(div) {
+    switch (div) {
+      case 'career':
+        careerOverlay.animate([
+          { backgroundColor: 'rgba(0,0,0,0)'},
+          { backgroundColor: 'rgba(0,0,0,0.5)'}
+        ], {
+          duration: colorTime,
+          fill: 'forwards'
+        });
+        break;
+      case 'programming':
+        programmingOverlay.animate([
+          { backgroundColor: 'rgba(0,0,0,0)'},
+          { backgroundColor: 'rgba(0,0,0,0.5)'}
+        ], {
+          duration: colorTime,
+          fill: 'forwards'
+        });
+        break;
+      case 'music':
+        musicOverlay.animate([
+          { backgroundColor: 'rgba(0,0,0,0)'},
+          { backgroundColor: 'rgba(0,0,0,0.5)'}
+        ], {
+          duration: colorTime,
+          fill: 'forwards'
+        });
+        break;
+    }
   }
 
 </script>
