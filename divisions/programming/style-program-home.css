@@ -1,0 +1,99 @@
+* {
+  font-family: Verdana, Geneva, Tahoma, sans-serif ;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(32, 32, 32);
+  color: white;
+}
+
+.logo {
+  height: 85px;
+  width: 85px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+nav {
+  margin: 0;
+  background-color: black;
+  width: 100vw;
+  height: 100px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-link {
+  margin: 0 30px;
+  position: relative;
+  text-decoration: none;
+  color: white;
+  line-height: 50px;
+}
+
+.nav-link::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: rgb(255, 255, 255);
+  transform: scaleX(0);
+  transform-origin: bottom center;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover::before {
+  transform: scaleX(1);
+}
+
+
+
+#craps-div, #workout-div, #roulette-div {
+  position: relative;
+  margin: 50px 0;
+  justify-self: center;
+}
+
+
+#craps-div, #craps-button,
+#workout-div, #workout-button,
+#roulette-div, #roulette-button {
+  height: 30vw;
+  max-height: 500px;
+  width: 80vw;
+  max-width: 1200px;
+}
+
+
+#craps-button, #workout-button, #roulette-button {
+  border: none;
+  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 25px 25px black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 30px;
+  transition: background-color 0.5s ease;
+}
+
+#craps-button:hover,
+#workout-button:hover,
+#roulette-button:hover {
+  background-color: rgba(0,0,0,0);
+}
+
+#craps-div img,
+#workout-div img,
+#roulette-div img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50px;
+}

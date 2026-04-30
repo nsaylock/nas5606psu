@@ -4,10 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programming Home</title>
-    <link rel="stylesheet" href="stylehome.css">
+    <link rel="stylesheet" href="style-program-home.css">
 </head>
 <body>
+  <img class="logo" src="img/noble_design_1.png">
+  <nav>
+    
+    <a class="nav-link" href="craps-js/craps.html">Craps</a>
+    <a class="nav-link" href="roulette/roullettespinner.html">Roulette</a>
+    <a class="nav-link" href="workouts/full-body.html">Workout Generator</a>
+  </nav>
+  
+  <div id="craps-div">
+    <img  src="img/craps.png">
+    <a href="craps-js/craps.html">
+      <button id="craps-button"></button>
+    </a>
+  </div> <!-- Close craps div-->
 
-  <h1>Nothing here yet, check back later</h1>
+  <div id="workout-div">
+    <img  src="img/workout.png">
+    <a href="workouts/full-body.html">
+      <button id="workout-button"></button>
+    </a>
+  </div> <!-- Close workout div-->
+
+  <div id="roulette-div">
+    <img  src="img/roulettespinner.png">
+    <a href="roulette/roullettespinner.html">
+      <button id="roulette-button"></button>
+    </a>
+  </div> <!-- Close roulette div-->
+
+  
+
 </body>
+
+<script>
+  const crapsDiv = document.getElementById('craps-div');
+  const crapsButton = document.getElementById('craps-button');
+
+  crapsButton.addEventListener('mouseenter', ()=>{
+    crapsDiv.animate([
+      {transform: 'translateY(0)'},
+      {transform: 'translateY(-10px)'}
+    ], {
+      duration: 250,
+      fill: 'forwards'
+    });
+  });
+  crapsButton.addEventListener('mouseleave', ()=>{
+    crapsDiv.animate([
+      {transform: 'translateY(-10px)'},
+      {transform: 'translateY(0)'}
+    ], {
+      duration: 250,
+      fill: 'forwards'
+    });
+  });
+
+
+  const workoutDiv = document.getElementById('workout-div');
+  const workoutButton = document.getElementById('workout-button');
+
+  workoutButton.addEventListener('mouseenter', ()=>{
+    workoutDiv.animate([
+      {transform: 'translateY(0)'},
+      {transform: 'translateY(-10px)'}
+    ], {
+      duration: 250,
+      fill: 'forwards'
+    });
+  });
+  workoutButton.addEventListener('mouseleave', ()=>{
+    workoutDiv.animate([
+      {transform: 'translateY(-10px)'},
+      {transform: 'translateY(0)'}
+    ], {
+      duration: 250,
+      fill: 'forwards'
+    });
+  });
+
+  const rouletteDiv = document.getElementById('roulette-div');
+  const rouletteButton = document.getElementById('roulette-button');
+
+  rouletteButton.addEventListener('mouseenter', ()=>{
+    rouletteDiv.animate([
+      {transform: 'translateY(0)'},
+      {transform: 'translateY(-10px)'}
+    ], {
+      duration: 250,
+      fill: 'forwards'
+    });
+  });
+  rouletteButton.addEventListener('mouseleave', ()=>{
+    rouletteDiv.animate([
+      {transform: 'translateY(-10px)'},
+      {transform: 'translateY(0)'}
+    ], {
+      duration: 250,
+      fill: 'forwards'
+    });
+  });
+
+
+
+
+
+</script>
 </html>
