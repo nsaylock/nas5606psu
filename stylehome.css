@@ -24,7 +24,7 @@ body {
 }
 
 #programming {
-  background-image: url('img/new_index_code.png');
+  background-image: url('img-home/new_index_code.png');
   background-size: 75%;
   background-position: 0% 0%;
 }
@@ -56,7 +56,7 @@ body {
 
 
 #career {
-  background-image: url('img/Degrees.jpg');
+  background-image: url('img-home/Degrees.jpg');
   background-size: 75%;
   background-position: 0% 0%;
 }
@@ -72,7 +72,7 @@ body {
 }
 
 #music {
-  background-image: url('img/IMG_4093.JPG');
+  background-image: url('img-home/IMG_4093.JPG');
   background-size: 75%;
   background-position: 0% 0%;
 }
@@ -101,7 +101,7 @@ button {
   position: absolute;
   color: white;
   text-shadow: 4px 4px 5px black;
-  top: 15vh;
+  top: 18vh;
   left: 8vw;
   z-index: 10;
 }
@@ -111,8 +111,8 @@ button {
   color: white;
   text-shadow: 4px 4px 5px black;
   top: 45vh;
-  left: 32vw;
-  z-index: 2;
+  left: 38vw;
+  z-index: 0;
 }
 
 #music-text {
@@ -120,7 +120,7 @@ button {
   color: white;
   text-shadow: 4px 4px 5px black;
   top: 72vh;
-  left: 70vw;
+  left: 69vw;
   z-index: 140;
 }
 
