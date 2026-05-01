@@ -45,6 +45,7 @@
   let swTotal = 350;
   let prevSW = 0;
   let allow = true;
+  let arrowsGone = false;
   document.addEventListener('wheel', (e) => {
     e.preventDefault();
     if (allow) {
@@ -54,9 +55,27 @@
         cycle_left();
       }
     }
-    
+    if (arrowsGone == false) dissolve_arrows();
   }, {passive: false}
 );
+
+function dissolve_arrows() {
+  left.animate([
+    { opacity: '100%' },
+    { opacity: '0%' }
+  ], { 
+    duration: 500,
+    fill: 'forwards'
+  });
+  right.animate([
+    { opacity: '100%' },
+    { opacity: '0%' }
+  ], { 
+    duration: 500,
+    fill: 'forwards'
+  });
+  arrowsGone = true;
+}
   
     let xL = -250;
     let yL = -25;
@@ -192,8 +211,6 @@
       }
     }
     requestAnimationFrame(step);
-    
-
   }
 
 
