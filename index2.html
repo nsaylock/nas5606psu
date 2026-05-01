@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="style-home.css">
+</head>
+<body>
+  <h1>nicksaylock.com</h1>
+  <div class="carousel">
+    <div id="career"></div>
+    <div id="program"></div>
+    <div id="music"></div>
+
+    <button id="left">
+      <img class="left-arrow" src="img-home/increase.png">
+    </button>
+    <button id="right">
+      <img class="right-arrow" src="img-home/increase.png">
+    </button>
+
+
+  </div>
+  <div class="temp-line"></div>
+</body>
+
+<script>
+  const career = document.getElementById('career');
+  const program = document.getElementById('program');
+  const music = document.getElementById('music');
+  const left = document.getElementById('left');
+  const right = document.getElementById('right');
+
+  const time = 1000;
+  const totalFrames = time/100*6;
+  const edgeMax = 350;
+  let circle = {
+    left: program,
+    center: career,
+    right: music
+  }
+  let mult = 1;
+  let sw = 0;
+  let swTotal = 350;
+  let prevSW = 0;
+  let allow = true;
+  document.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (allow) {
+      if (e.wheelDelta < 0) {
+        cycle_right();
+      } else {
+        cycle_left();
+      }
+    }
+    
+  }, {passive: false}
+);
+  
+    let xL = -250;
+    let yL = -25;
+    let Lscale = 0.75;
+    let shrinkScale = 1;
+    let growScale = 0.75;
+    let xC = 0;
+    let yC = 0;
+    let xR = 250;
+    let yR = -25;
+
+
+  // Control Animation Speed
+  
+
+  left.addEventListener('click', ()=> { if (allow) cycle_left() });
+  right.addEventListener('click', ()=> { if (allow) cycle_right() });
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function cycle_left() {
+    direction_flip('left');
+    cycle_animation('left');
+    await delay(time);
+    switch_circles();
+  }
+
+  async function cycle_right() {
+    direction_flip('right');
+    cycle_animation('right');
+    await delay(time);
+    switch_circles();
+  }
+
+  let flipKey = 'right';
+  let flip = false;
+  function direction_flip(direction) {
+    if (flipKey == direction) {
+      flip = true;
+      if (direction == 'right') flipKey = 'left';
+      else flipKey = 'right';
+    }
+    if (flip == true) {
+      tempLeft = circle.left;
+      tempRight = circle.right;
+      circle.left = tempRight;
+      circle.right = tempLeft;
+      flip = false;
+    }
+    
+  }
+
+  function switch_circles() {
+    allow = true;
+    tempLeft = circle.left;
+    tempRight = circle.right;
+    tempCenter = circle.center;
+
+    circle.left = tempCenter;
+    circle.center = tempRight;
+    circle.right = tempLeft;
+  }
+
+  function reset_parameters() {
+    xL = -250 * mult;
+    yL = -25;
+    Lscale = 0.75;
+    shrinkScale = 1;
+    growScale = 0.75;
+    xC = 0;
+    yC = 0;
+    xR = 250 * mult;
+    yR = -25;
+  }
+
+  const RTA = totalFrames/7;
+  const LTA = totalFrames - totalFrames/7;
+
+  function cycle_animation(direction) {
+    allow = false;
+    if (direction == 'left') mult = 1;
+    else mult = -1;
+    let start = null;
+    reset_parameters();
+    let frame = 1;
+    function step(timestamp) {
+      if (start == undefined) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed <= time) {
+        
+        // Left slides acros back to right position
+        xL += 500/totalFrames * mult;
+        
+        if (frame < totalFrames/2) {
+          Lscale -= 0.125/totalFrames;
+          yL -= 50/totalFrames;
+        } else {
+          Lscale += 0.125/totalFrames;
+          yL += 50/totalFrames;
+        }
+        circle.left.style.transform = `scale(${Lscale}) translate(${xL}px, ${yL}px)`;
+
+
+        // Center slides to left position and shrinks
+        
+        shrinkScale -= 0.25/totalFrames;
+
+        yC -= 25/totalFrames;
+        if (frame <= LTA) {
+          xC -= edgeMax/totalFrames * mult;
+        } else {
+          xC += edgeMax/totalFrames * mult;
+          circle.center.style.zIndex = 1;
+        }
+        circle.center.style.transform = `scale(${shrinkScale}) translate(${xC}px, ${yC}px)`;
+
+
+        // Right slides to center position and grows
+        
+        growScale += 0.25/totalFrames;
+        yR += 25/totalFrames;
+        if (frame <= RTA+1) {
+          xR += edgeMax/totalFrames * mult;
+        } else {
+          xR -= edgeMax/totalFrames * mult;
+          circle.right.style.zIndex = 3;
+        }
+        circle.right.style.transform = `scale(${growScale}) translate(${xR}px, ${yR}px)`;
+        requestAnimationFrame(step);
+        frame++;
+      }
+    }
+    requestAnimationFrame(step);
+    
+
+  }
+
+
+
+
+</script>
+
+</html>
