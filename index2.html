@@ -8,10 +8,21 @@
 </head>
 <body>
   <h1>nicksaylock.com</h1>
+  <div id="bgIMG"></div>
+  <div id="bgOverlay"></div>
   <div class="carousel">
-    <div id="career"></div>
-    <div id="program"></div>
-    <div id="music"></div>
+    <div id="career">
+      <button id="career-button">Career</button>
+      <div class="career-outline"></div>
+    </div>
+    <div id="program">
+      <button id="program-button">Computer<br>Programming</button>
+      <div class="program-outline"></div>
+    </div>
+    <div id="music">
+      <button id="music-button">Music<br>Production</button>
+      <div class="music-outline"></div>
+    </div>
 
     <button id="left">
       <img class="left-arrow" src="img-home/increase.png">
@@ -22,13 +33,17 @@
 
 
   </div>
-  <div class="temp-line"></div>
 </body>
 
 <script>
+  const bgIMG = document.getElementById('bgIMG');
+  const bgOverlay = document.getElementById('bgOverlay');
   const career = document.getElementById('career');
+  const careerButton = document.getElementById('career-button');
   const program = document.getElementById('program');
+  const programButton = document.getElementById('program-button');
   const music = document.getElementById('music');
+  const musicButton = document.getElementById('music-button');
   const left = document.getElementById('left');
   const right = document.getElementById('right');
 
@@ -37,9 +52,16 @@
   const edgeMax = 350;
   let circle = {
     left: program,
+    leftButton: programButton,
+    leftName: 'program',
     center: career,
-    right: music
+    centerButton: careerButton,
+    centerName: 'career',
+    right: music,
+    rightButton: musicButton,
+    rightName: 'music'
   }
+
   let mult = 1;
   let sw = 0;
   let swTotal = 350;
@@ -122,24 +144,91 @@ function dissolve_arrows() {
     }
     if (flip == true) {
       tempLeft = circle.left;
+      tempLB = circle.leftButton;
+      tempLN = circle.leftName;
       tempRight = circle.right;
+      tempRB = circle.rightButton;
+      tempRN = circle.rightName;
       circle.left = tempRight;
       circle.right = tempLeft;
+      circle.leftButton = tempRB;
+      circle.leftName = tempRN;
+      circle.rightButton = tempLB;
+      circle.rightName = tempLN;
       flip = false;
     }
     
   }
 
-  function switch_circles() {
+  async function switch_circles() {
     allow = true;
     tempLeft = circle.left;
+    tempLB = circle.leftButton;
+    tempLN = circle.leftName;
     tempRight = circle.right;
+    tempRB = circle.rightButton;
+    tempRN = circle.rightName;
     tempCenter = circle.center;
+    tempCB = circle.centerButton;
+    tempCN = circle.centerName;
 
     circle.left = tempCenter;
+    circle.leftButton = tempCB;
+    circle.leftName = tempCN;
     circle.center = tempRight;
+    circle.centerButton = tempRB;
+    circle.centerName = tempRN;
     circle.right = tempLeft;
+    circle.rightButton = tempLB;
+    circle.rightName = tempLN;
+    cancelAnimationFrame(bgStepId);
+    background_animation(circle.centerName);
+    fade_in();
   }
+
+  function fade_out() {
+    bgOverlay.animate([
+      { backgroundColor: 'rgba(0,0,0,0)'},
+      { backgroundColor: 'rgba(0,0,0,1)'},
+    ],
+    {duration: time,
+      fill: 'forwards'
+    }
+  );
+  }
+
+  function fade_in() {
+    bgOverlay.animate([
+      { backgroundColor: 'rgba(0,0,0,1)'},
+      { backgroundColor: 'rgba(0,0,0,0)'},
+    ],
+    {duration: time,
+      fill: 'forwards'
+    }
+  );
+  }
+
+  function background_animation(front) {
+    if (front == 'career') imgURL = "url('img-home/Degrees.jpg')";
+    else if (front == 'program') imgURL = "url('img-home/new_index_code.png')";
+    else if (front == 'music') imgURL = "url('img-home/IMG_4093.JPG')";
+    bgIMG.style.backgroundImage = imgURL;
+    let bgTime = 50000;
+    let start = null;
+    function bgStep(timestamp) {
+      if (start == undefined) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < bgTime) {
+        scale = elapsed / bgTime * 0.25;
+        pos = elapsed / bgTime * 30;
+        bgIMG.style.transform = `scale(${1-scale}) translate(${-50 + pos}%, ${-50 + pos}%)`;
+        requestAnimationFrame(bgStep);
+      }
+    }
+    bgStepId = requestAnimationFrame(bgStep);
+  }
+
+  background_animation('career');
 
   function reset_parameters() {
     xL = -250 * mult;
@@ -157,6 +246,8 @@ function dissolve_arrows() {
   const LTA = totalFrames - totalFrames/7;
 
   function cycle_animation(direction) {
+    fade_out();
+
     allow = false;
     if (direction == 'left') mult = 1;
     else mult = -1;
@@ -206,6 +297,14 @@ function dissolve_arrows() {
           circle.right.style.zIndex = 3;
         }
         circle.right.style.transform = `scale(${growScale}) translate(${xR}px, ${yR}px)`;
+
+        // Shadow
+        shadow = frame/totalFrames*10*mult;
+        circle.centerButton.style.boxShadow = `inset ${shadow}px 0 35px 25px black`;
+        circle.leftButton.style.boxShadow = `inset ${10 - shadow}px ${shadow}px 35px 25px black`;
+        circle.rightButton.style.boxShadow = `inset 0 ${10 - shadow}px 35px 25px black`;
+
+
         requestAnimationFrame(step);
         frame++;
       }
