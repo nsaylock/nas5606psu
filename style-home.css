@@ -107,7 +107,7 @@ h1 {
 }
 
 #music {
-  background-image: url('img-home/IMG_4093.JPG');
+  background-image: url('img-home/temp_MP.JPG');
   background-size: cover;
   transform: scale(0.75) translate(250px, -25px);
   z-index: 1;
