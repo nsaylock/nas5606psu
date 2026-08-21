@@ -67,9 +67,6 @@ function new_round() {
   playerTotal = 0;
   playerAces = 0;
   playerHandDiv.replaceChildren();
-  unhide(hitButton);
-  unhide(stayButton);
-  unhide(doubleDownButton);
   hide(splitButton);
   
 }
@@ -80,7 +77,7 @@ function deal_round() {
   deal_face_down_card();
   deal_card('player', playerHand, playerHandDiv);
   deal_card('dealer', dealerHand, dealerHandDiv);
-  hide(dealButton);
+  make_inactive(dealButton);
   if (playerHand[0].at(0) == playerHand[1].at(0)) {
     unhide(splitButton);
   }
@@ -134,10 +131,7 @@ function hit() {
     playerAces--;
     update_player_total();
   } else if (playerTotal > 21) {
-    hide(hitButton);
-    hide(stayButton);
-    hide(doubleDownButton);
-    unhide(dealButton);
+    make_active(dealButton);
     setTimeout(()=> {
       alert('Player Bust');
       dealer_reveal_card();
@@ -146,9 +140,6 @@ function hit() {
 }
 
 function stay() {
-  hide(hitButton);
-  hide(stayButton);
-  hide(doubleDownButton);
   dealer_turn();
 }
 
@@ -162,7 +153,7 @@ function dealer_reveal_card() {
   dealerFaceDownCard.src = `playing_cards/${dealerHand[0]}.png`;
   dealerTotal += faceDownCardValue;
   update_dealer_total();
-  if (dealerTotal >= 17) unhide(dealButton);
+  if (dealerTotal >= 17) make_active(dealButton);
 }
 
 function dealer_turn() {
@@ -181,9 +172,19 @@ function dealer_delay_func() {
         update_dealer_total;
         dealer_delay_func();
       } else {
-        unhide(dealButton);
+        make_active(dealButton);
       }
     }, 500);
+}
+
+function make_inactive(button) {
+  button.classList.add('inactive');
+  button.disabled = true;
+}
+
+function make_active(button) {
+  button.classList.remove('inactive');
+  button.disabled = false;
 }
 
 function hide(button) {

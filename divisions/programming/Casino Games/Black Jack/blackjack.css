@@ -7,6 +7,7 @@ body {
   color: white;
 }
 
+
 .main-container {
   display: flex;
   justify-content: center;
@@ -62,12 +63,24 @@ body {
 
 .controls {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 100px;
+  right: 50px;
   height: 100px;
-  display: flex;
-  justify-self: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 105px 105px 105px 105px;
+  z-index: 100;
+}
+
+.control-button {
+  height: 75px;
+  width: 100px;
+  border-radius: 15px;
+  font-size: 20px;
+}
+
+#split-button {
+  position: absolute;
+  top: 700px;
 }
 
 .card {
@@ -76,6 +89,7 @@ body {
   margin: 0 10px 0 10px;
 }
 
-.hidden {
-  display: none;
+.inactive {
+  background-color: rgb(51, 51, 51);
+  border: none;
 }
