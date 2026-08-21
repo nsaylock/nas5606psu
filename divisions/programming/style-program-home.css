@@ -8,6 +8,11 @@ body {
   color: white;
 }
 
+button {
+  font-size: 2em;
+  color: white;
+}
+
 .logo {
   height: 85px;
   width: 85px;

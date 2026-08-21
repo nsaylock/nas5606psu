@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: rgb(20, 58, 20);
+  color: white;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.main {
+  background-color: rgb(20, 58, 20);
+  height: 880px;
+  width: 900px;
+  padding: 20px;
+}
+
+
+
+#dealer-hand, #player-hand {
+  width: 100%;
+  height: 40%;
+  outline: 1px solid red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#player-hand {
+  margin-top: 30px;
+}
+
+.label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 1px solid black;
+}
+
+.name {
+  font-size: 30px;
+  text-align: center;
+}
+
+#dealer-total, #player-total {
+  font-size: 25px;
+  height: 30px;
+  width: 30px;
+  margin-left: 10px;
+  text-align: center;
+  outline: 1px solid yellow;
+}
+
+#player-total {
+  outline: 1px solid orange;
+}
+
+.controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100px;
+  display: flex;
+  justify-self: center;
+  justify-content: space-between;
+}
+
+.card {
+  height: 217px;
+  width: 150px;
+  margin: 0 10px 0 10px;
+}
+
+.hidden {
+  display: none;
+}
