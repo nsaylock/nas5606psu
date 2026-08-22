@@ -7,32 +7,40 @@
     <link rel="stylesheet" href="style-program-home.css">
 </head>
 <body>
-  <img class="logo" src="img/noble_design_1.png">
+  <img class="logo" src="img/avp_design_2.png">
   <nav>
     
     <a class="nav-link" href="Casino Games/Craps/craps.html">Craps</a>
+    <a class="nav-link" href="Casino Games/Black Jack/blackjack.html">Black Jack</a>
     <a class="nav-link" href="Casino Games/roulette/roullettespinner.html">Roulette</a>
     <a class="nav-link" href="workouts/full-body.html">Workout Generator</a>
   </nav>
   
-  <div id="craps-div">
+  <div id="craps" class="big-div">
     <img  src="img/craps.png">
     <a href="Casino Games/Craps/craps.html">
-      <button id="craps-button">Casino Craps</button>
+      <button id="craps-btn" class="big-button">Casino Craps</button>
     </a>
   </div> <!-- Close craps div-->
 
-  <div id="roulette-div">
-    <img  src="img/roulettespinner.png">
-    <a href="Casino Games/roulette/roullettespinner.html">
-      <button id="roulette-button">Roulette Spinner</button>
+  <div id="blackjack" class="big-div">
+    <img  src="img/bj_01.png">
+    <a href="Casino Games/Black Jack/blackjack.html">
+      <button id="blackjack-btn" class="big-button">Black Jack</button>
     </a>
   </div> <!-- Close roulette div-->
 
-  <div id="workout-div">
+  <div id="roulette" class="big-div">
+    <img  src="img/roulettespinner.png">
+    <a href="Casino Games/roulette/roullettespinner.html">
+      <button id="roulette-btn" class="big-button">Roulette Spinner</button>
+    </a>
+  </div> <!-- Close roulette div-->
+
+  <div id="workouts" class="big-div">
     <img  src="img/workout.png">
     <a href="workouts/full-body.html">
-      <button id="workout-button">Workout Generator</button>
+      <button id="workouts-btn" class="big-button">Workout Generator</button>
     </a>
   </div> <!-- Close workout div-->
 
@@ -43,76 +51,62 @@
 </body>
 
 <script>
-  const crapsDiv = document.getElementById('craps-div');
-  const crapsButton = document.getElementById('craps-button');
+  const crapsDiv = document.getElementById('craps');
+  const crapsBtn = document.getElementById('craps-btn');
+  const blackjackDiv = document.getElementById('blackjack');
+  const blackjackBtn  = document.getElementById('blackjack-btn');
+  const rouletteDiv = document.getElementById('roulette');
+  const rouletteBtn = document.getElementById('roulette-btn');
+  const workoutsDiv = document.getElementById('workouts');
+  const workoutsBtn = document.getElementById('workouts-btn');
+  crapsBtn.addEventListener('mouseenter', ()=>{ 
+    animate_div(crapsDiv, 'enter');
+  })
+  crapsBtn.addEventListener('mouseleave', ()=> {
+    animate_div(crapsDiv, 'leave');
+  })
+  blackjackBtn.addEventListener('mouseenter', ()=>{ 
+    animate_div(blackjackDiv, 'enter');
+  })
+  blackjackBtn.addEventListener('mouseleave', ()=> {
+    animate_div(blackjackDiv, 'leave');
+  })
+  rouletteBtn.addEventListener('mouseenter', ()=>{ 
+    animate_div(rouletteDiv, 'enter');
+  })
+  rouletteBtn.addEventListener('mouseleave', ()=> {
+    animate_div(rouletteDiv, 'leave');
+  })
+  workoutsBtn.addEventListener('mouseenter', ()=>{ 
+    animate_div(workoutsDiv, 'enter');
+  })
+  workoutsBtn.addEventListener('mouseleave', ()=> {
+    animate_div(workoutsDiv, 'leave');
+  })
 
-  crapsButton.addEventListener('mouseenter', ()=>{
-    crapsDiv.animate([
+
+  function animate_div(div, action) {
+    if (action == 'enter') {
+      div.animate([
       {transform: 'translateY(0)'},
       {transform: 'translateY(-10px)'}
     ], {
       duration: 250,
       fill: 'forwards'
     });
-  });
-  crapsButton.addEventListener('mouseleave', ()=>{
-    crapsDiv.animate([
+    } else {
+      div.animate([
       {transform: 'translateY(-10px)'},
       {transform: 'translateY(0)'}
     ], {
       duration: 250,
       fill: 'forwards'
     });
-  });
+    }
+    
+    
+  }
 
-
-  const workoutDiv = document.getElementById('workout-div');
-  const workoutButton = document.getElementById('workout-button');
-
-  workoutButton.addEventListener('mouseenter', ()=>{
-    workoutDiv.animate([
-      {transform: 'translateY(0)'},
-      {transform: 'translateY(-10px)'}
-    ], {
-      duration: 250,
-      fill: 'forwards'
-    });
-  });
-  workoutButton.addEventListener('mouseleave', ()=>{
-    workoutDiv.animate([
-      {transform: 'translateY(-10px)'},
-      {transform: 'translateY(0)'}
-    ], {
-      duration: 250,
-      fill: 'forwards'
-    });
-  });
-
-  const rouletteDiv = document.getElementById('roulette-div');
-  const rouletteButton = document.getElementById('roulette-button');
-
-  rouletteButton.addEventListener('mouseenter', ()=>{
-    rouletteDiv.animate([
-      {transform: 'translateY(0)'},
-      {transform: 'translateY(-10px)'}
-    ], {
-      duration: 250,
-      fill: 'forwards'
-    });
-  });
-  rouletteButton.addEventListener('mouseleave', ()=>{
-    rouletteDiv.animate([
-      {transform: 'translateY(-10px)'},
-      {transform: 'translateY(0)'}
-    ], {
-      duration: 250,
-      fill: 'forwards'
-    });
-  });
-
-
-
-
-
+  
 </script>
 </html>

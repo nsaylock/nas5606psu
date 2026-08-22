@@ -5,9 +5,6 @@ let bankrollOnRack = bankroll;
 let moneyOnTable = 0;
 let soundSelector = 0;
 let pullBackInProgress = false;
-const minBet = 10;
-let message = '';
-let newMessage = '';
 let roundUpBet = false;
 let goodToPlace = false;
 let chipDisplay = 'blank';
@@ -216,6 +213,7 @@ function update_staged_bet_chips() {
     for (const step in instructions) {
       if (instructions[step].operation == 'remove') {
         for (i = 0; i < instructions[step].num; i++) {
+          // Get last index of chip to be removed so it doesn't pull from bottom of stack
           index = stagedBetChips.chip.lastIndexOf(instructions[step].color);
           stagedBetChips.chip.splice(index, 1);
           stagedBetChips.location.removeChild(stagedBetChips.location.children[index]);
@@ -243,7 +241,7 @@ function update_staged_bet_chips() {
     
     // All done, update previous, sbAdd, sbRemove for next change
     prevSBCS = currentSBCS;
-    db(stagedBet)
+    update_bankroll_chips(bankroll - stagedBet);
 }
 
 // ---------------------- //
@@ -486,7 +484,6 @@ function update_bankroll() {
     } else {
       betElement.textContent = '$' + stagedBet;
     }
-    update_staged_bet_chips();
   }
   bankrollElement.textContent = '$' + bankroll;
   update_bankroll_chips(bankroll);
@@ -500,8 +497,6 @@ function commit_bet(bet) {
   play_increment_sound();
   return bet;
 }
-
-
 
 function change_bet(betToCommit) {
   bankroll += betToCommit;
@@ -548,6 +543,7 @@ function reset_stagedBet() {
     playSound = true;
     prevSBCS = get_chip_structure(0);
     stagedBetChips.location.replaceChildren();
+    stagedBetChips.chip = [];
     play_decrement_sound();
   }
 }

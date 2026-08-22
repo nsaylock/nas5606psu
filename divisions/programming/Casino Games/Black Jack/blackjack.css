@@ -15,18 +15,29 @@ body {
 }
 
 .main {
+  position: relative;
   background-color: rgb(20, 58, 20);
   height: 880px;
   width: 900px;
   padding: 20px;
 }
 
-
+#message-box {
+  position: fixed;
+  top: 250px;
+  left: 0px;
+  height: 100px;
+  width: 250px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.445);
+  color: white;
+  font-size: 20px;
+}
 
 #dealer-hand, #player-hand {
   width: 100%;
   height: 40%;
-  outline: 1px solid red;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +51,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  outline: 1px solid black;
 }
 
 .name {
@@ -63,8 +73,8 @@ body {
 
 .controls {
   position: absolute;
-  bottom: 100px;
-  right: 50px;
+  bottom: 20px;
+  right: -75px;
   height: 100px;
   display: grid;
   grid-template-columns: 105px 105px 105px 105px;
@@ -101,20 +111,34 @@ body {
   left: 0;
 }
 
+.main-bet, #main-bet-button {
+  height: 150px;
+  width: 150px;
+  background-color: transparent;
+
+}
+
 .main-bet {
   position: absolute;
   top: 500px;
-  left: 100px;
-}
-
-#main-bet-button {
-  position: relative;
-  height: 150px;
-  width: 150px;
-  border-radius: 75px;
-  background-color: transparent;
+  left: 0px;
+  border-radius: 100px;
   border-style: solid;
   border-width: 5px;
   border-color: orange;
+}
+
+#main-bet-button {
+  position: absolute;
+  border: none;
   z-index: 20;
+}
+
+#main-bet-chips {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: absolute;
+  height: 90px;
+  width: 150px;
 }

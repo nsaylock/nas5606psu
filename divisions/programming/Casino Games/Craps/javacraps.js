@@ -1354,8 +1354,6 @@ document.addEventListener('mouseup', () => {
   messageBoxDiv.style.backgroundColor = 'rgb(0,0,0,0.7)';
 })
 
-
-
 let counter = 0;
 function message_display(message) {
   //rollName = display_roll_message(sum);
@@ -1367,10 +1365,7 @@ function message_display(message) {
   if (messageBoxDiv.childElementCount > 12) {
     messageBoxDiv.removeChild(messageBoxDiv.lastChild);
   }
-
 }
-
-
 
 async function clear_table() {
   message = 'All bets cleared';

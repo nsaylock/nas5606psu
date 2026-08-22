@@ -17,7 +17,7 @@ button {
   height: 85px;
   width: 85px;
   position: absolute;
-  top: 10px;
+  top: 5px;
   left: 10px;
 }
 
@@ -59,16 +59,14 @@ nav {
 
 
 
-#craps-div, #workout-div, #roulette-div {
+.big-div {
   position: relative;
   margin: 50px 0;
   justify-self: center;
 }
 
 
-#craps-div, #craps-button,
-#workout-div, #workout-button,
-#roulette-div, #roulette-button {
+.big-div, .big-button {
   height: 30vw;
   max-height: 500px;
   width: 80vw;
@@ -76,7 +74,7 @@ nav {
 }
 
 
-#craps-button, #workout-button, #roulette-button {
+.big-button {
   border: none;
   border-radius: 30px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -88,15 +86,11 @@ nav {
   transition: background-color 0.5s ease;
 }
 
-#craps-button:hover,
-#workout-button:hover,
-#roulette-button:hover {
+.big-button:hover {
   background-color: rgba(0,0,0,0);
 }
 
-#craps-div img,
-#workout-div img,
-#roulette-div img {
+.big-div img {
   height: 100%;
   width: 100%;
   object-fit: cover;
