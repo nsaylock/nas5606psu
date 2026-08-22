@@ -93,3 +93,28 @@ body {
   background-color: rgb(51, 51, 51);
   border: none;
 }
+
+#debug-box {
+  font-size: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.main-bet {
+  position: absolute;
+  top: 500px;
+  left: 100px;
+}
+
+#main-bet-button {
+  position: relative;
+  height: 150px;
+  width: 150px;
+  border-radius: 75px;
+  background-color: transparent;
+  border-style: solid;
+  border-width: 5px;
+  border-color: orange;
+  z-index: 20;
+}

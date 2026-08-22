@@ -942,10 +942,9 @@ function update_staged_bet_chips() {
     let index = 0;
     let chipCount = 0;
     let rotation;
-    for (const img in stagedBetChips.chip) {
-      stagedBetChips.chip[img].remove();
-    }
-    //stagedBetChips.chip = []
+    // Clear All imgs from stagedBetChips Div
+    stagedBetChips.location.replaceChildren();
+    
     let chipStructure = get_chip_structure(stagedBet); // of the stagedBet
 
     for (const color in chipStructure) {

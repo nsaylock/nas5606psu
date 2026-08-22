@@ -46,6 +46,13 @@
     text-align: center;
     margin-right: 35px;
 }
+
+.table-chip-img {
+    position: absolute;
+    height: 60px;
+    width: 60px;
+}
+
 .side-chip-img {
     position: absolute;
     height: 40px;

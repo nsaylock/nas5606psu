@@ -57,6 +57,11 @@ const doubleDownButton = document.getElementById('double-down-button');
 doubleDownButton.addEventListener('click', double_down);
 const splitButton = document.getElementById('split-button');
 
+const debugBox = document.getElementById('debug-box');
+function db(message) {
+  debugBox.textContent = `${message}`;
+}
+
 
 function new_round() {
   dealerHand = [];
@@ -205,3 +210,30 @@ function update_dealer_total() {
   dealerTotalElement.textContent = dealerTotal;
 }
 
+
+let mainBet = {
+  button: document.getElementById('main-bet-button'),
+  amount: 0,
+  chips: {
+    location: document.getElementById('main-bet-chips'),
+    chip: [],
+    leftSpacing: 15,
+    bottom: 0
+  }
+}
+
+
+mainBet.button.addEventListener('click', ()=>{
+  main_bet();
+});
+
+function main_bet() {
+  if (stagedBet > minBet) {
+
+    add_chips_to_table(mainBet.chips, stagedBet, 'side', 'side', 'normal');
+
+    mainBet.amount = commit_bet(mainBet.amount);
+  } else {
+    alert('The min bet is $10');
+  }
+}

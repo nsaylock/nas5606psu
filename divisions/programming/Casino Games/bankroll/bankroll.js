@@ -11,6 +11,8 @@ let newMessage = '';
 let roundUpBet = false;
 let goodToPlace = false;
 let chipDisplay = 'blank';
+let xMargin = 8;
+let yMargin = 6;
 
 
 // Table Bet Storage Variables
@@ -182,62 +184,69 @@ function play_increment_sound() {
   }
 }
 
+// -------------------------- //
+
+// Previous staged bet chip structure
+let prevSBCS = get_chip_structure(0);
+
 function update_staged_bet_chips() {
-  if (stagedBet != prevStagedBet) {
-    let thisLength = 0;
-    let index = 0;
-    let chipCount = 0;
     let rotation;
-    for (const img in stagedBetChips.chip) {
-      stagedBetChips.chip[img].remove();
-    }
-    //stagedBetChips.chip = []
-    let chipStructure = get_chip_structure(stagedBet); // of the stagedBet
-
-    for (const color in chipStructure) {
-      if (chipStructure[color] != 0) {
-        thisLength += chipStructure[color];
-      }
-    }
-    //alert(thisLength);
-
-    difference = thisLength - stagedBetChips.prevLength;
-    if (difference >= 0) keep = stagedBetChips.prevLength;
-    if (difference < 0) keep = stagedBetChips.prevLength - Math.abs(difference);
-
-    for (const color in chipStructure) {
-      if (chipStructure[color] != 0) {
-        for (i = 0; i < chipStructure[color]; i++) {
-          index = stagedBetChips.chip.length;
-          
-          stagedBetChips.chip[index] = document.createElement('img');
-          thisChip = stagedBetChips.chip[index];
-
-
-        if (i < keep) {
-          rotation = stagedBetChips.rotation[i];
+    let newChip;
+    // Current staged bet Chip Structure
+    let currentSBCS = get_chip_structure(stagedBet);
+    let step = {color: 'none', num: 0, operation: 'none'}
+    let instructions = [];
+    
+    // Calculate difference then figure out how many chips to remove and how many to add
+    for (const color in currentSBCS) {
+      if (currentSBCS[color] > 0 || prevSBCS[color] > 0) {
+        difference = currentSBCS[color] - prevSBCS[color];
+        step.color = color;
+        step.num = Math.abs(difference);
+        if (difference > 0) {
+          step.operation = 'add';
         } else {
-          rotation = Math.ceil(Math.random() * 6);
-          stagedBetChips.rotation[i] = rotation;
+          step.operation = 'remove';
         }
-
-
-          thisChip.src = `../img/chips/side/${chipDisplay}/${color}_chip_${rotation}.png`;
-          thisChip.classList.add('side-chip-img');
-          thisChip.style.marginBottom = `${chipCount * 6}px`;
-          stagedBetChips.location.appendChild(thisChip);
-          chipCount += 1;
-          stagedBetChips.prevLength = chipCount;
+        // pushes a copy of step so the next one doesn't update it in the array
+        // Called Array Spread Syntax
+        instructions.push({ ...step });
+      }
+    }
+    for (const step in instructions) {
+      if (instructions[step].operation == 'remove') {
+        for (i = 0; i < instructions[step].num; i++) {
+          index = stagedBetChips.chip.lastIndexOf(instructions[step].color);
+          stagedBetChips.chip.splice(index, 1);
+          stagedBetChips.location.removeChild(stagedBetChips.location.children[index]);
+          // Need to adjust margins after removing chips from middle of stack
+          for (j = index; j < stagedBetChips.chip.length; j++) {
+            stagedBetChips.location.children[j].style.marginBottom = `${j * 6}px`;
+          }
+          
         }
       }
     }
-    update_bankroll_chips(bankroll-stagedBet);
-    prevStagedBet = stagedBet;
-    playSound = true;
-  } else {
-    playSound = false;
-  }
+    for (const step in instructions) {
+      if (instructions[step].operation == 'add') {
+        for(i = 0; i < instructions[step].num; i++) {
+          newChip = document.createElement('img');
+          rotation = Math.ceil(Math.random()*6);
+          newChip.src = `../img/chips/side/${chipDisplay}/${instructions[step].color}_chip_${rotation}.png`;
+          newChip.classList.add('side-chip-img');
+          newChip.style.marginBottom = `${stagedBetChips.chip.length * 6}px`;
+          stagedBetChips.chip.push(instructions[step].color);
+          stagedBetChips.location.appendChild(newChip);
+        }
+      }
+    }
+    
+    // All done, update previous, sbAdd, sbRemove for next change
+    prevSBCS = currentSBCS;
+    db(stagedBet)
 }
+
+// ---------------------- //
 
 function load_bankroll_chips() {
   //create 1 div for stack of black chips
@@ -262,7 +271,7 @@ function update_bankroll_chips(amount) {
   let chipStructure = get_chip_structure(amount);
   let rotation;
   let keep;
-  // ----------- generate whole new bankroll each timee -------------
+  // ----------- generate whole new bankroll each time -------------
   for (const divs in bankrollStack) {
     if (bankrollDiv.firstChild) {
       bankrollDiv.removeChild(bankrollDiv.firstChild);
@@ -536,12 +545,11 @@ function reset_stagedBet() {
     if (playSound == true) {
       play_decrement_sound();
     }
-
     playSound = true;
-
-    update_staged_bet_chips();
+    prevSBCS = get_chip_structure(0);
+    stagedBetChips.location.replaceChildren();
+    play_decrement_sound();
   }
-  
 }
 
 function update_moneyOnTable(action, amount) {
