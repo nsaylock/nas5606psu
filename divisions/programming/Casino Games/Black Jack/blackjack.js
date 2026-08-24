@@ -4,10 +4,11 @@
   causes money to be subtracted from bankroll and ghost added
   to money on table
 2. Pull back bet button does not work
-3. Double down not working properly (didn't get there yet)
+3. Bet remains doubled after doubled down win
 4. Split still not implemented
 5. Dealer delay function entering end round more than once when total > 17
 6. Decrement sound playing when reset staged bet
+7. Still only using 1 deck of cards
 
 */
 
@@ -49,15 +50,19 @@ shuffleDeck();
 
 // Finish Initial Setup
 const dealerHandDiv = document.getElementById('dealer-hand');
-const playerHandDiv = document.getElementById('player-hand');
 let dealerHand = [];
 let dealerTotal = 0;
 let dealerAces = {num:0};
 let faceDownCardValue = 0;
-let playerHand = [];
-let playerTotal = 0;
-let playerAces = {num:0};
+let player = [{
+  div: document.getElementById('player-hand'),
+  hand: [],
+  total: 0,
+  aces: 0
+}];
+let numOfPlayerHands = 1;
 let round = 0;
+let handIndex = 0;
 
 const dealButton = document.getElementById('deal-button');
 dealButton.addEventListener('click', deal_round);
@@ -70,6 +75,7 @@ stayButton.addEventListener('click', stay);
 const doubleDownButton = document.getElementById('double-down-button');
 doubleDownButton.addEventListener('click', double_down);
 const splitButton = document.getElementById('split-button');
+splitButton.addEventListener('click', split);
 
 const debugBox = document.getElementById('debug-box');
 function db(message) {
@@ -77,6 +83,25 @@ function db(message) {
 }
 
 const messageBoxDiv = document.getElementById('message-box');
+
+let splitBet = [];
+
+let mainBet = {
+  button: document.getElementById('main-bet-button'),
+  amount: 0,
+  chips: {
+    location: document.getElementById('main-bet-chips'),
+    chip: [],
+    leftSpacing: 15,
+    bottom: 0
+  }
+}
+
+const mainBetAmount = document.getElementById('main-bet-amount');
+
+mainBet.button.addEventListener('click', ()=>{
+  main_bet();
+});
 
 function message(message) {
   const newDiv = document.createElement('div');
@@ -90,28 +115,51 @@ function new_round() {
   dealerTotal = 0;
   dealerAces = 0;
   dealerHandDiv.replaceChildren();
-  playerHand = [];
-  playerTotal = 0;
-  playerAces = 0;
+  for (i = 0; i < handIndex + 1; i++) {
+    player[handIndex].hand = [];
+    player[handIndex].total = 0;
+    player[handIndex].aces = 0;
+  }
+  
   playerHandDiv.replaceChildren();
   hide(splitButton);
   messageBoxDiv.replaceChildren();
+  make_active(hitButton);
+  make_active(stayButton);
+  make_active(doubleDownButton);
 }
+
+document.addEventListener('keydown', function(event) {
+  event.preventDefault();
+  if (event.key == 'h' && !hitButton.classList.contains('inactive')) {
+    hit();
+  } else if (event.key == 's' && !stayButton.classList.contains('inactive')) {
+    stay();
+  } else if (event.key == 'Enter' && !dealButton.classList.contains('inactive')) {
+    deal_round();
+  } else if (event.key == 'p' && !splitButton.classList.contains('hidden')) {
+    split();
+  }
+})
 
 function deal_round() {
   if (round > 0) new_round();
-  deal_card('player', playerHand, playerHandDiv);
+  deal_card('player', player[handIndex].hand, player[handIndex].div);
   deal_face_down_card();
-  deal_card('player', playerHand, playerHandDiv);
+  deal_card('player', player[handIndex].hand, player[handIndex].div);
   deal_card('dealer', dealerHand, dealerHandDiv);
   make_inactive(dealButton);
-  if (playerHand[0].at(0) == playerHand[1].at(0)) {
+  make_active(hitButton);
+  make_active(stayButton);
+  make_active(doubleDownButton);
+  if (player[handIndex].hand[0].at(0) == player[handIndex].hand[1].at(0)) {
     unhide(splitButton);
   }
   update_player_total();
+  check_aces('player');
   update_dealer_total();
   round++;
-  if (playerTotal == 21) {
+  if (player[handIndex].total == 21) {
     end_round();
     dealer_reveal_card();
   }
@@ -136,45 +184,141 @@ function deal_face_down_card() {
 function deal_card(id, hand, element) {
   reset_stagedBet();
   if (deck.length < 1) shuffleDeck();
-  face = deck[deck.length-1].face;
-  value = deck[deck.length-1].value;
+  //face = deck[deck.length-1].face;
+  //value = deck[deck.length-1].value;
+  face = '8H';
+  value = 8;
   const img = document.createElement('img');
   img.src = `playing_cards/${face}.png`;
   img.className = 'card';
   element.appendChild(img);
   hand.push(face);
+  for (i = 0; i < hand.length; i++) {
+    if (id == 'player') {
+      element.children[i].style.margin = `0 0 ${i*25}px ${i*120}px`
+    } else if (id == 'dealer') {
+      element.children[i].style.marginLeft = `${i*120}px`
+    }
+  }
 
   if (face.at(0) == 'A') {
-    if (id == 'player') playerAces++;
+    if (id == 'player') player[handIndex].aces++;
     else dealerAces++;
   }
 
-  if (id == 'player') playerTotal += value;
+  if (id == 'player') player[handIndex].total += value;
   else dealerTotal += value;
   deck.pop();
 }
 
+function check_aces(id) {
+  if (id == 'player') {
+    if (player[handIndex].total > 21 && player[handIndex].aces > 0) {
+      player[handIndex].total -= 10;
+      player[handIndex].aces--;
+      update_player_total();
+    }
+  } else if (id == 'dealer') {
+    if (dealerTotal > 21 && dealerAces > 0) {
+      dealerTotal -= 10;
+      dealerAces--;
+      update_dealer_total();
+    }
+  }
+}
+
 function hit() {
-  deal_card('player', playerHand, playerHandDiv);
+  deal_card('player', player[handIndex].hand, player[handIndex].div);
   update_player_total();
-  if (playerTotal == 21) {
+  check_aces('player');
+  if (player[handIndex].hand[0].at(0) == player[handIndex].hand[1].at(0)) {
+    unhide(splitButton);
+  }
+  make_inactive(doubleDownButton);
+  if (player[handIndex].total == 21) {
     stay();
-  } else if (playerTotal > 21 && playerAces > 0) {
-    playerTotal -= 10;
-    playerAces--;
-    update_player_total();
-  } else if (playerTotal > 21) {
+  } else if (player[handIndex].total > 21) {
     end_round();
   }
 }
 
 function stay() {
-  dealer_turn();
+  if (handIndex + 1 < numOfPlayerHands) {
+    handIndex++;
+    // Then move the UI indicator here
+  } else {
+    dealer_turn();
+  }
 }
 
 function double_down() {
+  // Return the current main bet to staged bet, set to prev sb chip structure,
+  // double then update staged bet and commit back to main bet
+  // . . . spread syntax unpacks array into individual arguments
+  stagedBetChips.location.replaceChildren(...mainBet.chips.location.children);
+  stagedBetChips.chip = mainBet.chips.chip;
+  bankroll += mainBet.amount;
+  prevSBCS = get_chip_structure(mainBet.amount);
+  stagedBet = mainBet.amount * 2;
+  update_staged_bet_chips(stagedBet);
+  main_bet();
   hit();
   stay();
+}
+
+const playerHandContainer = document.getElementById('player-hand-container');
+let splitIndex = 0;
+
+function split() {
+  numOfPlayerHands = 2;
+
+  splitBet.push({
+    amount: 0,
+    chips: {
+      location: document.createElement('div'),
+      chip: [],
+      leftSpacing: 0,
+      bottom: 0
+    }
+  });
+  splitBet[splitIndex].amount = mainBet.amount;
+
+  splitIndex++;
+  hide(splitButton);
+
+  player.push({
+    div: document.createElement('div'),
+    hand: [],
+    total: 0,
+    aces: 0
+  });
+
+  // Here we go ...
+  player[splitIndex].div.id = 'player-split-hand';
+  playerHandContainer.appendChild(player[splitIndex].div);
+  
+  
+  let card = player[handIndex].hand.splice(1, 1);
+  player[splitIndex].hand.push(card);
+  player[splitIndex].div.replaceChildren(player[handIndex].div.children[1]);
+  player[splitIndex].div.children[0].style.margin = '0 0 0 0';
+  player[handIndex].total = player[handIndex].total/2;
+  playerTotalElement.textContent = player[handIndex].total;
+  player[splitIndex].total = player[handIndex].total;
+
+
+  playerHandContainer.appendChild(splitBet[splitIndex-1].chips.location);
+  splitBet[splitIndex-1].chips.location.classList.add('split-bet-chips');
+  // Get position of left side of player split hand div
+  for (i = 1; i < player.length; i++) {
+    rect = player[i].div.getBoundingClientRect();
+    splitBet[i-1].chips.location.style.left = `${rect.left - 50}px`;
+  }
+  
+  add_chips_to_table(splitBet[splitIndex-1].chips, splitBet[splitIndex-1].amount, 'side', 'side', 'normal');
+  bankroll -= splitBet[splitIndex-1].amount;
+  update_bankroll();
+  play_increment_sound();
 }
 
 function dealer_reveal_card() {
@@ -182,6 +326,7 @@ function dealer_reveal_card() {
   dealerFaceDownCard.src = `playing_cards/${dealerHand[0]}.png`;
   dealerTotal += faceDownCardValue;
   update_dealer_total();
+  check_aces('dealer');
 }
 
 function dealer_turn() {
@@ -197,9 +342,7 @@ function dealer_delay_func() {
       if (dealerTotal < 17) {
         dealer_delay_func();
       } else if (dealerTotal > 21 && dealerAces > 0) {
-        dealerTotal -= 10;
-        dealerAces--;
-        update_dealer_total;
+        check_aces('dealer');
         dealer_delay_func();
       } else {
         end_round();
@@ -208,19 +351,22 @@ function dealer_delay_func() {
 }
 
 function end_round() {
-  if (playerTotal > 21) bust();
-  else if (playerTotal == 21 && playerHand.length == 2) blackjack();
-  else if (playerTotal > dealerTotal || dealerTotal > 21) {
+  make_inactive(hitButton);
+  make_inactive(stayButton);
+  make_inactive(doubleDownButton);
+  if (player[handIndex].total > 21) bust();
+  else if (player[handIndex].total == 21 && player[handIndex].hand.length == 2) blackjack();
+  else if (player[handIndex].total > dealerTotal || dealerTotal > 21) {
     // Player Win
     let winAmount = mainBet.amount;
     win(winAmount);
     make_active(dealButton);
-  } else if (playerTotal == dealerTotal) {
+  } else if (player[handIndex].total == dealerTotal) {
     // Push
     message('Push');
     make_active(dealButton);
   } else {
-    // PlayerTotal < dealerTotal <= 21
+    // player.total < dealerTotal <= 21
     // Player Lose
     lose();
   }
@@ -255,8 +401,10 @@ function bust() {
 }
 
 function make_inactive(button) {
-  button.classList.add('inactive');
-  button.disabled = true;
+  if (button.classList.contains('inactive') == false) {
+    button.classList.add('inactive');
+    button.disabled = true;
+  }
 }
 
 function make_active(button) {
@@ -275,7 +423,7 @@ function unhide(button) {
 }
 
 function update_player_total() {
-  playerTotalElement.textContent = playerTotal;
+  playerTotalElement.textContent = player[handIndex].total;
 }
 
 function update_dealer_total() {
@@ -283,22 +431,7 @@ function update_dealer_total() {
 }
 
 
-let mainBet = {
-  button: document.getElementById('main-bet-button'),
-  amount: 0,
-  chips: {
-    location: document.getElementById('main-bet-chips'),
-    chip: [],
-    leftSpacing: 15,
-    bottom: 0
-  }
-}
 
-const mainBetAmount = document.getElementById('main-bet-amount');
-
-mainBet.button.addEventListener('click', ()=>{
-  main_bet();
-});
 
 function main_bet() {
   if (stagedBet > minBet) {
@@ -319,6 +452,8 @@ function main_bet() {
   }
 }
 
+
+
 function reset_mainBet() {
   mainBet.amount = 0;
   mainBet.chips.location.replaceChildren();
@@ -328,3 +463,6 @@ function reset_mainBet() {
 }
 
 make_inactive(dealButton);
+make_inactive(hitButton);
+make_inactive(stayButton);
+make_inactive(doubleDownButton);
