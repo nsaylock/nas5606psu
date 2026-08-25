@@ -68,6 +68,7 @@ let player = [{
 let numOfPlayerHands = 1;
 let round = 0;
 let handIndex = 0;
+let gameInProgress = false;
 
 const dealButton = document.getElementById('deal-button');
 dealButton.addEventListener('click', deal_round);
@@ -105,8 +106,28 @@ bet[0].chips.location = document.getElementById('main-bet-chips');
 const mainBetAmount = document.getElementById('main-bet-amount');
 
 bet[0].button.addEventListener('click', ()=>{
-  main_bet();
+  if (pullBackInProgress == true) {
+    bet[0].amount = pull_back_bet(bet[0].amount);
+    bet[0].chips.location.replaceChildren();
+  } else if (bet[0].amount != 0 && stagedBet != 0) {
+    add_to_bet(stagedBet);
+  } else {
+    main_bet();
+  }
 });
+
+function add_to_bet(amountIncrease) {
+  // Return the current main bet to staged bet, set to prev sb chip structure,
+  // double then update staged bet and commit back to main bet
+  // . . . spread syntax unpacks array into individual arguments
+  stagedBetChips.location.replaceChildren(...bet[0].chips.location.children);
+  stagedBetChips.chip = bet[0].chips.chip;
+  bankroll += bet[0].amount;
+  prevSBCS = get_chip_structure(bet[0].amount);
+  stagedBet = bet[0].amount + amountIncrease;
+  update_staged_bet_chips(stagedBet);
+  main_bet();
+}
 
 function message(message) {
   const newDiv = document.createElement('div');
@@ -174,6 +195,7 @@ document.addEventListener('keydown', function(event) {
 })
 
 function deal_round() {
+  bet[0].button.disabled = true;
   if (round > 0) new_round();
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
   deal_face_down_card();
@@ -291,16 +313,7 @@ let doubleDown = false;
 
 function double_down() {
   doubleDown = true;
-  // Return the current main bet to staged bet, set to prev sb chip structure,
-  // double then update staged bet and commit back to main bet
-  // . . . spread syntax unpacks array into individual arguments
-  stagedBetChips.location.replaceChildren(...bet[0].chips.location.children);
-  stagedBetChips.chip = bet[0].chips.chip;
-  bankroll += bet[0].amount;
-  prevSBCS = get_chip_structure(bet[0].amount);
-  stagedBet = bet[0].amount * 2;
-  update_staged_bet_chips(stagedBet);
-  main_bet();
+  add_to_bet(bet[0].amount);
   hit();
   if (player[handIndex].total < 21) stay();
   
@@ -472,6 +485,7 @@ function end_round() {
   make_inactive(hitButton);
   make_inactive(stayButton);
   make_inactive(doubleDownButton);
+  bet[0].button.disabled = false;
   if (outcome == 'lose') {
     make_inactive(dealButton);
     reset_bet();
@@ -512,7 +526,7 @@ function bust() {
 
 
 function main_bet() {
-  if (stagedBet > minBet) {
+  if (stagedBet >= minBet) {
 
     //add_chips_to_table(bet[0].chips, stagedBet, 'side', 'side', 'normal');
     bet[0].chips.location.replaceChildren(...stagedBetChips.location.children);

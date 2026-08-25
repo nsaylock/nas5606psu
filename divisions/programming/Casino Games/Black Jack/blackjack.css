@@ -49,13 +49,11 @@ body {
 }
 
 #split-chips-container {
-  outline: 1px solid green;
   height: 50px;
   bottom: 50px;
 }
 
 #player-hand, #player-split-hand, .split-bet-chips {
-  outline: 1px solid red;
   position: relative;
   height: 250px;
   width: 50%;
