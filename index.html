@@ -4,400 +4,365 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="stylehome.css">
+    <link rel="stylesheet" href="style-home.css">
 </head>
 <body>
+  <h1>nicksaylock.com</h1>
+  <div id="bgIMG"></div>
+  <div id="bgOverlay"></div>
+  <div class="carousel">
+    <div id="career">
+      <a href="divisions/career/resume.html">
+        <button id="career-button">Career</button>
+      </a> 
+      <div class="career-outline"></div>
+    </div>
 
-<div class="main">
-  <a href="index2.html"><button class="index2">index2.html</button></a>
-  <div id="programming">Programming</div>
-  <div id="programming-overlay"></div>
-  <a href="divisions/programming/programming-home.html">
-    <button id="programming-button"></button>
-  </a>
-  <article id="programming-text">Computer<br>Programming</article>
+    <div id="program">
+      <a href="divisions/programming/programming-home.html">
+        <button id="program-button">Computer<br>Programming</button>
+      </a>
+      <div class="program-outline"></div>
+    </div>
 
-  <div id="career-border"></div>
-  <div id="career"></div>
-  <div id="career-overlay"></div>
-  <a href="divisions/career/resume.html">
-    <button id="career-button"></button>
-  </a>
-  <article id="career-text">Career</article>
-  
-  <div id="music-border"></div>
-  <div id="music">Music</div>
-  <div id="music-overlay"></div>
-  <a href="divisions/music/music-home.html">
-    <button id="music-button"></button>
-  </a>
-  <article id="music-text">Music<br>Production</article>
+    <div id="music">
+      <a href="divisions/music/music-home.html">
+        <button id="music-button">Music<br>Production</button>
+      </a>
 
 
-  
-</div>
+      <div class="music-outline"></div>
+    </div>
+
+    <button id="left">
+      <img src="img-home/left-arrow.png" class="left-arrow">
+    </button>
+    <button id="right">
+      <img src="img-home/right-arrow.png" class="right-arrow" >
+    </button>
 
 
-
-
+  </div>
 </body>
+
 <script>
-  const programming = document.getElementById('programming');
-  const programmingOverlay = document.getElementById('programming-overlay');
-  const programmingButton = document.getElementById('programming-button');
-  const programmingText = document.getElementById('programming-text');
-
+  const bgIMG = document.getElementById('bgIMG');
+  const bgOverlay = document.getElementById('bgOverlay');
   const career = document.getElementById('career');
-  const careerBorder = document.getElementById('career-border');
   const careerButton = document.getElementById('career-button');
-  const careerOverlay = document.getElementById('career-overlay');
-  const careerText = document.getElementById('career-text');
-
-
+  const program = document.getElementById('program');
+  const programButton = document.getElementById('program-button');
   const music = document.getElementById('music');
-  const musicOverlay = document.getElementById('music-overlay');
-  const musicBorder = document.getElementById('music-border');
   const musicButton = document.getElementById('music-button');
-  const musicText = document.getElementById('music-text');
+  const left = document.getElementById('left');
+  const right = document.getElementById('right');
 
-  let time = 10000
-  let recoverTime = 0;
-  let recoverSpeed = 3;
-  let animationId;
-  let p = 0;
-  let xPosition = 0;
-  let xLeave = 0;
-  let yLeave = 0;
-  let careerAnimationId;
-  let complete;
-  let mouseLeft;
-  const m = 1.4;
-  let carPos = 0;
-  let carTemp = 0;
-  let musPos = 0;
-  let musTemp = 0;
-  const colorTime = 750;
-  const bgImgTime = 25000;
-  let bgStepId;
-  const textSlideSpeed = 4;
-  const textTurnAround = 12;
+  const time = 1000;
+  const totalFrames = time/100*6;
+  const edgeMax = 350;
+  let circle = {
+    left: program,
+    leftButton: programButton,
+    leftName: 'program',
+    center: career,
+    centerButton: careerButton,
+    centerName: 'career',
+    right: music,
+    rightButton: musicButton,
+    rightName: 'music'
+  }
 
+  let mult = 1;
+  let sw = 0;
+  let swTotal = 350;
+  let prevSW = 0;
+  let allow = true;
+  let arrowsGone = false;
+  document.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (allow) {
+      if (e.wheelDelta < 0) {
+        cycle_right();
+      } else {
+        cycle_left();
+      }
+    }
+    if (arrowsGone == false) dissolve_arrows();
+  }, {passive: false}
+);
 
- 
-  programmingButton.addEventListener('mouseenter', (e) => {
-    brighten('programming');
-    animation('both', 'left', time);
+function dissolve_arrows() {
+  left.animate([
+    { opacity: '100%' },
+    { opacity: '0%' }
+  ], { 
+    duration: 500,
+    fill: 'forwards'
   });
+  right.animate([
+    { opacity: '100%' },
+    { opacity: '0%' }
+  ], { 
+    duration: 500,
+    fill: 'forwards'
+  });
+  arrowsGone = true;
+}
+  
+  // Some kind of coordinate system stored as variables... Oooh
+    let xL = -250;
+    let yL = -25;
+    let Lscale = 0.75;
+    let shrinkScale = 1;
+    let growScale = 0.75;
+    let xC = 0;
+    let yC = 0;
+    let xR = 250;
+    let yR = -25;
 
-  careerButton.addEventListener('mouseenter', (e) => {
-    brighten('career');
-    animation('career', 'right', time);
-    });
 
-  musicButton.addEventListener('mouseenter', (e) => {
-    brighten('music');
-    animation('music', 'right', time);
-    });
+  // Control Animation Speed
   
 
-    // Mouse Leave
+  left.addEventListener('click', ()=> { if (allow) cycle_left() });
+  right.addEventListener('click', ()=> { if (allow) cycle_right() });
 
-  programmingButton.addEventListener('mouseleave', function() {
-    darken('programming');
-    mouseLeft = 'programming';
-    carPos = carTemp;
-    musPos = musTemp;
-    cancelAnimationFrame(animationId);
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function cycle_left() {
+    direction_flip('left');
+    cycle_animation('left');
+    await delay(time);
+    switch_circles();
+  }
+
+  async function cycle_right() {
+    direction_flip('right');
+    cycle_animation('right');
+    await delay(time);
+    switch_circles();
+  }
+
+  let flipKey = 'right';
+  let flip = false;
+  function direction_flip(direction) {
+    //Stop box shadow from appearing while animation in progress
+    add_no_hover(career);
+    add_no_hover(program);
+    add_no_hover(music);
+    disable_all_buttons();
+
+    if (flipKey == direction) {
+      flip = true;
+      if (direction == 'right') flipKey = 'left';
+      else flipKey = 'right';
+    }
+    if (flip == true) {
+      tempLeft = circle.left;
+      tempLB = circle.leftButton;
+      tempLN = circle.leftName;
+      tempRight = circle.right;
+      tempRB = circle.rightButton;
+      tempRN = circle.rightName;
+      circle.left = tempRight;
+      circle.right = tempLeft;
+      circle.leftButton = tempRB;
+      circle.leftName = tempRN;
+      circle.rightButton = tempLB;
+      circle.rightName = tempLN;
+      flip = false;
+    }
+    
+  }
+
+  async function switch_circles() {
+    allow = true;
+    tempLeft = circle.left;
+    tempLB = circle.leftButton;
+    tempLN = circle.leftName;
+    tempRight = circle.right;
+    tempRB = circle.rightButton;
+    tempRN = circle.rightName;
+    tempCenter = circle.center;
+    tempCB = circle.centerButton;
+    tempCN = circle.centerName;
+
+    circle.left = tempCenter;
+    circle.leftButton = tempCB;
+    circle.leftName = tempCN;
+    circle.center = tempRight;
+    circle.centerButton = tempRB;
+    circle.centerName = tempRN;
+    circle.right = tempLeft;
+    circle.rightButton = tempLB;
+    circle.rightName = tempLN;
     cancelAnimationFrame(bgStepId);
-    currentPScale = pscale;
-    programming.style.backgroundSize = '75%';
-    programming.style.backgroundPosition = '0% 0%';
-  });
+    background_animation(circle.centerName);
+    fade_in();
+  }
 
-  careerButton.addEventListener('mouseleave', (e) => {
-    darken('career');
-    mouseLeft = 'career';
-    carPos = carTemp;
-    cancelAnimationFrame(animationId);
-    cancelAnimationFrame(bgStepId);
-    currentCScale = scale;
-    career.style.backgroundSize = '75%';
-    career.style.backgroundPosition = '0% 0%';
-  });
+  function fade_out() {
+    bgOverlay.animate([
+      { backgroundColor: 'rgba(0,0,0,0)'},
+      { backgroundColor: 'rgba(0,0,0,1)'},
+    ],
+    {duration: time,
+      fill: 'forwards'
+    }
+  );
+  }
 
+  function fade_in() {
+    bgOverlay.animate([
+      { backgroundColor: 'rgba(0,0,0,1)'},
+      { backgroundColor: 'rgba(0,0,0,0)'},
+    ],
+    {duration: time,
+      fill: 'forwards'
+    }
+  );
+  }
 
-  musicButton.addEventListener('mouseleave', (e) => {
-    darken('music');
-    mouseLeft = 'music';
-    musPos = musTemp;
-    cancelAnimationFrame(animationId);
-    cancelAnimationFrame(bgStepId);
-    currentMScale = scale;
-    music.style.backgroundSize = '75%';
-    music.style.backgroundPosition = '0% 0%';
-  });
-
-
-  let musStopPoint;
-  let carStopPoint;
-  let currentPScale = 1;
-  let currentMScale = 1;
-  let currentCScale = 1;
-  let pscale = 1;
-
-  function animation(div, action, duration) {
+  function background_animation(front) {
+    if (front == 'career') {
+      imgURL = "url('img-home/Degrees.jpg')";
+      remove_no_hover(career);
+      careerButton.disabled = false;
+    }
+    else if (front == 'program') {
+      imgURL = "url('img-home/new_index_code.png')";
+      remove_no_hover(program);
+      programButton.disabled = false;
+    }
+    else if (front == 'music') {
+      imgURL = "url('img-home/temp_MP.JPG')";
+      remove_no_hover(music);
+      musicButton.disabled = false;
+    }
+    bgIMG.style.backgroundImage = imgURL;
+    let bgTime = 50000;
     let start = null;
-    let xCar = 0;
-    let xMus = 0;
+    function bgStep(timestamp) {
+      if (start == undefined) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < bgTime) {
+        scale = elapsed / bgTime * 0.25;
+        pos = elapsed / bgTime * 30;
+        bgIMG.style.transform = `scale(${1-scale}) translate(${-50 + pos}%, ${-50 + pos}%)`;
+        requestAnimationFrame(bgStep);
+      }
+    }
+    bgStepId = requestAnimationFrame(bgStep);
+  }
+
+  function disable_all_buttons() {
+    careerButton.disabled = true;
+    programButton.disabled = true;
+    musicButton.disabled = true;
+  }
+
+  function add_no_hover(element) {
+    if (!element.classList.contains('no-hover')) {
+      element.classList.add('no-hover');
+    }
+  }
+
+  function remove_no_hover(element) {
+    if (element.classList.contains('no-hover')) {
+      element.classList.remove('no-hover');
+    }
+  }
+
+  background_animation('career');
+
+  function reset_parameters() {
+    xL = -250 * mult;
+    yL = -25;
+    Lscale = 0.75;
+    shrinkScale = 1;
+    growScale = 0.75;
+    xC = 0;
+    yC = 0;
+    xR = 250 * mult;
+    yR = -25;
+  }
+
+  const RTA = totalFrames/7;
+  const LTA = totalFrames - totalFrames/7;
+
+  function cycle_animation(direction) {
+    fade_out();
+
+    allow = false;
+    if (direction == 'left') mult = 1;
+    else mult = -1;
+    let start = null;
+    reset_parameters();
+    let frame = 1;
     function step(timestamp) {
       if (start == undefined) start = timestamp;
       const elapsed = timestamp - start;
-      if (elapsed < duration) {
-      
-      if (div == 'career' || div == 'both'){
-        if (action == 'right') {
-          xCar = (elapsed/duration*100)**1.2 + carPos;
-          scale = elapsed/duration*2 + currentCScale;
-          pscale = currentPScale - elapsed/duration*(currentPScale - 1);
-        } else if (action == 'left' && xCar > -60) {
-          xCar = carPos - (elapsed/duration*100)**1.2;
-          scale = currentCScale - elapsed/duration*(currentCScale - 1);
-          pscale = elapsed/duration*1 + currentPScale;
+      if (elapsed <= time) {
+        
+        // Left slides acros back to right position
+        xL += 500/totalFrames * mult;
+        
+        if (frame < totalFrames/2) {
+          Lscale -= 0.125/totalFrames;
+          yL -= 50/totalFrames;
+        } else {
+          Lscale += 0.125/totalFrames;
+          yL += 50/totalFrames;
         }
+        circle.left.style.transform = `scale(${Lscale}) translate(${xL}px, ${yL}px)`;
 
-        if (div == 'both' && xCar < textTurnAround) {
-          careerText.style.transform = `scale(${scale}) translateX(${xCar*textSlideSpeed}%)`;
-          programmingText.style.transform = `scale(${pscale})`;
-        } else if (div == 'both' && xCar >= textTurnAround) { 
-          careerText.style.transform = `scale(${scale}) translateX(${carStopPoint}%)`;
-          programmingText.style.transform = `scale(${pscale})`;
-        } else if (div == 'career') {
-          if (xCar < textTurnAround) {
-            careerText.style.transform = `scale(${scale}) translateX(${xCar*textSlideSpeed}%)`;
-            programmingText.style.transform = `scale(${pscale})`;
-            carStopPoint = xCar*textSlideSpeed;
-          } else {
-            careerText.style.transform = `scale(${scale}) translateX(${carStopPoint}%)`;
-            programmingText.style.transform = `scale(${pscale})`;
-          }
+
+        // Center slides to left position and shrinks
+        
+        shrinkScale -= 0.25/totalFrames;
+
+        yC -= 25/totalFrames;
+        if (frame <= LTA) {
+          xC -= edgeMax/totalFrames * mult;
+        } else {
+          xC += edgeMax/totalFrames * mult;
+          circle.center.style.zIndex = 1;
         }
+        circle.center.style.transform = `scale(${shrinkScale}) translate(${xC}px, ${yC}px)`;
 
 
-        career.style.clipPath = `polygon(0% 0%, 0% ${80 + xCar*m}%, ${60 + xCar}% 0%)`;
-        careerOverlay.style.clipPath = `polygon(0% 0%, 0% ${80 + xCar*m}%, ${60 + xCar}% 0%)`;
-        careerBorder.style.clipPath = `polygon(0% 0%, 0% ${80 + xCar*m/1.02}%, ${60 + xCar/1.02}% 0%)`;
-        carTemp = xCar;
-      }
-
-      if (div == 'music' || div == 'both'){
-        if (action == 'right' ) {
-          xMus = (elapsed/duration*100)**1.2 + musPos;
-          scale = elapsed/duration*1 + currentMScale;
-          pscale = currentPScale - elapsed/duration*(currentPScale - 1);
-        } else if (action == 'left' && xMus > -60) {
-          xMus = musPos - (elapsed/duration*100)**1.2;
-          pscale = elapsed/duration*1 + currentPScale;
-          scale = currentMScale - elapsed/duration*(currentMScale - 1);
+        // Right slides to center position and grows
+        
+        growScale += 0.25/totalFrames;
+        yR += 25/totalFrames;
+        if (frame <= RTA+1) {
+          xR += edgeMax/totalFrames * mult;
+        } else {
+          xR -= edgeMax/totalFrames * mult;
+          circle.right.style.zIndex = 3;
         }
+        circle.right.style.transform = `scale(${growScale}) translate(${xR}px, ${yR}px)`;
 
-        if (div == 'both' && xMus < textTurnAround) {
-          musicText.style.transform = `scale(${scale}) translateX(${-xMus*textSlideSpeed}%)`;
-          programmingText.style.transform = `scale(${pscale})`;
-        } else if (div == 'both' && xMus >= textTurnAround) { 
-          musicText.style.transform = `scale(${scale}) translateX(${musStopPoint}%)`;
-          programmingText.style.transform = `scale(${pscale})`;
-        }
-        if (div == 'music') {
-          if (xMus < textTurnAround) {
-            musicText.style.transform = `scale(${scale}) translateX(${-xMus*textSlideSpeed}%)`;
-            programmingText.style.transform = `scale(${pscale})`;
-            musStopPoint = -xMus*textSlideSpeed;
-          } else {
-            musicText.style.transform = `scale(${scale}) translateX(${musStopPoint}%)`;
-            programmingText.style.transform = `scale(${pscale})`;
-          }
-        }
+        // Shadow
+        shadow = frame/totalFrames*10*mult;
+        circle.centerButton.style.boxShadow = `inset ${shadow}px 0 35px 25px black`;
+        circle.leftButton.style.boxShadow = `inset ${10 - shadow}px ${shadow}px 35px 25px black`;
+        circle.rightButton.style.boxShadow = `inset 0 ${10 - shadow}px 35px 25px black`;
 
-        music.style.clipPath = `polygon(100% ${20 + xMus*(-m)}%, ${40 + xMus*(-1)}% 100%, 100% 100%)`;
-        musicOverlay.style.clipPath = `polygon(100% ${20 + xMus*(-m)}%, ${40 + xMus*(-1)}% 100%, 100% 100%)`;
-        musicBorder.style.clipPath = `polygon(100% ${20 + xMus*(-m + 0.02)}%, ${40 + xMus*(-0.98)}% 100%, 100% 100%)`;
-        musTemp = xMus;
-      }
-      animationId = requestAnimationFrame(step);
+
+        requestAnimationFrame(step);
+        frame++;
       }
     }
     requestAnimationFrame(step);
   }
 
-  
 
-  function change_zIndex(div){
-    if (div == 'career') {
-      career.style.zIndex = 5;
-      careerBorder.style.zIndex = 5;
-      careerOverlay.style.zIndex = 10;
-      careerText.style.zIndex = 10;
-      music.style.zIndex = 0;
-      musicBorder.style.zIndex = 0;
-      musicOverlay.style.zIndex = 0;
-      musicText.style.zIndex = 2;
-    } else if (div == 'music') {
-      music.style.zIndex = 5;
-      musicBorder.style.zIndex = 5;
-      musicOverlay.style.zIndex = 10;
-      musicText.style.zIndex = 10;
-      career.style.zIndex = 0;
-      careerBorder.style.zIndex = 0;
-      careerOverlay.style.zIndex = 0;
-      careerText.style.zIndex = 2;
-    }
-  }
-
-
-  let textStepId;
-  let scale = 1;
-  let currentScale = 1;
-
-  function revert_text(div) {
-    let start = null;
-    let y;
-    function textStep(timestamp) {
-      if (start == undefined) start = timestamp;
-      const timeElapsed = timestamp - start;
-      if (timeElapsed <= 2000) {
-        scale = currentScale - timeElapsed/2000*(currentScale - 1);
-
-
-        if (div == 'programming') {
-          programmingText.style.transform = `scale(${scale})`;
-        } else if (div == 'career') {
-          careerText.style.transform = `scale(${scale}) translateX(${carPos*5}%)`;
-        } else if (div == 'music') {
-          musicText.style.transform = `scale(${scale})`;
-        }
-        textStepId = requestAnimationFrame(textStep);
-      }
-    }
-    requestAnimationFrame(textStep);
-  }
-
-  function animate_text(div) {
-    let start = null;
-    let y;
-    function textStep(timestamp) {
-      if (start == undefined) start = timestamp;
-      const timeElapsed = timestamp - start;
-      if (timeElapsed <= 5000) {
-        scale = 1 + timeElapsed/5000*2;
-
-
-        if (div == 'programming') {
-          programmingText.style.transform = `scale(${scale})`;
-        } else if (div == 'career') {
-          careerText.style.transform = `scale(${scale}) translateX(${carPos*5}%)`;
-        } else if (div == 'music') {
-          musicText.style.transform = `scale(${scale})`;
-        }
-        textStepId = requestAnimationFrame(textStep);
-      }
-    }
-    requestAnimationFrame(textStep);
-  }
-
-  function animate_bg_img(div) {
-    let start = null;
-    let x;
-    function bgStep(timestamp) {
-      if (start == undefined) start = timestamp;
-      const elapsed = timestamp - start;
-
-      if (elapsed < bgImgTime) {
-        x = elapsed/bgImgTime*20;
-
-        if (div == 'career') {
-          career.style.backgroundSize = `${75 + x}%`;
-          career.style.backgroundPosition = `${x}% -${x}%`;
-        } else if (div == 'programming') {
-          programming.style.backgroundSize = `${75 + x}%`;
-          programming.style.backgroundPosition = `-${x}% ${x*4}%`;
-        } else if (div == 'music') {
-          music.style.backgroundSize = `${75 + x}%`;
-          music.style.backgroundPosition = `-${x*6}% -${x*4}%`;
-        }
-        
-
-        bgStepId = requestAnimationFrame(bgStep);
-      }
-    }
-    requestAnimationFrame(bgStep);
-  }
-
-  function brighten(div) {
-    change_zIndex(div);
-    animate_bg_img(div);
-    switch (div) {
-      case 'career':
-        careerOverlay.animate([
-          { backgroundColor: 'rgba(0,0,0,0.5)'},
-          { backgroundColor: 'rgba(0,0,0,0)'}
-        ], {
-          duration: colorTime,
-          fill: 'forwards'
-        });
-        
-        break;
-      case 'programming':
-        programmingOverlay.animate([
-          { backgroundColor: 'rgba(0,0,0,0.5)'},
-          { backgroundColor: 'rgba(0,0,0,0)'}
-        ], {
-          duration: colorTime,
-          fill: 'forwards'
-        });
-        break;
-      case 'music':
-        musicOverlay.animate([
-          { backgroundColor: 'rgba(0,0,0,0.5)'},
-          { backgroundColor: 'rgba(0,0,0,0)'}
-        ], {
-          duration: colorTime,
-          fill: 'forwards'
-        });
-        break;
-    }
-  }
-
-  function darken(div) {
-    switch (div) {
-      case 'career':
-        careerOverlay.animate([
-          { backgroundColor: 'rgba(0,0,0,0)'},
-          { backgroundColor: 'rgba(0,0,0,0.5)'}
-        ], {
-          duration: colorTime,
-          fill: 'forwards'
-        });
-        break;
-      case 'programming':
-        programmingOverlay.animate([
-          { backgroundColor: 'rgba(0,0,0,0)'},
-          { backgroundColor: 'rgba(0,0,0,0.5)'}
-        ], {
-          duration: colorTime,
-          fill: 'forwards'
-        });
-        break;
-      case 'music':
-        musicOverlay.animate([
-          { backgroundColor: 'rgba(0,0,0,0)'},
-          { backgroundColor: 'rgba(0,0,0,0.5)'}
-        ], {
-          duration: colorTime,
-          fill: 'forwards'
-        });
-        break;
-    }
-  }
+disable_all_buttons();
+careerButton.disabled = false;
 
 </script>
+
 </html>

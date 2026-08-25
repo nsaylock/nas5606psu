@@ -1,7 +1,11 @@
+@charset "UTF-8";
+
 html {
   width: 100dvw;
   overflow-x: hidden;
 }
+
+
 
 *{
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -42,10 +46,11 @@ h1 {
   top: 50px;
 }
 
+
 .carousel {
   position: relative;
-  height: 50vh;
-  width: 80vw;
+  height: 500px;
+  width: 900px;
   top: 15vh;
   justify-self: center;
   display: flex;
@@ -72,6 +77,10 @@ h1 {
   font-weight: 600;
 }
 
+#career-button:disabled, #music-button:disabled {
+  color: black;
+}
+
 .career-outline, .program-outline, .music-outline {
   border: 6px solid black;
   height: 294px;
@@ -84,6 +93,12 @@ h1 {
   background-image: url('img-home/Degrees.jpg');
   background-size: cover;
   z-index: 3;
+  transition: box-shadow 1s ease;
+}
+
+#career:not(.no-hover):hover, #program:not(.no-hover):hover,
+#music:not(.no-hover):hover {
+  box-shadow: 0 0 100px 20px rgb(201, 172, 10);
 }
 
 #program {
@@ -91,19 +106,23 @@ h1 {
   background-size: cover;
   transform: scale(0.75) translate(-250px, -25px);
   z-index: 1;
+  transition: box-shadow 1s ease;
 }
 
 #program-button {
   color: white;
   box-shadow: inset 10px 0 35px 25px black;
+  z-index: 10;
 }
 
 #music-button {
   box-shadow: inset 0 10px 35px 25px black;
+  z-index: 10;
 }
 
 #career-button {
   box-shadow: inset 0 0 35px 25px black;
+  z-index: 10;
 }
 
 #music {
@@ -111,24 +130,34 @@ h1 {
   background-size: cover;
   transform: scale(0.75) translate(250px, -25px);
   z-index: 1;
+  transition: box-shadow 1s ease;
 }
 
 #left, #right {
-  background-color: transparent;
+  background-image: radial-gradient(160px 300px, rgba(0, 0, 0, 0.9) 20%, white);
   border: none;
+  border-radius: 20px;
   position: absolute;
   height: 100px;
   width: 100px;
   align-self: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
   z-index: 5;
+  transition: transform 0.5s ease;
 }
 
 #left {
-  left: 0;
+  left: -20px;
 }
 
 #right {
-  right: 0;
+  right: -20px;
+}
+
+#left:hover, #right:hover {
+  transform: scale(1.2);
 }
 
 #left:active, #right:active {
@@ -136,14 +165,11 @@ h1 {
 }
 
 .left-arrow {
-  height: 75%;
-  width: 100%;
-  transform: rotate(-90deg);
+  height: 50px;
+  margin-left: 15px;
 }
 
 .right-arrow {
-  height: 75%;
-  width: 100%;
-  transform: rotate(90deg);
+  height: 50px;
+  margin-left: 20px;
 }
-
