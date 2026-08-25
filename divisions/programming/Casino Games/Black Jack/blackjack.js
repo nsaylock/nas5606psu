@@ -24,12 +24,14 @@ let deck = [];
 const minBet = 10;
 //let discard = [];
   //discard = [];
-
-for (const [index, suit] of suits.entries()) {
-  for (const [index, rank] of ranks.entries()) {
-    initialDeck.push(rank + suit);
+for (i = 0; i < 6; i++) {
+  for (const [index, suit] of suits.entries()) {
+    for (const [index, rank] of ranks.entries()) {
+      initialDeck.push(rank + suit);
+    }
   }
 }
+
 function shuffleDeck() {
   tempDeck = initialDeck;
   for (let i = tempDeck.length - 1; i > 0; i--) {
