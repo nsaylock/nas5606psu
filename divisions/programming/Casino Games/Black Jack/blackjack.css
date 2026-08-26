@@ -35,13 +35,19 @@ body {
   font-size: 20px;
 }
 
-#dealer-hand, #player-hand-container, #split-chips-container {
+#dealer-hand, #player-hand-container, #split-chips-container,
+#current-hand-indicator-container {
   width: 100%;
   height: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+}
+
+#current-hand-indicator-container {
+  position: absolute;
+  height: 50px;
 }
 
 #player-hand-container {
@@ -63,7 +69,6 @@ body {
 }
 
 .split-bet-chips {
-  outline: 1px solid blue;
   align-items: flex-end;
   height: 100%;
 }
@@ -115,12 +120,8 @@ button:focus {
 
 #split-button {
   position: absolute;
-  top: 42%;
-  left: 48%;
-}
-
-.current-hand-indicator {
-  box-shadow: 0 0 15px goldenrod;
+  top: 96%;
+  left: 74.5%;
 }
 
 .card {

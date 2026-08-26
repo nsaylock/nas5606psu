@@ -1,18 +1,15 @@
 /* KNOWN ISSUES
 
-1. Changing bet by clicking bet circle with different amount
-  causes money to be subtracted from bankroll and ghost added
-  to money on table
-2. Pull back bet button does not work
-3. Bet remains doubled after doubled down win
-4. Split still not implemented
 5. Dealer delay function entering end round more than once when total > 17
 6. Decrement sound playing when reset staged bet
-7. Still only using 1 deck of cards
-8. Cannot double down on a split hand
 9. Dealer aces do not subtract propertly
 10. When hitting on the last hand of a split pair does not check_aces to subtract 10
 11. Double down doesn't work correctly on split pairs... ugh split pairs again
+12. If second hand in split pair wins but first doesn't, it lets you deal again
+-- Doesn't let you pull back bet in between rounds after split hand only ???
+-- After double down does not show correct number of chips in bet circle
+-- Goes crazy after double down win - error location code asd654f
+-- ^^ Cannot read properties of undefined line 551
 
 
 */
@@ -92,6 +89,19 @@ function db(message) {
 
 const messageBoxDiv = document.getElementById('message-box');
 
+document.addEventListener('keydown', function(event) {
+  if (event.key != 'F12') event.preventDefault();
+  if (event.key == 'h' && !hitButton.classList.contains('inactive')) {
+    hit();
+  } else if (event.key == 's' && !stayButton.classList.contains('inactive')) {
+    stay();
+  } else if (event.key == 'Enter' && !dealButton.classList.contains('inactive')) {
+    deal_round();
+  } else if (event.key == 'p' && !splitButton.classList.contains('hidden')) {
+    split();
+  }
+})
+
 let bet = [{
   button: document.getElementById('main-bet-button'),
   amount: 0,
@@ -112,23 +122,23 @@ bet[0].button.addEventListener('click', ()=>{
     bet[0].amount = pull_back_bet(bet[0].amount);
     bet[0].chips.location.replaceChildren();
   } else if (bet[0].amount != 0 && stagedBet != 0) {
-    add_to_bet(stagedBet);
+    add_to_bet(stagedBet, handIndex);
   } else {
-    main_bet();
+    main_bet(handIndex);
   }
 });
 
-function add_to_bet(amountIncrease) {
+function add_to_bet(amountIncrease, handIndex) {
   // Return the current main bet to staged bet, set to prev sb chip structure,
   // double then update staged bet and commit back to main bet
   // . . . spread syntax unpacks array into individual arguments
-  stagedBetChips.location.replaceChildren(...bet[0].chips.location.children);
-  stagedBetChips.chip = bet[0].chips.chip;
-  bankroll += bet[0].amount;
+  stagedBetChips.location.replaceChildren(...bet[handIndex].chips.location.children);
+  stagedBetChips.chip = bet[handIndex].chips.chip;
+  bankroll += bet[handIndex].amount;
   prevSBCS = get_chip_structure(bet[0].amount);
-  stagedBet = bet[0].amount + amountIncrease;
+  stagedBet = bet[handIndex].amount + amountIncrease;
   update_staged_bet_chips(stagedBet);
-  main_bet();
+  main_bet(handIndex);
 }
 
 function message(message) {
@@ -143,7 +153,7 @@ function new_round() {
   dealerTotal = 0;
   dealerAces = 0;
   dealerHandDiv.replaceChildren();
-  
+  currentHandIndicatorDiv.replaceChildren();
   if (splitIndex > 0) reset_split();
   
   player[0].div.replaceChildren();
@@ -155,6 +165,8 @@ function new_round() {
   }];
 
   if (outcome == 'win' && doubleDown == true) {
+    // Only removes 1 chip need to fix
+    // asd654f
     bet[0].chips.location.removeChild(bet[0].chips.location.lastElementChild);
     bet[0].amount = bet[0].amount/2;
     mainBetAmount.textContent = `$${bet[0].amount}`;
@@ -183,21 +195,11 @@ function reset_split() {
   splitChipsContainer.replaceChildren();
 }
 
-document.addEventListener('keydown', function(event) {
-  if (event.key != 'F12') event.preventDefault();
-  if (event.key == 'h' && !hitButton.classList.contains('inactive')) {
-    hit();
-  } else if (event.key == 's' && !stayButton.classList.contains('inactive')) {
-    stay();
-  } else if (event.key == 'Enter' && !dealButton.classList.contains('inactive')) {
-    deal_round();
-  } else if (event.key == 'p' && !splitButton.classList.contains('hidden')) {
-    split();
-  }
-})
+
 
 function deal_round() {
   bet[0].button.disabled = true;
+
   if (round > 0) new_round();
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
   deal_face_down_card();
@@ -206,7 +208,12 @@ function deal_round() {
   make_inactive(dealButton);
   make_active(hitButton);
   make_active(stayButton);
-  make_active(doubleDownButton);
+  if (bankroll < bet[0].amount) {
+    make_inactive(doubleDownButton)
+  } else {
+    make_active(doubleDownButton);
+  }
+
   check_for_split();
   update_player_total();
   check_aces('player');
@@ -315,7 +322,7 @@ let doubleDown = false;
 
 function double_down() {
   doubleDown = true;
-  add_to_bet(bet[0].amount);
+  add_to_bet(bet[handIndex].amount, handIndex);
   hit();
   if (player[handIndex].total < 21) stay();
   
@@ -324,7 +331,9 @@ function double_down() {
 const playerHandContainer = document.getElementById('player-hand-container');
 const splitChipsContainer = document.getElementById('split-chips-container');
 let splitIndex = 0;
-
+const currentHandIndicatorDiv = document.getElementById('current-hand-indicator-container');
+const currentHandIndicator = document.createElement('img');
+currentHandIndicator.src = '../img/decrease.png';
 function split() {
   splitIndex++;
   handsToBeScored.push(splitIndex);
@@ -333,8 +342,13 @@ function split() {
     const blank = document.createElement('div');
     blank.classList.add('split-bet-chips');
     splitChipsContainer.appendChild(blank);
-    player[0].div.classList.add('current-hand-indicator');
+    currentHandIndicatorDiv.appendChild(document.createElement('div'));
+    currentHandIndicatorDiv.children[0].classList.add('split-bet-chips');
+    currentHandIndicatorDiv.children[0].appendChild(currentHandIndicator);
+
   }
+  currentHandIndicatorDiv.appendChild(document.createElement('div'));
+  currentHandIndicatorDiv.children[splitIndex].classList.add('split-bet-chips');
   numOfPlayerHands++;
 
   bet.push({
@@ -387,17 +401,15 @@ function split() {
   update_bankroll();
   play_increment_sound();
 
-
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
-
   deal_card('player', player[splitIndex].hand, player[splitIndex].div, splitIndex);
-
   update_player_total();
   check_aces('player');
   check_for_split();
 }
 
 function check_for_split() {
+  if (bankroll < bet[0].amount) return;
   if (player[handIndex].hand[0].at(0) == player[handIndex].hand[1].at(0) 
     && numOfPlayerHands < 4) {
     unhide(splitButton);
@@ -477,9 +489,10 @@ function check_for_end_round() {
 }
 
 function move_to_next_hand() {
-  player[handIndex].div.classList.remove('current-hand-indicator');
+  currentHandIndicatorDiv.children[handIndex].replaceChildren();
   handIndex++;
-  player[handIndex].div.classList.add('current-hand-indicator');
+  currentHandIndicatorDiv.children[handIndex].appendChild(currentHandIndicator);
+  make_active(doubleDownButton);
   check_for_split();
 }
 
@@ -487,6 +500,8 @@ function end_round() {
   make_inactive(hitButton);
   make_inactive(stayButton);
   make_inactive(doubleDownButton);
+  hide(splitButton);
+  handIndex = 0;
   bet[0].button.disabled = false;
   if (outcome == 'lose') {
     make_inactive(dealButton);
@@ -527,19 +542,19 @@ function bust() {
 
 
 
-function main_bet() {
+function main_bet(handIndex) {
   if (stagedBet >= minBet) {
 
     //add_chips_to_table(bet[0].chips, stagedBet, 'side', 'side', 'normal');
-    bet[0].chips.location.replaceChildren(...stagedBetChips.location.children);
-    bet[0].chips.chip = stagedBetChips.chip;
-    for (i = 0; i < bet[0].chips.chip.length; i++) {
-      bet[0].chips.location.children[i].style.marginBottom = `${i*6}px`;
+    bet[handIndex].chips.location.replaceChildren(...stagedBetChips.location.children);
+    bet[handIndex].chips.chip = stagedBetChips.chip;
+    for (i = 0; i < bet[handIndex].chips.chip.length; i++) {
+      bet[handIndex].chips.location.children[i].style.marginBottom = `${i*6}px`;
     }
-    update_moneyOnTable('remove', bet[0].amount);
-    bet[0].amount = commit_bet(bet[0].amount);
+    update_moneyOnTable('remove', bet[handIndex].amount);
+    bet[handIndex].amount = commit_bet(bet[handIndex].amount);
     // comment out when working
-    mainBetAmount.textContent = `$${bet[0].amount}`;
+    mainBetAmount.textContent = `$${bet[handIndex].amount}`;
     reset_stagedBet();
     make_active(dealButton);
   } else {

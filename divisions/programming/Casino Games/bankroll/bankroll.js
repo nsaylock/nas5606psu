@@ -457,7 +457,7 @@ window.addEventListener('mousemove', (e) => {
     const mouseY = e.clientY;
 
   // Set position, subtracting 50px to center the div (adjust based on div size)
-  stagedBetChips.location.style.transform = `translate(${mouseX-zoom}px, ${mouseY+20}px)`;
+  stagedBetChips.location.style.transform = `translate(${mouseX-zoom}px, ${mouseY+35}px)`;
   //alert(zoom)
 });
 
