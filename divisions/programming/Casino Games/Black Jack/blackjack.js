@@ -165,10 +165,10 @@ function new_round() {
   }];
 
   if (outcome == 'win' && doubleDown == true) {
-    // Only removes 1 chip need to fix
-    // asd654f
-    bet[0].chips.location.removeChild(bet[0].chips.location.lastElementChild);
-    bet[0].amount = bet[0].amount/2;
+    // Might need logic for split bet double down reset
+    tempBet = bet[0].amount/2;
+    reset_bet();
+    add_to_bet(tempBet, 0);
     mainBetAmount.textContent = `$${bet[0].amount}`;
     update_moneyOnTable('remove', bet[0].amount);
     bankroll += bet[0].amount;
@@ -194,8 +194,6 @@ function reset_split() {
   }
   splitChipsContainer.replaceChildren();
 }
-
-
 
 function deal_round() {
   bet[0].button.disabled = true;
@@ -239,7 +237,6 @@ function deal_face_down_card() {
   if (face.at(0) == 'A') dealerAces++;
   deck.pop();
 }
-
 
 function deal_card(id, hand, element, handIndex) {
   reset_stagedBet();
@@ -334,6 +331,7 @@ let splitIndex = 0;
 const currentHandIndicatorDiv = document.getElementById('current-hand-indicator-container');
 const currentHandIndicator = document.createElement('img');
 currentHandIndicator.src = '../img/decrease.png';
+
 function split() {
   splitIndex++;
   handsToBeScored.push(splitIndex);
@@ -548,6 +546,7 @@ function main_bet(handIndex) {
     //add_chips_to_table(bet[0].chips, stagedBet, 'side', 'side', 'normal');
     bet[handIndex].chips.location.replaceChildren(...stagedBetChips.location.children);
     bet[handIndex].chips.chip = stagedBetChips.chip;
+    // asd654f
     for (i = 0; i < bet[handIndex].chips.chip.length; i++) {
       bet[handIndex].chips.location.children[i].style.marginBottom = `${i*6}px`;
     }
