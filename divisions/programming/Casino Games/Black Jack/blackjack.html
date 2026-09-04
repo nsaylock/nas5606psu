@@ -14,6 +14,11 @@
   <div class="main-container">
 
     <div id="debug-box">BJ V1</div>
+    <div id="shoe">
+      <img src="playing_cards/Shoe_01.png" class="shoe">
+    </div>
+
+    <div id="card-spawner"></div>
 
     <div class="main">
       <div id="message-box"></div>
@@ -108,6 +113,15 @@
       </div>
     </div> <!-- Close Bottom Container -->
 
+    <div id="settings-menu" class="hidden">
+      <button id="settings-exit-button">X</button>
+      <h3>Settings</h3>
+      Deal Speed
+      <input type="range" id="dealTime-slider" min="100" max="1000" step="50" value="400">
+      <h6 id="dealTime-slider-value">300</h6>
+    </div>
+
+    <button id="settings-button">Settings</button>
     <button id="show-money-button">
       <img src="../img/double_arrow.png" id="double-arrow" class="open">
     </button>

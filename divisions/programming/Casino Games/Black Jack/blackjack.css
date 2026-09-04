@@ -7,6 +7,25 @@ body {
   color: white;
 }
 
+#shoe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+}
+
+.shoe {
+  width: 250px;
+}
+
+#card-spawner {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  top: 0px;
+  right: 150px;
+  z-index: 50;
+}
 
 .main-container {
   display: flex;
@@ -130,6 +149,12 @@ button:focus {
   width: 150px;
 }
 
+.card-flip {
+  position: absolute;
+  height: 250px;
+  width: 250px;
+}
+
 .inactive {
   background-color: rgb(51, 51, 51);
   border: none;
@@ -172,4 +197,47 @@ button:focus {
   position: absolute;
   height: 90px;
   width: 150px;
+}
+
+#settings-button {
+    position: fixed;
+    bottom: 0;
+    right: 50px;
+    background-color: rgb(2, 2, 2);
+    border: 2px outset rgb(161, 127, 13);
+    border-radius: 5px;
+    border-style: solid;
+    color: rgb(161, 127, 13);
+    font-size: 20px;
+    height: 35px;
+    width: 135px;
+    z-index: 11;
+}
+
+#settings-exit-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  border: 1px solid white;
+  color: white;
+  font-size: 15px;
+}
+
+#settings-menu {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.911);
+  height: 600px;
+  width: 500px;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 50px;
+}
+
+input {
+  color: green;
 }

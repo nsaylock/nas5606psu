@@ -7,9 +7,12 @@
 11. Double down doesn't work correctly on split pairs... ugh split pairs again
 12. If second hand in split pair wins but first doesn't, it lets you deal again
 -- Doesn't let you pull back bet in between rounds after split hand only ???
--- After double down does not show correct number of chips in bet circle
--- Goes crazy after double down win - error location code asd654f
--- ^^ Cannot read properties of undefined line 551
+- Double down animation doesnt work
+- split animation deals the same card to both hands immediately
+- animation showing the split would be cool
+- Make animation to remove cards
+- Make animation to show winning chips/remove chips
+
 
 
 */
@@ -68,6 +71,9 @@ let numOfPlayerHands = 1;
 let round = 0;
 let handIndex = 0;
 let gameInProgress = false;
+let doubleDown = false;
+let outcome = 'none';
+let handsToBeScored = [0];
 
 const dealButton = document.getElementById('deal-button');
 dealButton.addEventListener('click', deal_round);
@@ -81,6 +87,32 @@ const doubleDownButton = document.getElementById('double-down-button');
 doubleDownButton.addEventListener('click', double_down);
 const splitButton = document.getElementById('split-button');
 splitButton.addEventListener('click', split);
+
+const playerHandContainer = document.getElementById('player-hand-container');
+const splitChipsContainer = document.getElementById('split-chips-container');
+let splitIndex = 0;
+const currentHandIndicatorDiv = document.getElementById('current-hand-indicator-container');
+const currentHandIndicator = document.createElement('img');
+currentHandIndicator.src = '../img/decrease.png';
+const settingsMenuDiv = document.getElementById('settings-menu');
+const settingsButton = document.getElementById('settings-button');
+settingsButton.addEventListener('click', settings_menu);
+const settingsExitButton = document.getElementById('settings-exit-button');
+settingsExitButton.addEventListener('click', settings_menu);
+const dealTimeSlider = document.getElementById('dealTime-slider');
+const dealTimeSliderValue = document.getElementById('dealTime-slider-value');
+dealTimeSlider.addEventListener('input', (e)=> {
+  dealTime = Number(e.target.value);
+  dealDelay = dealTime + 50 + flipTime * 30;
+  dealTimeSliderValue.textContent = e.target.value;
+});
+
+function settings_menu() {
+  if (settingsMenuDiv.classList.contains('hidden')) {
+    // Open Menu => remove hidden
+    settingsMenuDiv.classList.remove('hidden');
+  } else settingsMenuDiv.classList.add('hidden');
+}
 
 const debugBox = document.getElementById('debug-box');
 function db(message) {
@@ -116,6 +148,10 @@ let bet = [{
 bet[0].chips.location = document.getElementById('main-bet-chips');
 
 const mainBetAmount = document.getElementById('main-bet-amount');
+let dealTime = 400;
+const flipTime = 5;
+// Total flip time = flipTime * 30
+let dealDelay = dealTime + flipTime*30 + 50;
 
 bet[0].button.addEventListener('click', ()=>{
   if (pullBackInProgress == true) {
@@ -146,7 +182,6 @@ function message(message) {
   newDiv.textContent = message;
   messageBoxDiv.insertBefore(newDiv, messageBoxDiv.firstChild);
 }
-
 
 function new_round() {
   dealerHand = [];
@@ -195,15 +230,19 @@ function reset_split() {
   splitChipsContainer.replaceChildren();
 }
 
-function deal_round() {
+async function deal_round() {
   bet[0].button.disabled = true;
+  make_inactive(dealButton);
 
   if (round > 0) new_round();
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
+  await delay(dealDelay);
   deal_face_down_card();
+  await delay(dealTime + 30);
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
+  await delay(dealDelay);
   deal_card('dealer', dealerHand, dealerHandDiv, handIndex);
-  make_inactive(dealButton);
+  await delay(dealDelay);
   make_active(hitButton);
   make_active(stayButton);
   if (bankroll < bet[0].amount) {
@@ -219,11 +258,11 @@ function deal_round() {
   round++;
   if (player[handIndex].total == 21) {
     blackjack();
-    dealer_reveal_card();
+    dealer_reveal_card('bj');
   }
 }
 
-function deal_face_down_card() {
+async function deal_face_down_card() {
   if (deck.length < 1) shuffleDeck();
   face = deck[deck.length-1].face;
   value = deck[deck.length-1].value;
@@ -231,14 +270,23 @@ function deal_face_down_card() {
   img.src = `playing_cards/card_back.png`;
   img.className = 'card';
   img.id = 'dealer-card';
+  const target = document.createElement('div');
+  target.classList.add('card');
+  dealerHandDiv.appendChild(target);
+
+  deal_animation(target, 'face-down');
+  await delay(dealTime);
+
+  dealerHandDiv.removeChild(target);
   dealerHandDiv.appendChild(img);
+
   dealerHand.push(face);
   faceDownCardValue = value;
   if (face.at(0) == 'A') dealerAces++;
   deck.pop();
 }
 
-function deal_card(id, hand, element, handIndex) {
+async function deal_card(id, hand, element, handIndex) {
   reset_stagedBet();
   if (deck.length < 1) shuffleDeck();
   face = deck[deck.length-1].face;
@@ -247,17 +295,24 @@ function deal_card(id, hand, element, handIndex) {
   //face = 'AH';
   //value = 11;
   const img = document.createElement('img');
-  img.src = `playing_cards/${face}.png`;
   img.className = 'card';
-  element.appendChild(img);
+  img.src = `playing_cards/${face}.png`;
+
+  // For the animation, create a target to append so the animation function
+  // can grab its location, afterwards remove the target and add the img
+  const target = document.createElement('div');
+  target.classList.add('card');
+  element.appendChild(target);
   hand.push(face);
-  for (i = 0; i < hand.length; i++) {
-    if (id == 'player') {
-      element.children[i].style.margin = `0 0 ${i*25}px ${i*120}px`;
-    } else if (id == 'dealer') {
-      element.children[i].style.marginLeft = `${i*120}px`;
-    }
-  }
+
+  adjust_hand_layout(id, element, hand);
+
+  deal_animation(target, 'normal');
+  await delay(dealDelay);
+  element.removeChild(target);
+  element.appendChild(img);
+
+  adjust_hand_layout(id, element, hand);
 
   if (id == 'player' && doubleDown == true) {
     element.children[2].style.transform = 'rotate(90deg)';
@@ -272,6 +327,16 @@ function deal_card(id, hand, element, handIndex) {
   if (id == 'player') player[handIndex].total += value;
   else dealerTotal += value;
   deck.pop();
+}
+
+function adjust_hand_layout(id, element, hand) {
+  for (i = 0; i < hand.length; i++) {
+    if (id == 'player') {
+      element.children[i].style.margin = `0 0 ${i*25}px ${i*120}px`;
+    } else if (id == 'dealer') {
+      element.children[i].style.marginLeft = `${i*120}px`;
+    }
+  }
 }
 
 function check_aces(id) {
@@ -290,20 +355,43 @@ function check_aces(id) {
   }
 }
 
-function hit() {
+function blackjack() {
+  let winAmount = Math.floor(bet[0].amount * 3 / 2);
+  message('BLACKJACK');
+  win(winAmount);
+  make_inactive_all();
+  make_active(dealButton);
+}
+
+
+async function hit() {
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
+  await delay(dealDelay + 50);
   update_player_total();
   check_aces('player');
   
   make_inactive(doubleDownButton);
   if (player[handIndex].total == 21) {
+    // Player has 21 no further action needed -- auto stay
     stay();
   } else if (player[handIndex].total > 21) {
-    bust();
+    // Bust
+    message('Bust');
+    outcome = 'lose';
+    await delay(400);
+    lose(handIndex);
+    if (handsToBeScored.length == 1) {
+      dealer_reveal_card('bust');
+      outcome = 'lose';
+    } else if (handIndex + 1 < numOfPlayerHands) {
+      handsToBeScored.splice(handIndex, 1);
+      move_to_next_hand();
+    } else {
+      handsToBeScored.splice(handIndex, 1);
+      dealer_reveal_card('bust');
+    }
   }
 }
-
-
 
 function stay() {
   if (handIndex + 1 < numOfPlayerHands) {
@@ -311,28 +399,18 @@ function stay() {
     move_to_next_hand();
   } else {
     hide(splitButton);
-    dealer_turn();
+    dealer_reveal_card('dealer-turn');
   }
 }
-
-let doubleDown = false;
 
 function double_down() {
   doubleDown = true;
   add_to_bet(bet[handIndex].amount, handIndex);
   hit();
   if (player[handIndex].total < 21) stay();
-  
 }
 
-const playerHandContainer = document.getElementById('player-hand-container');
-const splitChipsContainer = document.getElementById('split-chips-container');
-let splitIndex = 0;
-const currentHandIndicatorDiv = document.getElementById('current-hand-indicator-container');
-const currentHandIndicator = document.createElement('img');
-currentHandIndicator.src = '../img/decrease.png';
-
-function split() {
+async function split() {
   splitIndex++;
   handsToBeScored.push(splitIndex);
 
@@ -400,7 +478,9 @@ function split() {
   play_increment_sound();
 
   deal_card('player', player[handIndex].hand, player[handIndex].div, handIndex);
+  await delay(dealDelay);
   deal_card('player', player[splitIndex].hand, player[splitIndex].div, splitIndex);
+  await delay(dealDelay);
   update_player_total();
   check_aces('player');
   check_for_split();
@@ -414,37 +494,36 @@ function check_for_split() {
   }
 }
 
-function dealer_reveal_card() {
+async function dealer_reveal_card(action) {
+  make_inactive_all();
+
   const dealerFaceDownCard = document.getElementById('dealer-card');
+  card_flip_animation(dealerFaceDownCard, 1);
+  await delay(flipTime * 30 + 50);
   dealerFaceDownCard.src = `playing_cards/${dealerHand[0]}.png`;
+  dealerFaceDownCard.classList.remove('card-flip');
+  dealerFaceDownCard.classList.add('card');
   dealerTotal += faceDownCardValue;
   update_dealer_total();
   check_aces('dealer');
-}
-
-function dealer_turn() {
-  dealer_reveal_card();
-  if (dealerTotal < 17) dealer_delay_func();
+  if (dealerTotal < 17 && action == 'dealer-turn') dealer_delay_func();
+  else if (action == 'bust' || action == 'bj') check_for_end_round();
   else score_hand();
 }
 
-function dealer_delay_func() {
-  setTimeout(()=> {
-      deal_card('dealer', dealerHand, dealerHandDiv, handIndex);
-      update_dealer_total();
-      if (dealerTotal < 17) {
-        dealer_delay_func();
-      } else if (dealerTotal > 21 && dealerAces > 0) {
-        check_aces('dealer');
-        dealer_delay_func();
-      } else {
-        score_hand();
-      }
-    }, 500);
+async function dealer_delay_func() {
+    deal_card('dealer', dealerHand, dealerHandDiv, handIndex);
+    await delay(dealDelay);
+    update_dealer_total();
+    if (dealerTotal < 17) {
+      dealer_delay_func();
+    } else if (dealerTotal > 21 && dealerAces > 0) {
+      check_aces('dealer');
+      dealer_delay_func();
+    } else {
+      score_hand();
+    }
 }
-
-let outcome = 'none';
-let handsToBeScored = [0];
 
 function score_hand() {
   for (x = 0; x < handsToBeScored.length; x++) {
@@ -495,47 +574,13 @@ function move_to_next_hand() {
 }
 
 function end_round() {
-  make_inactive(hitButton);
-  make_inactive(stayButton);
-  make_inactive(doubleDownButton);
-  hide(splitButton);
+  
   handIndex = 0;
   bet[0].button.disabled = false;
   if (outcome == 'lose') {
     make_inactive(dealButton);
     reset_bet();
   } else make_active(dealButton);
-
-  
-}
-
-function blackjack() {
-  let winAmount = Math.floor(bet[0].amount * 3 / 2);
-  message('BLACKJACK');
-  win(winAmount);
-  make_inactive(hitButton);
-  make_inactive(stayButton);
-  make_inactive(doubleDownButton);
-  make_active(dealButton);
-}
-
-function bust() {
-  message('Bust');
-  setTimeout(()=> {
-    lose(handIndex);
-    if (handsToBeScored.length == 1) {
-      dealer_reveal_card();
-      outcome = 'lose';
-      end_round();
-    } else if (handIndex + 1 < numOfPlayerHands) {
-      handsToBeScored.splice(handIndex, 1);
-      move_to_next_hand();
-    } else {
-      handsToBeScored.splice(handIndex, 1);
-      dealer_turn();
-    }
-    
-  }, 400);
 }
 
 
@@ -594,6 +639,13 @@ function unhide(button) {
   }
 }
 
+function make_inactive_all() {
+  make_inactive(hitButton);
+  make_inactive(stayButton);
+  make_inactive(doubleDownButton);
+  hide(splitButton);
+}
+
 function update_player_total() {
   playerTotalElement.textContent = player[handIndex].total;
 }
@@ -606,3 +658,68 @@ make_inactive(dealButton);
 make_inactive(hitButton);
 make_inactive(stayButton);
 make_inactive(doubleDownButton);
+
+// Animations
+// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% //
+
+const cardSpawnerDiv = document.getElementById('card-spawner');
+const cardWidth = 150;
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function deal_animation(destination, flipType) {
+  let start = null;
+  // Card Spawner Rect
+  let CSRect = cardSpawnerDiv.getBoundingClientRect();
+  let targetRect = destination.getBoundingClientRect();
+  let distanceX = targetRect.left - CSRect.left;
+  let distanceY = targetRect.top - CSRect.top;
+
+  let blank = document.createElement('img');
+  blank.classList.add('card');
+  blank.src = 'playing_cards/card_back.png';
+  cardSpawnerDiv.appendChild(blank);
+
+  function step(timestamp) {
+    if (start == undefined) start = timestamp;
+    const elapsed = timestamp - start;
+    if (elapsed <= dealTime) {
+      x = elapsed*distanceX/dealTime;
+      y = elapsed*distanceY/dealTime;
+      blank.style.transform = `translate(${x}px, ${y}px)`;
+      requestAnimationFrame(step);
+    } else requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+
+  await delay(dealTime + 10);
+  let index = 1;
+  if (flipType == 'face-down') {
+    // Stop here
+    cardSpawnerDiv.replaceChildren();
+  } else {
+    card_flip_animation(blank, index, x, y);
+  }
+}
+
+function card_flip_animation(blank, index, x, y) {
+  blank.classList.remove('card');
+  blank.src = 'Card_Flip_Animation/1.png';
+  blank.classList.add('card-flip');
+  blank.style.transform = `translate(${x - 55}px, ${y-10}px)`;
+  update_animation_pic(blank, index);
+}
+
+async function update_animation_pic(blank, index) {
+  await delay(flipTime);
+  if (index < 30) {
+    blank.src = `Card_Flip_Animation/${index}.png`;
+    index++;
+    update_animation_pic(blank, index);
+  } else {
+    // Animation complete, remove the img
+    cardSpawnerDiv.replaceChildren();
+  }
+}
