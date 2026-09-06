@@ -1,0 +1,166 @@
+html {
+    overflow-y: scroll;
+}
+
+body {
+  margin: 0;
+  top: 0;
+  left: 0;
+}
+
+
+#side-bar-button::before {
+    content: "\2630";
+}
+
+#side-bar-button {
+    background-color: rgb(9, 5, 14);
+    border: 1px solid rgb(39, 39, 39);
+    font-size: 22px;
+    line-height: 35px;
+    text-align: middle;
+    color: white;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 150;
+    transition: background-color 0.2s ease;
+}
+#side-bar-button:hover {
+    background-color: rgb(66, 66, 66);
+}
+.side-bar-label {
+    font-size: 16px;
+}
+#page-title {
+    font-size: 36px;
+    font-weight: 600;
+    height: 55px;
+    width: 100vw;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    z-index: 0;
+}
+.page-title-text {
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+aside {
+    background-color: rgb(9, 5, 14);
+    height: 100vh;
+    left: -20%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 25px;
+    padding-top: 50px;
+    color: white;
+    z-index: 100;
+}
+
+#side-bar {
+    width: 20%;
+    transition: transform 0.3s ease-in-out;
+}
+#side-bar.open {
+    transform: translateX(100%);
+}
+
+.page-link {
+    color: black;
+    display: block;
+    width: 80%;
+    height: 30px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* End Side Bar */
+
+.no-scroll {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+.main-container {
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(110, 109, 109);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wheel-container {
+    background-color: rgb(198, 202, 135);
+    width: 850px;
+    height: 500px;
+    margin-top: 150px;
+    display: grid;
+    grid-template-columns: repeat(3, 250px);
+    column-gap: 50px;
+}
+
+#wheel-L, #wheel-M, #wheel-R {
+    position: relative;
+    outline: 2px solid black;
+    background-image: radial-gradient(1000px 280px, rgba(255, 255, 255, 0), black 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.wheel-img {
+    height: 100px;
+    width: 100px;
+}
+
+#spin-button, #cancel {
+    position: relative;
+    height: 5%;
+    width: 10%;
+    margin-top: 50px;
+    z-index: 10;
+}
+
+
+
+.blocker-top, #blocker-btm {
+  position: absolute;
+  height: 149px;
+  width: 900px;
+  background-color: rgb(110, 109, 109);
+  z-index: 1;
+}
+
+#blocker-btm {
+  top: 651px;
+  height: 1000px;
+}
+
+/* Wheel Imgs */
+#m1, #m2, #m3 {
+    position: absolute;
+    top: -100px;
+}
+
+.chunk {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.hidden {
+    display: none;
+}
