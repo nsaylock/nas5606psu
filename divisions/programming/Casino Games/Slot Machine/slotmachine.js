@@ -17,53 +17,106 @@ window.addEventListener('keydown', function(event) {
 // bottom position = 366.6666
 
 
+// debug display
+const debug1 = document.getElementById('debug-1');
+const debug2 = document.getElementById('debug-2');
+const debug3 = document.getElementById('debug-3');
+
+const colorSet = [
+  'oneHundredK', 
+  'fiftyK', 'fiftyK',
+  'twentyFiveK', 'twentyFiveK', 'twentyFiveK',
+  'platinum', 'platinum', 'platinum', 'platinum',
+  'brown', 'brown', 'brown', 'brown', 'brown', 
+  'gold', 'gold', 'gold', 'gold', 'gold', 'gold',
+  'purple', 'purple', 'purple', 'purple', 'purple', 'purple',
+  'black', 'black', 'black', 'black', 'black', 'black', 'black', 'black',
+  'green', 'green', 'green', 'green', 'green', 'green', 'green', 'green', 'green',
+  'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red', 'red',
+  'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white', 'white'
+]
 
 
+
+const oneHundredK = document.getElementById('oneHundredK');
+const fiftyK = document.getElementById('fiftyK');
+const twentyFiveK = document.getElementById('twentyFiveK');
+const platinum = document.getElementById('platinum');
+const brown = document.getElementById('brown');
+const gold = document.getElementById('gold');
+const purple = document.getElementById('purple');
+const black = document.getElementById('black');
+const green = document.getElementById('green');
+const red = document.getElementById('red');
+const white = document.getElementById('white');
+
+oneHundredK.textContent = `100K : ${_getPercentChange('oneHundredK').toFixed(4)}%`;
+fiftyK.textContent = `50K : ${_getPercentChange('fiftyK').toFixed(4)}%`;
+twentyFiveK.textContent = `25K : ${_getPercentChange('twentyFiveK').toFixed(4)}%`;
+platinum.textContent = `Platinum : ${_getPercentChange('platinum').toFixed(4)}%`;
+brown.textContent = `Brown : ${_getPercentChange('brown').toFixed(4)}%`;
+gold.textContent = `Gold : ${_getPercentChange('gold').toFixed(4)}%`;
+purple.textContent = `Purple : ${_getPercentChange('purple').toFixed(4)}%`;
+black.textContent = `Black : ${_getPercentChange('black').toFixed(4)}%`;
+green.textContent = `Green : ${_getPercentChange('green').toFixed(4)}%`;
+red.textContent = `Red : ${_getPercentChange('red').toFixed(4)}%`;
+white.textContent = `White : ${_getPercentChange('white').toFixed(4)}%`;
+
+function _getPercentChange(color) {
+  // Probability that all 3 will land on the payline
+  let value = colorSet.filter(str => str === color).length / colorSet.length;
+  value = value ** 3;
+  value *= 100;
+  return value;
+}
+
+const maxColorIndex = colorSet.length - 1;
+
+function _shuffle(element) {
+  for (let i = element.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [element[i], element[j]] = [element[j], element[i]];
+  }
+}
 
 let left = {
   element: document.getElementById('wheel-L'),
-  colorArr: ['twentyFiveK', 'white', 'red', 'black', 'oneHundredK', 
-  'purple', 'green', 'brown', 'gold'],
+  colorArr: [...colorSet],
   chunk: [],
   index: 0,
-  colorIndex: 8
+  colorIndex: maxColorIndex
 }
 
 let middle = {
   element: document.getElementById('wheel-M'),
-  colorArr: [ 
-    'red',
-    'green',
-    'black',
-    'white',
-    'purple',
-    'gold',
-    'twentyFiveK',
-    'brown',
-    'oneHundredK'
-  ],
+  colorArr: [...colorSet],
   chunk: [],
   index: 0,
-  colorIndex: 8
+  colorIndex: maxColorIndex
 }
 
 let right = {
   element: document.getElementById('wheel-R'),
-  colorArr: ['oneHundredK', 'purple', 'red', 'gold', 'white', 'twentyFiveK',
-  'black', 'brown', 'green'],
+  colorArr: [...colorSet],
   chunk: [],
   index: 0,
-  colorIndex: 8
+  colorIndex: maxColorIndex
 }
 
+_shuffle(left.colorArr);
+_shuffle(middle.colorArr);
+_shuffle(right.colorArr);
+
+const maxChunks = left.colorArr.length / 3;
 const blockerBtm = document.getElementById('blocker-btm');
+
 
 const blockerBtmRect = blockerBtm.getBoundingClientRect();
 //const middle.element = document.getElementById('wheel-M');
 const wheelRect = middle.element.getBoundingClientRect();
 const wheelTop = wheelRect.top;
 
-let topIndex = {l: 8, m: 8, r: 8}
+let topIndex = {l: maxColorIndex, m: maxColorIndex, r: maxColorIndex}
 let chunkIndex = {l: 0, m: 0, r: 0};
 let wheel = {left: [], middle: [], right: []};
 
@@ -77,10 +130,19 @@ const distance = 650;
 let spinDuration = 3210; // controls how long wheel spins, change to random number each spin
 const bumpLength = 50; // px distance for stop animation
 
+let stopTimerL;
+let stopTimerM;
+let stopTimerR;
+
+let payline = [];
+
 left.chunk[0] = _addChunk(left);
 middle.chunk[0] = _addChunk(middle);
 right.chunk[0] = _addChunk(right);
 
+debug1.textContent = left.colorArr.length;
+debug2.textContent = middle.colorArr.length;
+debug3.textContent = right.colorArr.length;
 
 
 // Functions ---------------------------------------------------
@@ -91,19 +153,34 @@ function _addChunk(wheel) {
   newChunk.classList.add('chunk');
   for (i = 0; i < 3; i++) {
     wheel.colorIndex++;
-    if (wheel.colorIndex == 9) wheel.colorIndex = 0;
+    if (wheel.colorIndex == colorSet.length) wheel.colorIndex = 0;
     _addImg(wheel.colorArr[wheel.colorIndex], newChunk);
   }
   wheel.element.appendChild(newChunk);
   return newChunk;
 }
 
+function _addImg(id, chunk) {
+  // creates img and adds to div
+  const img = document.createElement('img');
+  img.classList.add('wheel-img');
+  img.id = id;
+  img.src = `../img/chips/face/blank/${id}_chip.png`;
+  chunk.appendChild(img);
+}
+
 async function spin() {
   // Needs first position because only travels half the distance
   let position = 'first';
+  spinButton.disabled = true;
   stopSpinL = false;
   stopSpinM = false;
   stopSpinR = false;
+  payline = [];
+  // Finish resetting variables
+  
+  _waitStopTimers();
+  await delay(50);
   _translateM(left.chunk[left.index], position);
   _translateM(middle.chunk[middle.index], position);
   _translateM(right.chunk[right.index], position);
@@ -117,18 +194,30 @@ async function spin() {
   _continueSpinRight();
 }
 
+async function _waitStopTimers() {
+  stopTimerL = Math.round(Math.ceil(Math.random()*2000 + 1000));
+  stopTimerM = Math.round(Math.ceil(Math.random()*2000) + 300);
+  stopTimerR = Math.round(Math.ceil(Math.random()*2000) + 300);
+  await delay(stopTimerL);
+  stopSpinL = true;
+  await delay(stopTimerM);
+  stopSpinM = true;
+  await delay(stopTimerR);
+  stopSpinR = true;
+}
+
 async function _continueSpinLeft() {
   // recursive function, updates left.index
+
   left.index++;
-  if (left.index == 3) left.index = 0;
+  if (left.index == maxChunks) left.index = 0;
   left.chunk[left.index] = _addChunk(left);
   _translateM(left.chunk[left.index], ' '); // Any string but 'first'
   _hide(left.chunk[left.index]);
 
   await delay(time/2);
-  setTimeout(()=>{stopSpinL = true}, Math.round(Math.ceil(Math.random()*2000 + 500)))
   if (stopSpinL == true) {
-    _stopSpin(left);
+    _stopSpin(left, left.chunk.length);
   } else {
     _continueSpinLeft();
   }
@@ -136,16 +225,16 @@ async function _continueSpinLeft() {
 
 async function _continueSpinMiddle() {
   // recursive function, updates middle.index
+
   middle.index++;
-  if (middle.index == 3) middle.index = 0;
+  if (middle.index == maxChunks) middle.index = 0;
   middle.chunk[middle.index] = _addChunk(middle);
   _translateM(middle.chunk[middle.index], ' '); // Any string but 'first'
   _hide(middle.chunk[middle.index]);
 
   await delay(time/2);
-  setTimeout(()=>{stopSpinM = true}, Math.round(Math.ceil(Math.random()*2000 + 1000)))
   if (stopSpinM == true) {
-    _stopSpin(middle);
+    _stopSpin(middle, middle.chunk.length);
   } else {
     _continueSpinMiddle();
   }
@@ -153,24 +242,26 @@ async function _continueSpinMiddle() {
 
 async function _continueSpinRight() {
   // recursive function, updates right.index
+
   right.index++;
-  if (right.index == 3) right.index = 0;
+  if (right.index == maxChunks) right.index = 0;
   right.chunk[right.index] = _addChunk(right);
   _translateM(right.chunk[right.index], ' '); // Any string but 'first'
   _hide(right.chunk[right.index]);
 
   await delay(time/2);
-  setTimeout(()=>{stopSpinR = true}, Math.round(Math.ceil(Math.random()*2000 + 1500)))
   if (stopSpinR == true) {
-    _stopSpin(right);
+    _stopSpin(right, right.chunk.length);
+    spinButton.disabled = false;
   } else {
     _continueSpinRight();
   }
 }
 
-function _stopSpin(wheel) {
+function _stopSpin(wheel, length) {
   // Find the index of the top img then use that to generate a new first chunk
-  for (i = 0; i < 3; i++) {
+  /*
+  for (i = 0; i < length; i++) {
     for (q = 0; q < 3; q++) {
       imgRect = wheel.chunk[i].children[q].getBoundingClientRect();
       difference = imgRect.top - wheelTop;
@@ -180,13 +271,29 @@ function _stopSpin(wheel) {
       }
     }
   }
+
   wheel.colorIndex = wheel.colorArr.indexOf(topImgId);
   wheel.colorIndex--;
-  if (wheel.colorIndex == -1) wheel.colorIndex = 8;
+  if (wheel.colorIndex == -1) wheel.colorIndex = 65;
+  */
+  // wow that was much simpler
+  wheel.colorIndex -= 3;
   wheel.index = 0;
   wheel.element.replaceChildren();
   wheel.chunk[0] = _addChunk(wheel);
   _bumpAnimation(wheel.chunk[0]);
+  // Get middle row img ids
+  payline.push(wheel.chunk[0].children[1].id);
+  if (payline.length == 3) {
+    _scorePayline();
+  }
+  
+}
+
+function _scorePayline() {
+  debug1.textContent = payline[0];
+  debug2.textContent = payline[1];
+  debug3.textContent = payline[2];
 }
 
 
@@ -215,21 +322,14 @@ function _translateM(element, position) {
     } else {
       element.style.transform = `translateY(${y - 100}%)`;  
     }
-    requestAnimationFrame(step);
+    stepId = requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
 
 
-function _addImg(id, chunk) {
-  // creates img and adds to div
-  const img = document.createElement('img');
-  img.classList.add('wheel-img');
-  img.id = id;
-  img.src = `../img/chips/face/blank/${id}_chip.png`;
-  chunk.appendChild(img);
-}
+
 
 async function _hide(element) {
   // removes div when it is no longer in wheel
