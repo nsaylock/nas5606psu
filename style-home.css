@@ -1,8 +1,9 @@
 @charset "UTF-8";
 
 html {
-  width: 100dvw;
+  width: 100%;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 
@@ -12,10 +13,16 @@ html {
 }
 
 body {
-  position: relative;
-  background-color: rgb(26, 26, 26);
+  height: 100vh;
+  width: 100vw;
+  position: static;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(rgb(35, 112, 199), black);
   margin: 0;
   padding: 0;
+  
 }
 
 #bgIMG {
@@ -25,18 +32,19 @@ body {
   left: 0;
   height: 200vh;
   width: 200vw;
-  background-image: url('');
   background-size: 75%;
+  z-index: -2;
 }
 
 #bgOverlay {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0);
+  background: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
   margin: 0;
   top: 0;
   left: 0;
-  height: 200vh;
-  width: 200vw;
+  height: 100vh;
+  width: 100vw;
+  z-index: 0;
 }
 
 h1 {
@@ -48,32 +56,33 @@ h1 {
 
 
 .carousel {
-  position: relative;
+  position: static;
   height: 500px;
   width: 900px;
-  top: 15vh;
-  justify-self: center;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-#career, #program, #music {
+
+
+#career, #program, #music, .career-container,
+.program-container, .music-container {
   position: absolute;
-  border-radius: 150px;
-  height: 300px;
-  width: 300px;
+  border-radius: 200px;
+  height: 400px;
+  width: 400px;
 }
 
 #career-button, #program-button, #music-button,
 .career-outline, .program-outline, .music-outline {
   border: none;
   position: absolute;
-  height: 300px;
-  width: 300px;
-  border-radius: 150px;
+  height: 400px;
+  width: 400px;
+  border-radius: 200px;
   background-color: transparent;
-  font-size: 25px;
+  font-size: 30px;
   font-weight: 600;
 }
 
@@ -82,31 +91,45 @@ h1 {
 }
 
 .career-outline, .program-outline, .music-outline {
-  border: 6px solid black;
-  height: 294px;
-  width: 294px;
-  left: -3px;
-  top: -3px;
+  border: 7px solid black;
+  height: 392px;
+  width: 392px;
+  left: -2px;
+  top: -2px;
 }
 
 #career {
   background-image: url('img-home/Degrees.jpg');
   background-size: cover;
+  top: -200px;
   z-index: 3;
-  transition: box-shadow 1s ease;
+  transition: transform 1s ease;
 }
 
-#career:not(.no-hover):hover, #program:not(.no-hover):hover,
-#music:not(.no-hover):hover {
-  box-shadow: 0 0 100px 20px rgb(201, 172, 10);
+
+
+#shadow-career, #shadow-program, #shadow-music    {
+  position: absolute;
+  background: radial-gradient(30% 20%, black 20%, rgba(0, 0, 0, 0) );
+  bottom: 0%;
+  left: -50%;
+  height: 100%;
+  width: 200%;
+  z-index: 0;
 }
 
 #program {
   background-image: url('img-home/new_index_code.png');
   background-size: cover;
-  transform: scale(0.75) translate(-250px, -25px);
-  z-index: 1;
-  transition: box-shadow 1s ease;
+  z-index: 3;
+  transition: transform 1s ease;
+}
+
+.program-container {transform: scale(0.75) translate(-350px, 300px);}
+.music-container {transform: scale(0.75) translate(350px, 300px);}
+
+#shadow-program, #shadow-music {
+  bottom: -50%;
 }
 
 #program-button {
@@ -128,9 +151,12 @@ h1 {
 #music {
   background-image: url('img-home/temp_MP.JPG');
   background-size: cover;
-  transform: scale(0.75) translate(250px, -25px);
   z-index: 1;
-  transition: box-shadow 1s ease;
+  transition: transform 1s ease;
+}
+
+#career:hover, #program:hover, #music:hover {
+  transform: translateY(-100px);
 }
 
 #left, #right {

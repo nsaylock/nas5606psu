@@ -3,49 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Nick Saylock</title>
+    <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style-home.css">
 </head>
 <body>
-  <h1>nicksaylock.com</h1>
   <div id="bgIMG"></div>
   <div id="bgOverlay"></div>
   <div class="carousel">
-    <div id="career">
-      <a href="divisions/career/resume.html">
-        <button id="career-button">Career</button>
-      </a> 
-      <div class="career-outline"></div>
+    <div class="career-container">
+      <div id="career">
+        <a href="divisions/career/resume.html">
+          <button id="career-button">Career</button>
+        </a> 
+        <div class="career-outline"></div>
+      </div>
+      <div id="shadow-career"></div>
     </div>
-
-    <div id="program">
-      <a href="divisions/programming/programming-home.html">
-        <button id="program-button">Computer<br>Programming</button>
-      </a>
-      <div class="program-outline"></div>
+    
+    <div class="program-container">
+      <div id="program">
+        <a href="divisions/programming/programming-home.html">
+          <button id="program-button">Computer<br>Programming</button>
+        </a>
+        <div class="program-outline"></div>
+      </div>
+      <div id="shadow-program"></div>
     </div>
-
-    <div id="music">
-      <a href="divisions/music/music-home.html">
-        <button id="music-button">Music<br>Production</button>
-      </a>
-
-
-      <div class="music-outline"></div>
+    
+    <div class="music-container">
+      <div id="music">
+        <a href="divisions/music/music-home.html">
+          <button id="music-button">Music<br>Production</button>
+        </a>
+        <div class="music-outline"></div>
+      </div>
+      <div id="shadow-music"></div>
     </div>
-
-    <button id="left">
-      <img src="img-home/left-arrow.png" class="left-arrow">
-    </button>
-    <button id="right">
-      <img src="img-home/right-arrow.png" class="right-arrow" >
-    </button>
+    
 
 
   </div>
-</body>
+  <script>
 
-<script>
+    document.body.style.display = 'none';
+    void document.body.offsetHeight; // force reflow
+    document.body.style.display = 'flex';
+
   const bgIMG = document.getElementById('bgIMG');
   const bgOverlay = document.getElementById('bgOverlay');
   const career = document.getElementById('career');
@@ -60,309 +64,219 @@
   const time = 1000;
   const totalFrames = time/100*6;
   const edgeMax = 350;
-  let circle = {
-    left: program,
-    leftButton: programButton,
-    leftName: 'program',
-    center: career,
-    centerButton: careerButton,
-    centerName: 'career',
-    right: music,
-    rightButton: musicButton,
-    rightName: 'music'
+  let fadeInProgess;
+  let shadowAnimationId;
+  let fadeInAnimationId;
+  let fadeOutAnimationId;
+
+  
+  const shadowCareer = {
+    id: document.getElementById('shadow-career'),
+    initialWidth: 30, // percent
+    initialHeight: 20, //percent
+    initialOpacity: 1,
+    initialFeather: 20, //percent
+    width: 30, // percent
+    height: 20, //percent
+    opacity: 1,
+    feather: 20 //percent
   }
+  
 
-  let mult = 1;
-  let sw = 0;
-  let swTotal = 350;
-  let prevSW = 0;
-  let allow = true;
-  let arrowsGone = false;
-  document.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    if (allow) {
-      if (e.wheelDelta < 0) {
-        cycle_right();
-      } else {
-        cycle_left();
-      }
-    }
-    if (arrowsGone == false) dissolve_arrows();
-  }, {passive: false}
-);
+  const shadowProgram = {
+    id: document.getElementById('shadow-program'),
+    initialWidth: 30, // percent
+    initialHeight: 20, //percent
+    initialOpacity: 1,
+    initialFeather: 20, //percent
+    width: 30, // percent
+    height: 20, //percent
+    opacity: 1,
+    feather: 20 //percent
+  }
+  const shadowMusic = document.getElementById('shadow-music');
 
-function dissolve_arrows() {
-  left.animate([
-    { opacity: '100%' },
-    { opacity: '0%' }
-  ], { 
-    duration: 500,
-    fill: 'forwards'
+  let progress = 0;
+
+  careerButton.addEventListener('mouseenter', ()=>{
+    _mouseEnterFunctionChain('career', shadowCareer);
   });
-  right.animate([
-    { opacity: '100%' },
-    { opacity: '0%' }
-  ], { 
-    duration: 500,
-    fill: 'forwards'
+
+  careerButton.addEventListener('mouseleave', ()=>{
+    _mouseLeaveFunctionChain(shadowCareer);
   });
-  arrowsGone = true;
+
+  programButton.addEventListener('mouseenter', ()=>{
+    _mouseEnterFunctionChain('program', shadowProgram);
+  });
+
+  programButton.addEventListener('mouseleave', ()=>{
+    _mouseLeaveFunctionChain(shadowProgram);
+  });
+
+  musicButton.addEventListener('mouseenter', ()=>{
+    _mouseEnterFunctionChain('music', shadowMusic);
+  });
+
+  musicButton.addEventListener('mouseleave', ()=>{
+    _mouseLeaveFunctionChain(shadowMusic);
+  });
+
+function _mouseEnterFunctionChain(strId, shadowId) {
+  if (fadeOutAnimationId != undefined) {
+    cancelAnimationFrame(fadeOutAnimationId);
+  }
+  background_animation(strId);
+  _growShadow(shadowId);
+}
+
+function _mouseLeaveFunctionChain(shadowId) {
+  cancelAnimationFrame(shadowAnimationId);
+  cancelAnimationFrame(fadeInAnimationId);
+  fade_out();
+  let rTime = 1000 * progress;
+  _shrinkShadow(shadowId, rTime);
 }
   
-  // Some kind of coordinate system stored as variables... Oooh
-    let xL = -250;
-    let yL = -25;
-    let Lscale = 0.75;
-    let shrinkScale = 1;
-    let growScale = 0.75;
-    let xC = 0;
-    let yC = 0;
-    let xR = 250;
-    let yR = -25;
+function _growShadow(element) {
+  let eTime = 1000;
+  let start = null;
+  function step(timestamp) {
+    if (start == undefined) start = timestamp;
+    const elapsed = timestamp - start;
+    if (elapsed < eTime) {
+      progress = elapsed / eTime;
+      easedProgress = easeOutQuad(Math.min(progress, 1));
+      element.width = element.initialWidth + 20 * easedProgress;
+      element.height = element.initialHeight + 10 * easedProgress;
+      element.opacity = element.initialOpacity - 0.5 * easedProgress;
+      element.feather = element.initialFeather - 10 * easedProgress;
+      element.id.style.background = 
+      `radial-gradient(${element.width}% ${element.height}%, 
+      rgba(0, 0, 0, ${element.opacity}) ${element.feather}%, rgba(0, 0, 0, 0))`;
+      // rgb(201, 157, 15)
+    }
+    if (progress < 1) {
+      shadowAnimationId = requestAnimationFrame(step);
+    }
+  }
+  shadowAnimationId = requestAnimationFrame(step);
+}
 
-
-  // Control Animation Speed
+function _shrinkShadow(element, rTime) {
+  let rProgress;
+  let easedProgress;
+  let start = null;
+  let rHeight = element.height - element.initialHeight;
+  let rWidth = element.width - element.initialWidth;
+  let rOpacity = element.initialOpacity - element.opacity;
+  let rFeather = element.initialFeather - element.feather;
+  function step(timestamp) {
+    if (start == undefined) start = timestamp;
+    const elapsed = timestamp - start;
+    if (elapsed < rTime) {
+      rProgress = elapsed / rTime;
+      easedProgress = easeOutQuad(Math.min(rProgress, 1));
+      
+      element.id.style.background = 
+      `radial-gradient(${element.width - rWidth*easedProgress}% ${element.height - rHeight*easedProgress}%, 
+      rgba(0, 0, 0, ${element.opacity + rOpacity*easedProgress}) ${element.feather + rFeather*easedProgress}%, rgba(0, 0, 0, 0))`;
+      // rgb(201, 157, 15)
+    }
+    if (progress < 1) {
+      shrinkAnimationId = requestAnimationFrame(step);
+    }
+  }
+  shrinkAnimationId = requestAnimationFrame(step);
+}
   
+function easeOutQuad(k) {
+  return 1 - (1 - k) * (1 - k);
+}
 
-  left.addEventListener('click', ()=> { if (allow) cycle_left() });
-  right.addEventListener('click', ()=> { if (allow) cycle_right() });
 
   function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  async function cycle_left() {
-    direction_flip('left');
-    cycle_animation('left');
-    await delay(time);
-    switch_circles();
-  }
-
-  async function cycle_right() {
-    direction_flip('right');
-    cycle_animation('right');
-    await delay(time);
-    switch_circles();
-  }
-
-  let flipKey = 'right';
-  let flip = false;
-  function direction_flip(direction) {
-    //Stop box shadow from appearing while animation in progress
-    add_no_hover(career);
-    add_no_hover(program);
-    add_no_hover(music);
-    disable_all_buttons();
-
-    if (flipKey == direction) {
-      flip = true;
-      if (direction == 'right') flipKey = 'left';
-      else flipKey = 'right';
-    }
-    if (flip == true) {
-      tempLeft = circle.left;
-      tempLB = circle.leftButton;
-      tempLN = circle.leftName;
-      tempRight = circle.right;
-      tempRB = circle.rightButton;
-      tempRN = circle.rightName;
-      circle.left = tempRight;
-      circle.right = tempLeft;
-      circle.leftButton = tempRB;
-      circle.leftName = tempRN;
-      circle.rightButton = tempLB;
-      circle.rightName = tempLN;
-      flip = false;
-    }
-    
-  }
-
-  async function switch_circles() {
-    allow = true;
-    tempLeft = circle.left;
-    tempLB = circle.leftButton;
-    tempLN = circle.leftName;
-    tempRight = circle.right;
-    tempRB = circle.rightButton;
-    tempRN = circle.rightName;
-    tempCenter = circle.center;
-    tempCB = circle.centerButton;
-    tempCN = circle.centerName;
-
-    circle.left = tempCenter;
-    circle.leftButton = tempCB;
-    circle.leftName = tempCN;
-    circle.center = tempRight;
-    circle.centerButton = tempRB;
-    circle.centerName = tempRN;
-    circle.right = tempLeft;
-    circle.rightButton = tempLB;
-    circle.rightName = tempLN;
-    cancelAnimationFrame(bgStepId);
-    background_animation(circle.centerName);
-    fade_in();
-  }
-
-  function fade_out() {
-    bgOverlay.animate([
-      { backgroundColor: 'rgba(0,0,0,0)'},
-      { backgroundColor: 'rgba(0,0,0,1)'},
-    ],
-    {duration: time,
-      fill: 'forwards'
-    }
-  );
-  }
 
   function fade_in() {
-    bgOverlay.animate([
-      { backgroundColor: 'rgba(0,0,0,1)'},
-      { backgroundColor: 'rgba(0,0,0,0)'},
-    ],
-    {duration: time,
-      fill: 'forwards'
-    }
-  );
-  }
-
-  function background_animation(front) {
-    if (front == 'career') {
-      imgURL = "url('img-home/Degrees.jpg')";
-      remove_no_hover(career);
-      careerButton.disabled = false;
-    }
-    else if (front == 'program') {
-      imgURL = "url('img-home/new_index_code.png')";
-      remove_no_hover(program);
-      programButton.disabled = false;
-    }
-    else if (front == 'music') {
-      imgURL = "url('img-home/temp_MP.JPG')";
-      remove_no_hover(music);
-      musicButton.disabled = false;
-    }
-    bgIMG.style.backgroundImage = imgURL;
-    let bgTime = 50000;
+    bgIMG.style.backgroundImage = 'none';
     let start = null;
-    function bgStep(timestamp) {
-      if (start == undefined) start = timestamp;
-      const elapsed = timestamp - start;
-      if (elapsed < bgTime) {
-        scale = elapsed / bgTime * 0.25;
-        pos = elapsed / bgTime * 30;
-        bgIMG.style.transform = `scale(${1-scale}) translate(${-50 + pos}%, ${-50 + pos}%)`;
-        requestAnimationFrame(bgStep);
-      }
-    }
-    bgStepId = requestAnimationFrame(bgStep);
-  }
-
-  function disable_all_buttons() {
-    careerButton.disabled = true;
-    programButton.disabled = true;
-    musicButton.disabled = true;
-  }
-
-  function add_no_hover(element) {
-    if (!element.classList.contains('no-hover')) {
-      element.classList.add('no-hover');
-    }
-  }
-
-  function remove_no_hover(element) {
-    if (element.classList.contains('no-hover')) {
-      element.classList.remove('no-hover');
-    }
-  }
-
-  background_animation('career');
-
-  function reset_parameters() {
-    xL = -250 * mult;
-    yL = -25;
-    Lscale = 0.75;
-    shrinkScale = 1;
-    growScale = 0.75;
-    xC = 0;
-    yC = 0;
-    xR = 250 * mult;
-    yR = -25;
-  }
-
-  const RTA = totalFrames/7;
-  const LTA = totalFrames - totalFrames/7;
-
-  function cycle_animation(direction) {
-    fade_out();
-
-    allow = false;
-    if (direction == 'left') mult = 1;
-    else mult = -1;
-    let start = null;
-    reset_parameters();
-    let frame = 1;
+    let fadeInTime = 1500;
+    let percent;
     function step(timestamp) {
-      if (start == undefined) start = timestamp;
+      if (!start) start = timestamp;
       const elapsed = timestamp - start;
-      if (elapsed <= time) {
-        
-        // Left slides acros back to right position
-        xL += 500/totalFrames * mult;
-        
-        if (frame < totalFrames/2) {
-          Lscale -= 0.125/totalFrames;
-          yL -= 50/totalFrames;
-        } else {
-          Lscale += 0.125/totalFrames;
-          yL += 50/totalFrames;
-        }
-        circle.left.style.transform = `scale(${Lscale}) translate(${xL}px, ${yL}px)`;
-
-
-        // Center slides to left position and shrinks
-        
-        shrinkScale -= 0.25/totalFrames;
-
-        yC -= 25/totalFrames;
-        if (frame <= LTA) {
-          xC -= edgeMax/totalFrames * mult;
-        } else {
-          xC += edgeMax/totalFrames * mult;
-          circle.center.style.zIndex = 1;
-        }
-        circle.center.style.transform = `scale(${shrinkScale}) translate(${xC}px, ${yC}px)`;
-
-
-        // Right slides to center position and grows
-        
-        growScale += 0.25/totalFrames;
-        yR += 25/totalFrames;
-        if (frame <= RTA+1) {
-          xR += edgeMax/totalFrames * mult;
-        } else {
-          xR -= edgeMax/totalFrames * mult;
-          circle.right.style.zIndex = 3;
-        }
-        circle.right.style.transform = `scale(${growScale}) translate(${xR}px, ${yR}px)`;
-
-        // Shadow
-        shadow = frame/totalFrames*10*mult;
-        circle.centerButton.style.boxShadow = `inset ${shadow}px 0 35px 25px black`;
-        circle.leftButton.style.boxShadow = `inset ${10 - shadow}px ${shadow}px 35px 25px black`;
-        circle.rightButton.style.boxShadow = `inset 0 ${10 - shadow}px 35px 25px black`;
-
-
-        requestAnimationFrame(step);
-        frame++;
+      if (elapsed < fadeInTime) {
+        percent = elapsed / fadeInTime;
+        fadeInProgess = percent;
+        bgOverlay.style.background = `radial-gradient(rgba(35, 112,
+        199, ${1 - 1*percent}), rgba(0, 0, 0, ${1 - 1*percent}))`;
+        fadeInAnimationId = requestAnimationFrame(step);
       }
     }
-    requestAnimationFrame(step);
+    fadeInAnimationId = requestAnimationFrame(step);
   }
 
+ let bgStepId = null;
+let bgFadeTimeoutId = null;
 
-disable_all_buttons();
-careerButton.disabled = false;
+function background_animation(front) {
+  cancelAnimationFrame(bgStepId);
+  clearTimeout(bgFadeTimeoutId);
+
+  let imgURL;
+  if (front === 'career') {
+    imgURL = "url('img-home/Degrees.jpg')";
+  } else if (front === 'program') {
+    imgURL = "url('img-home/new_index_code.png')";
+  } else if (front === 'music') {
+    imgURL = "url('img-home/temp_MP.JPG')";
+  }
+
+  fade_in();
+  bgIMG.style.backgroundImage = imgURL;
+
+  const bgTime = 50000;
+  let start = null;
+
+  function bgStep(timestamp) {
+    if (start === null) start = timestamp;
+    const elapsed = timestamp - start;
+    if (elapsed < bgTime) {
+      const scale = (elapsed / bgTime) * 0.25;
+      const pos = (elapsed / bgTime) * 30;
+      bgIMG.style.transform = `scale(${1 - scale}) translate(${-50 + pos}%, ${-50 + pos}%)`;
+      bgStepId = requestAnimationFrame(bgStep);
+    }
+  }
+  bgStepId = requestAnimationFrame(bgStep);
+}
+
+function fade_out() {
+  let start = null;
+    let percent;
+    let duration = 1000 * fadeInProgess;
+    let startOpacity = 1 - fadeInProgess;
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      if (elapsed < duration) {
+        percent = elapsed / duration;
+        bgOverlay.style.background = `radial-gradient(rgba(35, 112,
+        199, ${startOpacity + percent}), rgba(0, 0, 0, ${startOpacity + percent}))`;
+        fadeOutAnimationId = requestAnimationFrame(step);
+      }
+    }
+    fadeOutAnimationId = requestAnimationFrame(step);
+
+    
+}
 
 </script>
+</body>
+
+
 
 </html>
