@@ -48,7 +48,7 @@ const LIBRARY = [
           { title: "Treasure for Another", duration: "3:56", src: "library/Interval 11/Beyond Knowing/Treasure_for_Another.mp3" },
           { title: "The Shallows", duration: "2:58", src: "library/Interval 11/Beyond Knowing/The Shallows.mp3" },
           { title: "Natural Order", duration: "6:23", src: "library/Interval 11/Beyond Knowing/Natural Order.mp3" },
-          { title: "Three Flames", duration: "5:34", src: "library/Interval 11/Beyond Knowing/Three_Flames.mp3 "},
+          { title: "Three Flames", duration: "5:34", src: "library/Interval 11/Beyond Knowing/Three_Flames.mp3"},
           { title: "Say the Reason", duration: "4:22", src: "library/Interval 11/Beyond Knowing/Say_the_Reason.mp3" },
           { title: "Idyllic", duration: "4:18", src: "library/Interval 11/Beyond Knowing/Idyllic.mp3" },
           { title: "Who Knew, I'm Fine", duration: "2:41", src: "library/Interval 11/Beyond Knowing/Who Knew I'm Fine.mp3" },
@@ -72,6 +72,15 @@ const LIBRARY = [
           { title: "Blotter", duration: "4:40", src: "library/Avalanche Paths/Scioto Darby EP/Blotter.wav" },
           { title: "Codename Z", duration: "2:35", src: "library/Avalanche Paths/Scioto Darby EP/Codename Z.wav" },
           { title: "Warm October", duration: "5:01", src: "library/Avalanche Paths/Scioto Darby EP/Warm October.wav" }
+        ]
+      },
+      {
+        title: '2026',
+        cover: '',
+        year: '2026',
+        songs: [
+          { title: 'Explode', duration: '3:09', src: 'library/Avalanche Paths/2026/Explode_2.mp3'},
+          { title: 'Gauntlet', duration: '7:47', src: 'library/Avalanche Paths/2026/Gauntlet_2026_01.mp3'}
         ]
       }
     ] // End Avalanche Paths Albums
