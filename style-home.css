@@ -159,43 +159,32 @@ h1 {
   transform: translateY(-100px);
 }
 
-#left, #right {
-  background-image: radial-gradient(160px 300px, rgba(0, 0, 0, 0.9) 20%, white);
-  border: none;
-  border-radius: 20px;
-  position: absolute;
-  height: 100px;
-  width: 100px;
-  align-self: center;
+
+
+@media (max-width: 600px) {
+  html {
+    overflow-y: visible;
+
+  }
+
+  .career-container {
+    top: 150px;
+    transform: scale(0.75);
+  }
+  .program-container {
+    top: 350px;
+    transform: scale(0.75);
+  }
+  .music-container {
+    top: 700px;
+    transform: scale(0.75);
+  }
+  .carousel {
+  position: static;
+  height: 500px;
+  width: 900px;
   display: flex;
-  align-items: center;
-  margin-bottom: 25px;
-  z-index: 5;
-  transition: transform 0.5s ease;
+  flex-direction: column;
+  justify-content: center;
 }
-
-#left {
-  left: -20px;
-}
-
-#right {
-  right: -20px;
-}
-
-#left:hover, #right:hover {
-  transform: scale(1.2);
-}
-
-#left:active, #right:active {
-  transform: scale(0.95);
-}
-
-.left-arrow {
-  height: 50px;
-  margin-left: 15px;
-}
-
-.right-arrow {
-  height: 50px;
-  margin-left: 20px;
 }
