@@ -84,5 +84,30 @@ const LIBRARY = [
         ]
       }
     ] // End Avalanche Paths Albums
+  },
+  {
+    artist: 'Time-Like Interval',
+    albums: [
+      {
+        title: 'The Final Page',
+        cover: 'library/Time-Like Interval/The Final Page/Lunarium.jpg',
+        year: '2017',
+        songs: [
+          { title: 'Clothespin', duration: '5:44', src: 'library/Time-Like Interval/The Final Page/Clothespin.mp3'},
+          { title: 'Overpass', duration: '2:37', src: 'library/Time-Like Interval/The Final Page/Overpass.mp3'},
+          { title: 'Buzzed Dark Year', duration: '4:47', src: 'library/Time-Like Interval/The Final Page/Buzzed Dark Year.mp3'},
+          { title: 'Transition', duration: '0:51', src: 'library/Time-Like Interval/The Final Page/Transition.mp3'},
+          { title: 'Into The Mist', duration: '4:15', src: 'library/Time-Like Interval/The Final Page/Into The Mist.mp3'},
+          { title: 'Half-truth', duration: '8:03', src: 'library/Time-Like Interval/The Final Page/Half-truth.mp3'},
+          { title: 'Azimuth', duration: '2:03', src: 'library/Time-Like Interval/The Final Page/Azimuth.mp3'},
+          { title: 'Heave Ho', duration: '3:40', src: 'library/Time-Like Interval/The Final Page/Heave Ho.mp3'},
+          { title: 'Syrup', duration: '4:12', src: 'library/Time-Like Interval/The Final Page/Syrup.mp3'},
+          { title: 'Time Lake', duration: '10:38', src: 'library/Time-Like Interval/The Final Page/Time Lake.mp3'},
+          { title: 'Penk Flod', duration: '5:05', src: 'library/Time-Like Interval/The Final Page/Penk Flod.mp3'},
+          { title: 'The Song to End on', duration: '4:54', src: 'library/Time-Like Interval/The Final Page/The Song to End on.mp3'}
+        ]
+      }
+    ]
+    
   }
 ];
