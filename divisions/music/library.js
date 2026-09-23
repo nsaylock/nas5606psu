@@ -80,7 +80,26 @@ const LIBRARY = [
         year: '2026',
         songs: [
           { title: 'Explode', duration: '3:09', src: 'library/Avalanche Paths/2026/Explode_2.mp3'},
-          { title: 'Gauntlet', duration: '7:47', src: 'library/Avalanche Paths/2026/Gauntlet_2026_01.mp3'}
+          { title: 'Gauntlet', duration: '7:47', src: 'library/Avalanche Paths/2026/Gauntlet_2026_01.mp3'},
+          { title: 'Advent', duration: '4:33', src: 'library/Avalanche Paths/2026/advent_rough.mp3'},
+          { title: 'eyeswideshut', duration: '4:50', src: 'library/Avalanche Paths/2026/eyeswideshut_RAW.mp3'},
+          { title: 'Blase', duration: '4:50', src: 'library/Avalanche Paths/2026/Blase_Rough9-23-26.mp3'}
+
+        ]
+      },
+      {
+        title: "Fata Morgana",
+        cover: '',
+        year: '2026',
+        songs: [
+          { title: 'Fata Morgana', duration: '3:36', src: 'library/Avalanche Paths/Fata Morgana/Fata Morgana_Raw_8-8-26.mp3'},
+          { title: 'Incline', duration: '4:28', src: 'library/Avalanche Paths/Fata Morgana/Incline_8-8-26.mp3'},
+          { title: 'Morello Cherry', duration: '2:55', src: 'library/Avalanche Paths/Fata Morgana/Morello Cherry_8-8-26.mp3'},
+          { title: 'Snowdrift', duration: '3:33', src: 'library/Avalanche Paths/Fata Morgana/Snowdrift_8-8-26.mp3'},
+          { title: 'Swords at the Lake', duration: '3:03', src: 'library/Avalanche Paths/Fata Morgana/Swords_8-8-26.mp3'},
+          { title: 'Traffic', duration: '4:25', src: 'library/Avalanche Paths/Fata Morgana/Traffic_RAW MIX.mp3'},
+          { title: 'Trails', duration: '5:33', src: 'library/Avalanche Paths/Fata Morgana/Trails_8-8-26.mp3'},
+          { title: 'Winter\'s Crown', duration: '3:39', src: 'library/Avalanche Paths/Fata Morgana/Winters Crown_8-8-26.mp3'}
         ]
       }
     ] // End Avalanche Paths Albums
